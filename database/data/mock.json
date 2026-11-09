@@ -1,0 +1,7074 @@
+{
+  "users": [
+    {
+      "id": "usr-super",
+      "firstName": "Lina",
+      "lastName": "Mansouri",
+      "email": "super@bravo.stock",
+      "password": "demo",
+      "role": "SUPER_ADMIN",
+      "title": "Propriétaire Bravo.Stock",
+      "avatarHue": 250,
+      "warehouseIds": [],
+      "productIds": [],
+      "regionIds": []
+    },
+    {
+      "id": "usr-owner",
+      "firstName": "Rachid",
+      "lastName": "Kettani",
+      "email": "owner@bravo.stock",
+      "password": "demo",
+      "role": "TENANT_OWNER",
+      "title": "Propriétaire Atlas Distribution",
+      "avatarHue": 32,
+      "warehouseIds": [],
+      "productIds": [],
+      "regionIds": [],
+      "companyId": "co-atlas"
+    },
+    {
+      "id": "usr-admin",
+      "firstName": "Leila",
+      "lastName": "Benjelloun",
+      "email": "admin@bravo.stock",
+      "password": "demo",
+      "role": "ADMIN",
+      "title": "Administratrice",
+      "avatarHue": 220,
+      "warehouseIds": [],
+      "productIds": [],
+      "regionIds": [],
+      "companyId": "co-atlas"
+    },
+    {
+      "id": "usr-manager",
+      "firstName": "Sarah",
+      "lastName": "Benali",
+      "email": "sarah@bravo.stock",
+      "password": "demo",
+      "role": "MANAGER",
+      "title": "Responsable opérations",
+      "avatarHue": 239,
+      "warehouseIds": [],
+      "productIds": [],
+      "regionIds": [
+        "reg-nord",
+        "reg-centre"
+      ],
+      "companyId": "co-atlas"
+    },
+    {
+      "id": "usr-warehouse",
+      "firstName": "Youssef",
+      "lastName": "Amrani",
+      "email": "youssef@bravo.stock",
+      "password": "demo",
+      "role": "WAREHOUSE_MANAGER",
+      "title": "Gestionnaire Casablanca & Rabat",
+      "avatarHue": 160,
+      "warehouseIds": [
+        "wh-casa",
+        "wh-rabat"
+      ],
+      "productIds": [],
+      "regionIds": [
+        "reg-nord"
+      ],
+      "companyId": "co-atlas"
+    },
+    {
+      "id": "usr-procurement",
+      "firstName": "Amina",
+      "lastName": "Tazi",
+      "email": "amina@bravo.stock",
+      "password": "demo",
+      "role": "PROCUREMENT",
+      "title": "Acheteuse",
+      "avatarHue": 30,
+      "warehouseIds": [],
+      "productIds": [],
+      "regionIds": [],
+      "companyId": "co-atlas"
+    },
+    {
+      "id": "usr-finance",
+      "firstName": "Karim",
+      "lastName": "El Fassi",
+      "email": "karim@bravo.stock",
+      "password": "demo",
+      "role": "FINANCE",
+      "title": "Contrôleur financier",
+      "avatarHue": 200,
+      "warehouseIds": [],
+      "productIds": [],
+      "regionIds": [],
+      "companyId": "co-atlas"
+    },
+    {
+      "id": "usr-dispatcher",
+      "firstName": "Nadia",
+      "lastName": "Berrada",
+      "email": "nadia@bravo.stock",
+      "password": "demo",
+      "role": "DISPATCHER",
+      "title": "Dispatch logistique",
+      "avatarHue": 280,
+      "warehouseIds": [
+        "wh-casa"
+      ],
+      "productIds": [],
+      "regionIds": [
+        "reg-nord"
+      ],
+      "companyId": "co-atlas"
+    },
+    {
+      "id": "usr-driver",
+      "firstName": "Mehdi",
+      "lastName": "Chraibi",
+      "email": "mehdi@bravo.stock",
+      "password": "demo",
+      "role": "DRIVER",
+      "title": "Chauffeur",
+      "avatarHue": 12,
+      "warehouseIds": [
+        "wh-casa"
+      ],
+      "productIds": [],
+      "regionIds": [
+        "reg-nord"
+      ],
+      "driverId": "drv-mehdi",
+      "companyId": "co-atlas"
+    },
+    {
+      "id": "usr-driver-2",
+      "firstName": "Hassan",
+      "lastName": "Alami",
+      "email": "hassan@bravo.stock",
+      "password": "demo",
+      "role": "DRIVER",
+      "title": "Chauffeur",
+      "avatarHue": 18,
+      "warehouseIds": [
+        "wh-rabat"
+      ],
+      "productIds": [],
+      "regionIds": [
+        "reg-nord"
+      ],
+      "driverId": "drv-hassan",
+      "companyId": "co-atlas"
+    },
+    {
+      "id": "usr-auditor",
+      "firstName": "Omar",
+      "lastName": "Senhaji",
+      "email": "omar@bravo.stock",
+      "password": "demo",
+      "role": "AUDITOR",
+      "title": "Auditeur",
+      "avatarHue": 210,
+      "warehouseIds": [],
+      "productIds": [],
+      "regionIds": [],
+      "companyId": "co-atlas"
+    },
+    {
+      "id": "usr-maghreb-owner",
+      "firstName": "Salma",
+      "lastName": "Cherkaoui",
+      "email": "owner.maghreb@bravo.stock",
+      "password": "demo",
+      "role": "TENANT_OWNER",
+      "title": "Propriétaire Maghreb Fresh",
+      "avatarHue": 340,
+      "warehouseIds": [],
+      "productIds": [],
+      "regionIds": [],
+      "companyId": "co-maghreb"
+    },
+    {
+      "id": "usr-maghreb-admin",
+      "firstName": "Yassine",
+      "lastName": "Lahlou",
+      "email": "admin.maghreb@bravo.stock",
+      "password": "demo",
+      "role": "ADMIN",
+      "title": "Administrateur Maghreb Fresh",
+      "avatarHue": 195,
+      "warehouseIds": [],
+      "productIds": [],
+      "regionIds": [],
+      "companyId": "co-maghreb"
+    },
+    {
+      "id": "usr-sud-owner",
+      "firstName": "Imane",
+      "lastName": "Elouardi",
+      "email": "owner.sud@bravo.stock",
+      "password": "demo",
+      "role": "TENANT_OWNER",
+      "title": "Propriétaire Sud Logistique",
+      "avatarHue": 28,
+      "warehouseIds": [],
+      "productIds": [],
+      "regionIds": [],
+      "companyId": "co-sud"
+    },
+    {
+      "id": "usr-nord-owner",
+      "firstName": "Anas",
+      "lastName": "Bennis",
+      "email": "owner.nord@bravo.stock",
+      "password": "demo",
+      "role": "TENANT_OWNER",
+      "title": "Propriétaire Nord Transit",
+      "avatarHue": 205,
+      "warehouseIds": [],
+      "productIds": [],
+      "regionIds": [],
+      "companyId": "co-nord"
+    },
+    {
+      "id": "usr-oasis-owner",
+      "firstName": "Houda",
+      "lastName": "Amellal",
+      "email": "owner.oasis@bravo.stock",
+      "password": "demo",
+      "role": "TENANT_OWNER",
+      "title": "Propriétaire Oasis Négoce",
+      "avatarHue": 15,
+      "warehouseIds": [],
+      "productIds": [],
+      "regionIds": [],
+      "companyId": "co-oasis"
+    }
+  ],
+  "roles": [
+    {
+      "id": "role-super",
+      "key": "SUPER_ADMIN",
+      "name": "Super administrateur",
+      "description": "Propriétaire Bravo.Stock : entreprises, plans, abonnements, facturation.",
+      "permissions": [
+        "platform.view",
+        "platform.companies",
+        "platform.plans",
+        "platform.billing"
+      ]
+    },
+    {
+      "id": "role-owner",
+      "key": "TENANT_OWNER",
+      "name": "Propriétaire",
+      "description": "Compte entreprise : administrateurs, abonnement, factures Bravo.Stock.",
+      "permissions": [
+        "account.view",
+        "account.company",
+        "account.admins",
+        "account.billing"
+      ]
+    },
+    {
+      "id": "role-admin",
+      "key": "ADMIN",
+      "name": "Administrateur",
+      "description": "Configuration opérationnelle : utilisateurs, entrepôts, catalogue.",
+      "permissions": [
+        "product.view",
+        "product.create",
+        "product.update",
+        "product.archive",
+        "warehouse.view",
+        "warehouse.create",
+        "warehouse.update",
+        "warehouse.assign",
+        "stock.view",
+        "stock.receive",
+        "stock.issue",
+        "stock.transfer",
+        "stock.adjust",
+        "stock.inventory",
+        "procurement.view",
+        "procurement.create",
+        "procurement.approve",
+        "purchase.view",
+        "purchase.create",
+        "purchase.update",
+        "purchase.approve",
+        "delivery.view",
+        "delivery.create",
+        "delivery.update",
+        "delivery.confirm",
+        "delivery.prepare",
+        "finance.view",
+        "finance.invoice",
+        "finance.budget",
+        "user.view",
+        "user.create",
+        "user.update",
+        "user.assign_role",
+        "task.view",
+        "task.create",
+        "task.update",
+        "analytics.view",
+        "assistant.use"
+      ]
+    },
+    {
+      "id": "role-manager",
+      "key": "MANAGER",
+      "name": "Manager",
+      "description": "Priorités, alertes, décisions opérationnelles.",
+      "permissions": [
+        "product.view",
+        "warehouse.view",
+        "stock.view",
+        "stock.inventory",
+        "procurement.view",
+        "procurement.create",
+        "procurement.approve",
+        "purchase.view",
+        "purchase.create",
+        "delivery.view",
+        "analytics.view",
+        "task.view",
+        "task.create",
+        "task.update",
+        "assistant.use",
+        "finance.view"
+      ]
+    },
+    {
+      "id": "role-wh",
+      "key": "WAREHOUSE_MANAGER",
+      "name": "Gestionnaire d’entrepôt",
+      "description": "Stock, réceptions, mouvements, bons de livraison.",
+      "permissions": [
+        "product.view",
+        "warehouse.view",
+        "stock.view",
+        "stock.receive",
+        "stock.issue",
+        "stock.transfer",
+        "stock.adjust",
+        "stock.inventory",
+        "procurement.view",
+        "procurement.create",
+        "purchase.view",
+        "delivery.view",
+        "delivery.prepare",
+        "task.view",
+        "task.create",
+        "task.update",
+        "assistant.use"
+      ]
+    },
+    {
+      "id": "role-proc",
+      "key": "PROCUREMENT",
+      "name": "Approvisionnement",
+      "description": "Besoins, fournisseurs, commandes, délais.",
+      "permissions": [
+        "product.view",
+        "product.create",
+        "product.update",
+        "stock.view",
+        "warehouse.view",
+        "procurement.view",
+        "procurement.create",
+        "purchase.view",
+        "purchase.create",
+        "purchase.update",
+        "task.view",
+        "task.create",
+        "task.update",
+        "assistant.use"
+      ]
+    },
+    {
+      "id": "role-fin",
+      "key": "FINANCE",
+      "name": "Finance",
+      "description": "Achats, factures, budgets, paiements.",
+      "permissions": [
+        "purchase.view",
+        "procurement.view",
+        "finance.view",
+        "finance.invoice",
+        "finance.payment",
+        "finance.budget",
+        "analytics.view",
+        "task.view",
+        "task.create",
+        "assistant.use"
+      ]
+    },
+    {
+      "id": "role-disp",
+      "key": "DISPATCHER",
+      "name": "Dispatcher",
+      "description": "Tournées, bons à affecter, véhicules, chauffeurs.",
+      "permissions": [
+        "delivery.view",
+        "delivery.create",
+        "delivery.update",
+        "stock.view",
+        "warehouse.view",
+        "task.view",
+        "task.create",
+        "task.update",
+        "assistant.use"
+      ]
+    },
+    {
+      "id": "role-drv",
+      "key": "DRIVER",
+      "name": "Chauffeur",
+      "description": "Tournée du jour et confirmations de livraison.",
+      "permissions": [
+        "delivery.view",
+        "delivery.confirm",
+        "task.view",
+        "assistant.use"
+      ]
+    },
+    {
+      "id": "role-aud",
+      "key": "AUDITOR",
+      "name": "Auditeur",
+      "description": "Consultation sans modification.",
+      "permissions": [
+        "product.view",
+        "warehouse.view",
+        "stock.view",
+        "procurement.view",
+        "purchase.view",
+        "delivery.view",
+        "finance.view",
+        "user.view",
+        "task.view",
+        "analytics.view",
+        "assistant.use"
+      ]
+    }
+  ],
+  "permissions": [
+    {
+      "id": "product.view",
+      "group": "Catalogue",
+      "label": "Voir les produits"
+    },
+    {
+      "id": "product.create",
+      "group": "Catalogue",
+      "label": "Créer un produit"
+    },
+    {
+      "id": "product.update",
+      "group": "Catalogue",
+      "label": "Modifier un produit"
+    },
+    {
+      "id": "product.archive",
+      "group": "Catalogue",
+      "label": "Archiver un produit"
+    },
+    {
+      "id": "warehouse.view",
+      "group": "Entrepôts",
+      "label": "Voir les entrepôts"
+    },
+    {
+      "id": "warehouse.create",
+      "group": "Entrepôts",
+      "label": "Créer un entrepôt"
+    },
+    {
+      "id": "warehouse.update",
+      "group": "Entrepôts",
+      "label": "Modifier un entrepôt"
+    },
+    {
+      "id": "warehouse.assign",
+      "group": "Entrepôts",
+      "label": "Affecter un entrepôt"
+    },
+    {
+      "id": "stock.view",
+      "group": "Stock",
+      "label": "Voir le stock"
+    },
+    {
+      "id": "stock.receive",
+      "group": "Stock",
+      "label": "Réceptionner"
+    },
+    {
+      "id": "stock.issue",
+      "group": "Stock",
+      "label": "Sortir du stock"
+    },
+    {
+      "id": "stock.transfer",
+      "group": "Stock",
+      "label": "Transférer"
+    },
+    {
+      "id": "stock.adjust",
+      "group": "Stock",
+      "label": "Ajuster"
+    },
+    {
+      "id": "stock.inventory",
+      "group": "Stock",
+      "label": "Inventorier"
+    },
+    {
+      "id": "procurement.view",
+      "group": "Approvisionnement",
+      "label": "Voir les demandes"
+    },
+    {
+      "id": "procurement.create",
+      "group": "Approvisionnement",
+      "label": "Créer une demande"
+    },
+    {
+      "id": "procurement.approve",
+      "group": "Approvisionnement",
+      "label": "Approuver une demande"
+    },
+    {
+      "id": "purchase.view",
+      "group": "Achats",
+      "label": "Voir les commandes"
+    },
+    {
+      "id": "purchase.create",
+      "group": "Achats",
+      "label": "Créer une commande"
+    },
+    {
+      "id": "purchase.update",
+      "group": "Achats",
+      "label": "Modifier une commande"
+    },
+    {
+      "id": "purchase.approve",
+      "group": "Achats",
+      "label": "Approuver une commande"
+    },
+    {
+      "id": "delivery.view",
+      "group": "Logistique",
+      "label": "Voir les livraisons"
+    },
+    {
+      "id": "delivery.create",
+      "group": "Logistique",
+      "label": "Créer une livraison"
+    },
+    {
+      "id": "delivery.update",
+      "group": "Logistique",
+      "label": "Modifier une livraison"
+    },
+    {
+      "id": "delivery.confirm",
+      "group": "Logistique",
+      "label": "Confirmer une livraison"
+    },
+    {
+      "id": "delivery.prepare",
+      "group": "Logistique",
+      "label": "Préparer un bon de livraison"
+    },
+    {
+      "id": "finance.view",
+      "group": "Finance",
+      "label": "Voir la finance"
+    },
+    {
+      "id": "finance.invoice",
+      "group": "Finance",
+      "label": "Gérer les factures"
+    },
+    {
+      "id": "finance.payment",
+      "group": "Finance",
+      "label": "Gérer les paiements"
+    },
+    {
+      "id": "finance.budget",
+      "group": "Finance",
+      "label": "Gérer les budgets"
+    },
+    {
+      "id": "user.view",
+      "group": "Administration",
+      "label": "Voir les utilisateurs"
+    },
+    {
+      "id": "user.create",
+      "group": "Administration",
+      "label": "Créer un utilisateur"
+    },
+    {
+      "id": "user.update",
+      "group": "Administration",
+      "label": "Modifier un utilisateur"
+    },
+    {
+      "id": "user.assign_role",
+      "group": "Administration",
+      "label": "Affecter un rôle"
+    },
+    {
+      "id": "task.view",
+      "group": "Travail",
+      "label": "Voir les tâches"
+    },
+    {
+      "id": "task.create",
+      "group": "Travail",
+      "label": "Créer une tâche"
+    },
+    {
+      "id": "task.update",
+      "group": "Travail",
+      "label": "Modifier une tâche"
+    },
+    {
+      "id": "analytics.view",
+      "group": "Analyse",
+      "label": "Voir les analyses"
+    },
+    {
+      "id": "assistant.use",
+      "group": "Assistant",
+      "label": "Utiliser l’assistant"
+    },
+    {
+      "id": "platform.view",
+      "group": "Plateforme",
+      "label": "Voir la console plateforme"
+    },
+    {
+      "id": "platform.companies",
+      "group": "Plateforme",
+      "label": "Gérer les entreprises"
+    },
+    {
+      "id": "platform.plans",
+      "group": "Plateforme",
+      "label": "Gérer les plans"
+    },
+    {
+      "id": "platform.billing",
+      "group": "Plateforme",
+      "label": "Gérer la facturation plateforme"
+    },
+    {
+      "id": "account.view",
+      "group": "Compte",
+      "label": "Voir le compte entreprise"
+    },
+    {
+      "id": "account.company",
+      "group": "Compte",
+      "label": "Modifier la fiche entreprise"
+    },
+    {
+      "id": "account.admins",
+      "group": "Compte",
+      "label": "Gérer les administrateurs"
+    },
+    {
+      "id": "account.billing",
+      "group": "Compte",
+      "label": "Gérer l’abonnement et les factures"
+    }
+  ],
+  "categories": [
+    {
+      "id": "cat-liquides",
+      "name": "Liquides"
+    },
+    {
+      "id": "cat-epicerie",
+      "name": "Épicerie"
+    },
+    {
+      "id": "cat-frais",
+      "name": "Frais"
+    },
+    {
+      "id": "cat-hygiene",
+      "name": "Hygiène"
+    }
+  ],
+  "products": [
+    {
+      "id": "prd-huile",
+      "sku": "HUI-5L",
+      "name": "Huile végétale 5L",
+      "categoryId": "cat-liquides",
+      "unit": "bidon",
+      "minStock": 200,
+      "maxStock": 800,
+      "price": 89,
+      "supplierId": "sup-atlas",
+      "archived": false,
+      "dailyDemand": 42,
+      "barcode": "6111254789012",
+      "description": "Huile de table 5 litres, conditionnement bidon alimentaire.",
+      "imageUrl": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=640&h=640&q=70",
+      "images": [
+        "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=640&h=640&q=70"
+      ]
+    },
+    {
+      "id": "prd-sucre",
+      "sku": "SUC-1K",
+      "name": "Sucre 1kg",
+      "categoryId": "cat-epicerie",
+      "unit": "sac",
+      "minStock": 150,
+      "maxStock": 900,
+      "price": 12,
+      "supplierId": "sup-maghreb",
+      "archived": false,
+      "dailyDemand": 28,
+      "barcode": "6111254789029",
+      "description": "Sucre cristallisé, sac de 1 kg.",
+      "imageUrl": "https://images.unsplash.com/photo-1516684669134-de6f7be4a327?auto=format&fit=crop&w=640&h=640&q=70",
+      "images": [
+        "https://images.unsplash.com/photo-1516684669134-de6f7be4a327?auto=format&fit=crop&w=640&h=640&q=70"
+      ]
+    },
+    {
+      "id": "prd-farine",
+      "sku": "FAR-10",
+      "name": "Farine 10kg",
+      "categoryId": "cat-epicerie",
+      "unit": "sac",
+      "minStock": 80,
+      "maxStock": 320,
+      "price": 46,
+      "supplierId": "sup-atlas",
+      "archived": false,
+      "dailyDemand": 18,
+      "barcode": "6111254789036",
+      "description": "Farine de blé tendre, sac 10 kg boulangerie.",
+      "imageUrl": "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=640&h=640&q=70",
+      "images": [
+        "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=640&h=640&q=70"
+      ]
+    },
+    {
+      "id": "prd-lait",
+      "sku": "LAI-UHT",
+      "name": "Lait en poudre",
+      "categoryId": "cat-frais",
+      "unit": "brique",
+      "minStock": 300,
+      "maxStock": 1200,
+      "price": 8.5,
+      "supplierId": "sup-nord",
+      "archived": false,
+      "dailyDemand": 55,
+      "barcode": "6111254789043",
+      "description": "Lait en poudre pour restauration, brique 400 g.",
+      "imageUrl": "https://images.unsplash.com/photo-1563636619-e9143da7973b?auto=format&fit=crop&w=640&h=640&q=70",
+      "images": [
+        "https://images.unsplash.com/photo-1563636619-e9143da7973b?auto=format&fit=crop&w=640&h=640&q=70"
+      ]
+    },
+    {
+      "id": "prd-riz",
+      "sku": "RIZ-5K",
+      "name": "Riz 5kg",
+      "categoryId": "cat-epicerie",
+      "unit": "sac",
+      "minStock": 120,
+      "maxStock": 500,
+      "price": 62,
+      "supplierId": "sup-abc",
+      "archived": false,
+      "dailyDemand": 16,
+      "barcode": "6111254789050",
+      "description": "Riz long grain, sac 5 kg.",
+      "imageUrl": "https://images.unsplash.com/photo-1536304993881-ff6e9e91a1be?auto=format&fit=crop&w=640&h=640&q=70",
+      "images": [
+        "https://images.unsplash.com/photo-1536304993881-ff6e9e91a1be?auto=format&fit=crop&w=640&h=640&q=70"
+      ]
+    },
+    {
+      "id": "prd-eau",
+      "sku": "EAU-15",
+      "name": "Eau 1.5L",
+      "categoryId": "cat-liquides",
+      "unit": "pack",
+      "minStock": 400,
+      "maxStock": 2000,
+      "price": 18,
+      "supplierId": "sup-nord",
+      "archived": false,
+      "dailyDemand": 70,
+      "barcode": "6111254789067",
+      "description": "Pack de bouteilles 1,5 L, eau de source.",
+      "imageUrl": "https://images.unsplash.com/photo-1548835326-0c7654c8665a?auto=format&fit=crop&w=640&h=640&q=70",
+      "images": [
+        "https://images.unsplash.com/photo-1548835326-0c7654c8665a?auto=format&fit=crop&w=640&h=640&q=70"
+      ]
+    },
+    {
+      "id": "prd-savon",
+      "sku": "SAV-LIQ",
+      "name": "Savon liquide",
+      "categoryId": "cat-hygiene",
+      "unit": "flacon",
+      "minStock": 90,
+      "maxStock": 400,
+      "price": 24,
+      "supplierId": "sup-abc",
+      "archived": false,
+      "dailyDemand": 12,
+      "barcode": "6111254789074",
+      "description": "Savon liquide mains, flacon 500 ml.",
+      "imageUrl": "https://images.unsplash.com/photo-1584305574647-0ccedc8dd27e?auto=format&fit=crop&w=640&h=640&q=70",
+      "images": [
+        "https://images.unsplash.com/photo-1584305574647-0ccedc8dd27e?auto=format&fit=crop&w=640&h=640&q=70"
+      ]
+    },
+    {
+      "id": "prd-pate",
+      "sku": "PAT-500",
+      "name": "Pâtes 500g",
+      "categoryId": "cat-epicerie",
+      "unit": "paquet",
+      "minStock": 200,
+      "maxStock": 900,
+      "price": 7.5,
+      "supplierId": "sup-maghreb",
+      "archived": false,
+      "dailyDemand": 30,
+      "barcode": "6111254789081",
+      "description": "Spaghetti 500 g, blé dur.",
+      "imageUrl": "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?auto=format&fit=crop&w=640&h=640&q=70",
+      "images": [
+        "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?auto=format&fit=crop&w=640&h=640&q=70"
+      ]
+    },
+    {
+      "id": "prd-the",
+      "sku": "THE-200",
+      "name": "Thé vert 200g",
+      "categoryId": "cat-epicerie",
+      "unit": "boîte",
+      "minStock": 60,
+      "maxStock": 220,
+      "price": 34,
+      "supplierId": "sup-atlas",
+      "archived": false,
+      "dailyDemand": 8,
+      "barcode": "6111254789098",
+      "description": "Thé vert gunpowder, boîte 200 g.",
+      "imageUrl": "https://images.unsplash.com/photo-1564890369478-c89ca2c6b1f0?auto=format&fit=crop&w=640&h=640&q=70",
+      "images": [
+        "https://images.unsplash.com/photo-1564890369478-c89ca2c6b1f0?auto=format&fit=crop&w=640&h=640&q=70"
+      ]
+    },
+    {
+      "id": "prd-cafe",
+      "sku": "CAF-250",
+      "name": "Café 250g",
+      "categoryId": "cat-epicerie",
+      "unit": "paquet",
+      "minStock": 70,
+      "maxStock": 250,
+      "price": 42,
+      "supplierId": "sup-abc",
+      "archived": false,
+      "dailyDemand": 9,
+      "barcode": "6111254789104",
+      "description": "Café moulu 250 g, torréfaction moyenne.",
+      "imageUrl": "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=640&h=640&q=70",
+      "images": [
+        "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=640&h=640&q=70"
+      ]
+    }
+  ],
+  "warehouses": [
+    {
+      "id": "wh-casa",
+      "name": "Casablanca",
+      "city": "Casablanca",
+      "regionId": "reg-nord",
+      "address": "Zone industrielle Aïn Sebaâ",
+      "managerUserId": "usr-warehouse",
+      "capacity": 12000,
+      "active": true,
+      "companyId": "co-atlas",
+      "lat": 33.6095,
+      "lng": -7.5328
+    },
+    {
+      "id": "wh-rabat",
+      "name": "Rabat",
+      "city": "Rabat",
+      "regionId": "reg-nord",
+      "address": "Parc logistique Salé",
+      "managerUserId": "usr-warehouse",
+      "capacity": 7000,
+      "active": true,
+      "companyId": "co-atlas",
+      "lat": 34.0384,
+      "lng": -6.7969
+    },
+    {
+      "id": "wh-marrakech",
+      "name": "Marrakech",
+      "city": "Marrakech",
+      "regionId": "reg-centre",
+      "address": "Sidi Ghanem",
+      "managerUserId": "usr-admin",
+      "capacity": 5000,
+      "active": true,
+      "companyId": "co-atlas",
+      "lat": 31.6469,
+      "lng": -8.0106
+    },
+    {
+      "id": "wh-tanger",
+      "name": "Tanger",
+      "city": "Tanger",
+      "regionId": "reg-nord",
+      "address": "Zone franche",
+      "managerUserId": "usr-admin",
+      "capacity": 3500,
+      "active": true,
+      "companyId": "co-atlas",
+      "lat": 35.7479,
+      "lng": -5.8339
+    }
+  ],
+  "stock": [
+    {
+      "id": "stk-huile-casa",
+      "productId": "prd-huile",
+      "warehouseId": "wh-casa",
+      "quantity": 126,
+      "reserved": 20,
+      "enabled": true
+    },
+    {
+      "id": "stk-huile-rabat",
+      "productId": "prd-huile",
+      "warehouseId": "wh-rabat",
+      "quantity": 80,
+      "reserved": 0,
+      "enabled": true
+    },
+    {
+      "id": "stk-huile-mar",
+      "productId": "prd-huile",
+      "warehouseId": "wh-marrakech",
+      "quantity": 210,
+      "reserved": 0,
+      "enabled": true
+    },
+    {
+      "id": "stk-huile-tng",
+      "productId": "prd-huile",
+      "warehouseId": "wh-tanger",
+      "quantity": 160,
+      "reserved": 0,
+      "enabled": true
+    },
+    {
+      "id": "stk-sucre-casa",
+      "productId": "prd-sucre",
+      "warehouseId": "wh-casa",
+      "quantity": 4200,
+      "reserved": 40,
+      "enabled": true
+    },
+    {
+      "id": "stk-sucre-rabat",
+      "productId": "prd-sucre",
+      "warehouseId": "wh-rabat",
+      "quantity": 2800,
+      "reserved": 0,
+      "enabled": true
+    },
+    {
+      "id": "stk-sucre-mar",
+      "productId": "prd-sucre",
+      "warehouseId": "wh-marrakech",
+      "quantity": 95,
+      "reserved": 0,
+      "enabled": true
+    },
+    {
+      "id": "stk-sucre-tng",
+      "productId": "prd-sucre",
+      "warehouseId": "wh-tanger",
+      "quantity": 1900,
+      "reserved": 0,
+      "enabled": true
+    },
+    {
+      "id": "stk-farine-casa",
+      "productId": "prd-farine",
+      "warehouseId": "wh-casa",
+      "quantity": 64,
+      "reserved": 10,
+      "enabled": true
+    },
+    {
+      "id": "stk-farine-rabat",
+      "productId": "prd-farine",
+      "warehouseId": "wh-rabat",
+      "quantity": 110,
+      "reserved": 0,
+      "enabled": true
+    },
+    {
+      "id": "stk-farine-mar",
+      "productId": "prd-farine",
+      "warehouseId": "wh-marrakech",
+      "quantity": 48,
+      "reserved": 0,
+      "enabled": true
+    },
+    {
+      "id": "stk-farine-tng",
+      "productId": "prd-farine",
+      "warehouseId": "wh-tanger",
+      "quantity": 90,
+      "reserved": 0,
+      "enabled": true
+    },
+    {
+      "id": "stk-lait-casa",
+      "productId": "prd-lait",
+      "warehouseId": "wh-casa",
+      "quantity": 180,
+      "reserved": 80,
+      "enabled": true
+    },
+    {
+      "id": "stk-lait-rabat",
+      "productId": "prd-lait",
+      "warehouseId": "wh-rabat",
+      "quantity": 6200,
+      "reserved": 0,
+      "enabled": true
+    },
+    {
+      "id": "stk-lait-mar",
+      "productId": "prd-lait",
+      "warehouseId": "wh-marrakech",
+      "quantity": 4100,
+      "reserved": 0,
+      "enabled": true
+    },
+    {
+      "id": "stk-lait-tng",
+      "productId": "prd-lait",
+      "warehouseId": "wh-tanger",
+      "quantity": 3500,
+      "reserved": 0,
+      "enabled": true
+    },
+    {
+      "id": "stk-riz-casa",
+      "productId": "prd-riz",
+      "warehouseId": "wh-casa",
+      "quantity": 2800,
+      "reserved": 0,
+      "enabled": true
+    },
+    {
+      "id": "stk-riz-rabat",
+      "productId": "prd-riz",
+      "warehouseId": "wh-rabat",
+      "quantity": 1600,
+      "reserved": 0,
+      "enabled": true
+    },
+    {
+      "id": "stk-riz-mar",
+      "productId": "prd-riz",
+      "warehouseId": "wh-marrakech",
+      "quantity": 1200,
+      "reserved": 0,
+      "enabled": true
+    },
+    {
+      "id": "stk-riz-tng",
+      "productId": "prd-riz",
+      "warehouseId": "wh-tanger",
+      "quantity": 900,
+      "reserved": 0,
+      "enabled": true
+    },
+    {
+      "id": "stk-eau-casa",
+      "productId": "prd-eau",
+      "warehouseId": "wh-casa",
+      "quantity": 9800,
+      "reserved": 120,
+      "enabled": true
+    },
+    {
+      "id": "stk-eau-rabat",
+      "productId": "prd-eau",
+      "warehouseId": "wh-rabat",
+      "quantity": 6400,
+      "reserved": 0,
+      "enabled": true
+    },
+    {
+      "id": "stk-eau-mar",
+      "productId": "prd-eau",
+      "warehouseId": "wh-marrakech",
+      "quantity": 4200,
+      "reserved": 0,
+      "enabled": true
+    },
+    {
+      "id": "stk-eau-tng",
+      "productId": "prd-eau",
+      "warehouseId": "wh-tanger",
+      "quantity": 3100,
+      "reserved": 0,
+      "enabled": true
+    },
+    {
+      "id": "stk-savon-casa",
+      "productId": "prd-savon",
+      "warehouseId": "wh-casa",
+      "quantity": 1400,
+      "reserved": 0,
+      "enabled": true
+    },
+    {
+      "id": "stk-savon-rabat",
+      "productId": "prd-savon",
+      "warehouseId": "wh-rabat",
+      "quantity": 700,
+      "reserved": 0,
+      "enabled": true
+    },
+    {
+      "id": "stk-savon-mar",
+      "productId": "prd-savon",
+      "warehouseId": "wh-marrakech",
+      "quantity": 550,
+      "reserved": 0,
+      "enabled": true
+    },
+    {
+      "id": "stk-savon-tng",
+      "productId": "prd-savon",
+      "warehouseId": "wh-tanger",
+      "quantity": 400,
+      "reserved": 0,
+      "enabled": false
+    },
+    {
+      "id": "stk-pate-casa",
+      "productId": "prd-pate",
+      "warehouseId": "wh-casa",
+      "quantity": 4300,
+      "reserved": 50,
+      "enabled": true
+    },
+    {
+      "id": "stk-pate-rabat",
+      "productId": "prd-pate",
+      "warehouseId": "wh-rabat",
+      "quantity": 2100,
+      "reserved": 0,
+      "enabled": true
+    },
+    {
+      "id": "stk-pate-mar",
+      "productId": "prd-pate",
+      "warehouseId": "wh-marrakech",
+      "quantity": 1600,
+      "reserved": 0,
+      "enabled": true
+    },
+    {
+      "id": "stk-pate-tng",
+      "productId": "prd-pate",
+      "warehouseId": "wh-tanger",
+      "quantity": 1200,
+      "reserved": 0,
+      "enabled": true
+    },
+    {
+      "id": "stk-the-casa",
+      "productId": "prd-the",
+      "warehouseId": "wh-casa",
+      "quantity": 95,
+      "reserved": 0,
+      "enabled": true
+    },
+    {
+      "id": "stk-the-rabat",
+      "productId": "prd-the",
+      "warehouseId": "wh-rabat",
+      "quantity": 40,
+      "reserved": 0,
+      "enabled": true
+    },
+    {
+      "id": "stk-the-mar",
+      "productId": "prd-the",
+      "warehouseId": "wh-marrakech",
+      "quantity": 22,
+      "reserved": 0,
+      "enabled": false
+    },
+    {
+      "id": "stk-the-tng",
+      "productId": "prd-the",
+      "warehouseId": "wh-tanger",
+      "quantity": 70,
+      "reserved": 0,
+      "enabled": true
+    },
+    {
+      "id": "stk-cafe-casa",
+      "productId": "prd-cafe",
+      "warehouseId": "wh-casa",
+      "quantity": 88,
+      "reserved": 0,
+      "enabled": true
+    },
+    {
+      "id": "stk-cafe-rabat",
+      "productId": "prd-cafe",
+      "warehouseId": "wh-rabat",
+      "quantity": 36,
+      "reserved": 0,
+      "enabled": true
+    },
+    {
+      "id": "stk-cafe-mar",
+      "productId": "prd-cafe",
+      "warehouseId": "wh-marrakech",
+      "quantity": 18,
+      "reserved": 0,
+      "enabled": false
+    },
+    {
+      "id": "stk-cafe-tng",
+      "productId": "prd-cafe",
+      "warehouseId": "wh-tanger",
+      "quantity": 50,
+      "reserved": 0,
+      "enabled": true
+    }
+  ],
+  "stockMovements": [
+    {
+      "id": "mov-01",
+      "productId": "prd-huile",
+      "type": "issue",
+      "quantity": 48,
+      "fromWarehouseId": "wh-casa",
+      "userId": "usr-warehouse",
+      "date": "2026-08-26T08:10:00.000Z",
+      "note": "Préparation tournée Casablanca centre",
+      "reference": "dlv-482"
+    },
+    {
+      "id": "mov-02",
+      "productId": "prd-huile",
+      "type": "issue",
+      "quantity": 40,
+      "fromWarehouseId": "wh-casa",
+      "userId": "usr-warehouse",
+      "date": "2026-08-25T09:00:00.000Z",
+      "note": "Sortie magasin"
+    },
+    {
+      "id": "mov-03",
+      "productId": "prd-huile",
+      "type": "issue",
+      "quantity": 38,
+      "fromWarehouseId": "wh-casa",
+      "userId": "usr-warehouse",
+      "date": "2026-08-24T09:20:00.000Z",
+      "note": "Sortie magasin"
+    },
+    {
+      "id": "mov-04",
+      "productId": "prd-lait",
+      "type": "receive",
+      "quantity": 400,
+      "toWarehouseId": "wh-casa",
+      "userId": "usr-warehouse",
+      "date": "2026-08-23T14:00:00.000Z",
+      "note": "Réception PO-1038",
+      "reference": "rcp-12"
+    },
+    {
+      "id": "mov-05",
+      "productId": "prd-eau",
+      "type": "issue",
+      "quantity": 90,
+      "fromWarehouseId": "wh-casa",
+      "userId": "usr-warehouse",
+      "date": "2026-08-26T07:40:00.000Z",
+      "note": "Tournée du matin"
+    },
+    {
+      "id": "mov-06",
+      "productId": "prd-farine",
+      "type": "transfer",
+      "quantity": 20,
+      "fromWarehouseId": "wh-rabat",
+      "toWarehouseId": "wh-casa",
+      "userId": "usr-warehouse",
+      "date": "2026-08-22T11:00:00.000Z",
+      "note": "Rééquilibrage Casa"
+    },
+    {
+      "id": "mov-07",
+      "productId": "prd-sucre",
+      "type": "adjust",
+      "quantity": -8,
+      "fromWarehouseId": "wh-casa",
+      "userId": "usr-warehouse",
+      "date": "2026-08-21T16:30:00.000Z",
+      "note": "Casse constatée"
+    },
+    {
+      "id": "mov-08",
+      "productId": "prd-riz",
+      "type": "receive",
+      "quantity": 150,
+      "toWarehouseId": "wh-casa",
+      "userId": "usr-warehouse",
+      "date": "2026-08-20T10:15:00.000Z",
+      "note": "Réception ABC Supply",
+      "reference": "rcp-11"
+    }
+  ],
+  "inventories": [
+    {
+      "id": "inv-01",
+      "warehouseId": "wh-casa",
+      "status": "pending_review",
+      "counted": 58,
+      "expected": 64,
+      "startedAt": "2026-08-26T09:00:00.000Z",
+      "userId": "usr-warehouse",
+      "countedByUserId": "usr-warehouse",
+      "lines": [
+        {
+          "productId": "prd-farine",
+          "expected": 64,
+          "counted": 58
+        }
+      ]
+    }
+  ],
+  "suppliers": [
+    {
+      "id": "sup-atlas",
+      "name": "Atlas Distribution",
+      "contact": "Rachid Ouazzani",
+      "email": "contact@atlas-dist.ma",
+      "phone": "+212 522 10 20 30",
+      "city": "Casablanca",
+      "address": "Zone industrielle Aïn Sebaâ, rue 12",
+      "ice": "001545278000089",
+      "category": "Liquides",
+      "paymentTerms": "30 jours",
+      "note": "Fournisseur principal huile et farine.",
+      "leadTimeDays": 5,
+      "reliability": 72,
+      "status": "active"
+    },
+    {
+      "id": "sup-abc",
+      "name": "ABC Supply",
+      "contact": "Sara Kadiri",
+      "email": "contact@abc-supply.ma",
+      "phone": "+212 537 44 12 90",
+      "city": "Rabat",
+      "address": "Hay Riad, lot 24",
+      "ice": "001612890000045",
+      "category": "Épicerie",
+      "paymentTerms": "15 jours",
+      "leadTimeDays": 3,
+      "reliability": 91,
+      "status": "active"
+    },
+    {
+      "id": "sup-maghreb",
+      "name": "Maghreb Grossiste",
+      "contact": "Yassine Bennani",
+      "email": "hello@maghreb-g.ma",
+      "phone": "+212 524 88 01 15",
+      "city": "Marrakech",
+      "address": "Sidi Ghanem, atelier 8",
+      "ice": "001398450000112",
+      "category": "Épicerie",
+      "paymentTerms": "30 jours",
+      "leadTimeDays": 4,
+      "reliability": 84,
+      "status": "active"
+    },
+    {
+      "id": "sup-global",
+      "name": "Global Supply",
+      "contact": "Mehdi Kabbaj",
+      "email": "hello@global-supply.ma",
+      "phone": "+212 522 90 11 40",
+      "city": "Casablanca",
+      "address": "Boulevard Moulay Ismail, 118",
+      "ice": "001720334000078",
+      "category": "Divers",
+      "paymentTerms": "45 jours",
+      "leadTimeDays": 4,
+      "reliability": 88,
+      "status": "active"
+    },
+    {
+      "id": "sup-nord",
+      "name": "Nord Import",
+      "contact": "Inès Lahlou",
+      "email": "ops@nord-import.ma",
+      "phone": "+212 539 21 67 40",
+      "city": "Tanger",
+      "address": "Zone franche, hangar B4",
+      "ice": "001801226000033",
+      "category": "Frais",
+      "paymentTerms": "60 jours",
+      "note": "Délais parfois dépassés — à surveiller.",
+      "leadTimeDays": 6,
+      "reliability": 63,
+      "status": "active"
+    }
+  ],
+  "procurementRequests": [
+    {
+      "id": "pr-204",
+      "code": "DA-2026-00125",
+      "requesterId": "usr-warehouse",
+      "warehouseId": "wh-casa",
+      "status": "submitted",
+      "priority": "high",
+      "service": "Entrepôt Casablanca",
+      "items": [
+        {
+          "productId": "prd-huile",
+          "quantity": 250
+        },
+        {
+          "productId": "prd-lait",
+          "quantity": 120
+        },
+        {
+          "productId": "prd-farine",
+          "quantity": 40
+        }
+      ],
+      "createdAt": "2026-08-26T07:15:00.000Z",
+      "submittedAt": "2026-08-26T07:20:00.000Z",
+      "note": "Couverture 10 jours — risque de rupture Casa"
+    },
+    {
+      "id": "pr-205",
+      "code": "DA-2026-00126",
+      "requesterId": "usr-warehouse",
+      "warehouseId": "wh-casa",
+      "status": "approved",
+      "priority": "high",
+      "service": "Entrepôt Casablanca",
+      "items": [
+        {
+          "productId": "prd-lait",
+          "quantity": 300
+        }
+      ],
+      "createdAt": "2026-08-26T08:00:00.000Z",
+      "submittedAt": "2026-08-26T08:05:00.000Z",
+      "decidedAt": "2026-08-26T09:10:00.000Z",
+      "note": "Lait en poudre sous le seuil à Casa",
+      "assigneeId": "usr-procurement",
+      "assignedRole": "PROCUREMENT",
+      "handedOffAt": "2026-08-26T09:10:00.000Z",
+      "takenAt": "2026-08-26T09:40:00.000Z"
+    },
+    {
+      "id": "pr-203",
+      "code": "DA-2026-00124",
+      "requesterId": "usr-manager",
+      "warehouseId": "wh-rabat",
+      "status": "approved",
+      "priority": "medium",
+      "service": "Opérations",
+      "items": [
+        {
+          "productId": "prd-lait",
+          "quantity": 400
+        }
+      ],
+      "createdAt": "2026-08-25T10:40:00.000Z",
+      "submittedAt": "2026-08-25T11:00:00.000Z",
+      "decidedAt": "2026-08-25T14:10:00.000Z",
+      "note": "Renfort week-end Rabat",
+      "assigneeId": "usr-warehouse",
+      "assignedRole": "WAREHOUSE_MANAGER",
+      "handedOffAt": "2026-08-25T14:10:00.000Z"
+    },
+    {
+      "id": "pr-206",
+      "code": "DA-2026-00127",
+      "requesterId": "usr-warehouse",
+      "warehouseId": "wh-casa",
+      "status": "approved",
+      "priority": "high",
+      "service": "Entrepôt Casablanca",
+      "items": [
+        {
+          "productId": "prd-huile",
+          "quantity": 180
+        }
+      ],
+      "createdAt": "2026-08-25T16:00:00.000Z",
+      "submittedAt": "2026-08-25T16:10:00.000Z",
+      "decidedAt": "2026-08-25T17:20:00.000Z",
+      "note": "Complément huile Casa — stock insuffisant",
+      "assigneeId": "usr-procurement",
+      "assignedRole": "PROCUREMENT",
+      "handedOffAt": "2026-08-25T17:20:00.000Z",
+      "takenAt": "2026-08-26T08:00:00.000Z"
+    },
+    {
+      "id": "pr-202",
+      "code": "DA-2026-00122",
+      "requesterId": "usr-procurement",
+      "warehouseId": "wh-casa",
+      "status": "ordered",
+      "priority": "medium",
+      "service": "Achats",
+      "items": [
+        {
+          "productId": "prd-farine",
+          "quantity": 80
+        }
+      ],
+      "createdAt": "2026-08-20T09:00:00.000Z",
+      "submittedAt": "2026-08-20T09:10:00.000Z",
+      "decidedAt": "2026-08-20T11:00:00.000Z",
+      "note": "Commande Atlas déjà lancée"
+    },
+    {
+      "id": "pr-201",
+      "code": "DA-2026-00118",
+      "requesterId": "usr-warehouse",
+      "warehouseId": "wh-casa",
+      "status": "closed",
+      "priority": "high",
+      "service": "Entrepôt Casablanca",
+      "items": [
+        {
+          "productId": "prd-huile",
+          "quantity": 200
+        }
+      ],
+      "createdAt": "2026-08-18T09:00:00.000Z",
+      "submittedAt": "2026-08-18T09:20:00.000Z",
+      "decidedAt": "2026-08-18T11:00:00.000Z",
+      "note": "Reconstitution huile — commande Atlas"
+    },
+    {
+      "id": "pr-200",
+      "code": "DA-2026-00112",
+      "requesterId": "usr-dispatcher",
+      "warehouseId": "wh-casa",
+      "status": "rejected",
+      "priority": "low",
+      "service": "Dispatch",
+      "items": [
+        {
+          "productId": "prd-savon",
+          "quantity": 40
+        }
+      ],
+      "createdAt": "2026-08-17T15:00:00.000Z",
+      "submittedAt": "2026-08-17T15:10:00.000Z",
+      "decidedAt": "2026-08-17T17:00:00.000Z",
+      "decisionNote": "Stock savon encore suffisant. Reporter à septembre.",
+      "note": "Renfort hygiène tournée"
+    },
+    {
+      "id": "pr-199",
+      "code": "DA-2026-00108",
+      "requesterId": "usr-warehouse",
+      "warehouseId": "wh-rabat",
+      "status": "draft",
+      "priority": "medium",
+      "service": "Entrepôt Rabat",
+      "items": [
+        {
+          "productId": "prd-the",
+          "quantity": 60
+        }
+      ],
+      "createdAt": "2026-08-26T09:40:00.000Z",
+      "note": "Brouillon — à compléter avant envoi"
+    }
+  ],
+  "consultations": [
+    {
+      "id": "cs-12",
+      "code": "CS-2026-00012",
+      "status": "quoted",
+      "procurementRequestIds": [
+        "pr-205"
+      ],
+      "warehouseId": "wh-casa",
+      "supplierIds": [
+        "sup-nord",
+        "sup-abc",
+        "sup-atlas"
+      ],
+      "items": [
+        {
+          "productId": "prd-lait",
+          "quantity": 200
+        }
+      ],
+      "createdAt": "2026-08-26T10:00:00.000Z",
+      "sentAt": "2026-08-26T10:00:00.000Z",
+      "quotedAt": "2026-08-26T10:12:00.000Z",
+      "note": "Urgence lait Casa — 3 fournisseurs consultés.",
+      "quotes": [
+        {
+          "id": "qt-nord",
+          "supplierId": "sup-nord",
+          "status": "received",
+          "receivedAt": "2026-08-26T10:08:00.000Z",
+          "validUntil": "2026-09-03",
+          "leadTimeDays": 5,
+          "amount": 1496,
+          "lines": [
+            {
+              "productId": "prd-lait",
+              "quantity": 200,
+              "unitPrice": 7.48
+            }
+          ],
+          "note": "Stock dispo départ Tanger."
+        },
+        {
+          "id": "qt-abc",
+          "supplierId": "sup-abc",
+          "status": "received",
+          "receivedAt": "2026-08-26T10:11:00.000Z",
+          "validUntil": "2026-09-02",
+          "leadTimeDays": 3,
+          "amount": 1768,
+          "lines": [
+            {
+              "productId": "prd-lait",
+              "quantity": 200,
+              "unitPrice": 8.84
+            }
+          ]
+        },
+        {
+          "id": "qt-atlas",
+          "supplierId": "sup-atlas",
+          "status": "received",
+          "receivedAt": "2026-08-26T10:12:00.000Z",
+          "validUntil": "2026-09-04",
+          "leadTimeDays": 5,
+          "amount": 1683,
+          "lines": [
+            {
+              "productId": "prd-lait",
+              "quantity": 200,
+              "unitPrice": 8.42
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "purchaseOrders": [
+    {
+      "id": "po-1042",
+      "code": "OA-2026-01042",
+      "supplierId": "sup-atlas",
+      "warehouseId": "wh-casa",
+      "status": "delayed",
+      "items": [
+        {
+          "productId": "prd-huile",
+          "quantity": 200
+        }
+      ],
+      "expectedDate": "2026-08-24",
+      "createdAt": "2026-08-18T10:00:00.000Z",
+      "amount": 17800,
+      "procurementRequestId": "pr-201",
+      "procurementRequestIds": [
+        "pr-201"
+      ]
+    },
+    {
+      "id": "po-1041",
+      "code": "OA-2026-01041",
+      "supplierId": "sup-abc",
+      "warehouseId": "wh-casa",
+      "status": "confirmed",
+      "items": [
+        {
+          "productId": "prd-riz",
+          "quantity": 100
+        }
+      ],
+      "expectedDate": "2026-08-28",
+      "createdAt": "2026-08-22T09:30:00.000Z",
+      "amount": 6200
+    },
+    {
+      "id": "po-1040",
+      "code": "OA-2026-01040",
+      "supplierId": "sup-nord",
+      "warehouseId": "wh-rabat",
+      "status": "sent",
+      "items": [
+        {
+          "productId": "prd-lait",
+          "quantity": 400
+        }
+      ],
+      "expectedDate": "2026-08-29",
+      "createdAt": "2026-08-25T12:00:00.000Z",
+      "amount": 3400
+    },
+    {
+      "id": "po-1039",
+      "code": "OA-2026-01039",
+      "supplierId": "sup-atlas",
+      "warehouseId": "wh-casa",
+      "status": "confirmed",
+      "items": [
+        {
+          "productId": "prd-farine",
+          "quantity": 80
+        }
+      ],
+      "expectedDate": "2026-08-30",
+      "createdAt": "2026-08-20T09:00:00.000Z",
+      "amount": 3680,
+      "procurementRequestId": "pr-202",
+      "procurementRequestIds": [
+        "pr-202"
+      ]
+    },
+    {
+      "id": "po-1038",
+      "code": "OA-2026-01038",
+      "supplierId": "sup-nord",
+      "warehouseId": "wh-casa",
+      "status": "received",
+      "items": [
+        {
+          "productId": "prd-lait",
+          "quantity": 400
+        }
+      ],
+      "expectedDate": "2026-08-23",
+      "createdAt": "2026-08-16T08:00:00.000Z",
+      "amount": 3400
+    }
+  ],
+  "receipts": [
+    {
+      "id": "rcp-12",
+      "code": "BR-2026-00012",
+      "purchaseOrderId": "po-1038",
+      "warehouseId": "wh-casa",
+      "expected": 400,
+      "received": 400,
+      "date": "2026-08-23T14:00:00.000Z",
+      "status": "validated",
+      "userId": "usr-warehouse",
+      "items": [
+        {
+          "productId": "prd-lait",
+          "expected": 400,
+          "received": 400
+        }
+      ],
+      "checkedAt": "2026-08-23T14:00:00.000Z"
+    },
+    {
+      "id": "rcp-13",
+      "code": "BR-2026-00013",
+      "purchaseOrderId": "po-1041",
+      "warehouseId": "wh-casa",
+      "expected": 100,
+      "received": 0,
+      "date": "2026-08-28T09:00:00.000Z",
+      "status": "pending",
+      "userId": "usr-warehouse",
+      "items": [
+        {
+          "productId": "prd-riz",
+          "expected": 100,
+          "received": 0
+        }
+      ]
+    },
+    {
+      "id": "rcp-14",
+      "code": "BR-2026-00014",
+      "purchaseOrderId": "po-1040",
+      "warehouseId": "wh-rabat",
+      "expected": 400,
+      "received": 0,
+      "date": "2026-08-29T09:00:00.000Z",
+      "status": "pending",
+      "userId": "usr-warehouse",
+      "items": [
+        {
+          "productId": "prd-lait",
+          "expected": 400,
+          "received": 0
+        }
+      ]
+    },
+    {
+      "id": "rcp-15",
+      "code": "BR-2026-00015",
+      "purchaseOrderId": "po-1042",
+      "warehouseId": "wh-casa",
+      "expected": 200,
+      "received": 0,
+      "date": "2026-08-24T09:00:00.000Z",
+      "status": "pending",
+      "userId": "usr-warehouse",
+      "items": [
+        {
+          "productId": "prd-huile",
+          "expected": 200,
+          "received": 0
+        }
+      ]
+    }
+  ],
+  "shipments": [
+    {
+      "id": "shp-88",
+      "originWarehouseId": "wh-casa",
+      "destination": "Tournée Casa centre",
+      "vehicleId": "veh-12",
+      "driverId": "drv-mehdi",
+      "routeId": "rt-26a",
+      "date": "2026-08-26T07:30:00.000Z",
+      "status": "in_transit",
+      "origin": {
+        "lat": 33.6095,
+        "lng": -7.5328,
+        "label": "Entrepôt Casablanca"
+      },
+      "destinationLocation": {
+        "lat": 33.5712,
+        "lng": -7.6498,
+        "label": "Market Beauséjour"
+      },
+      "path": [
+        {
+          "lat": 33.6095,
+          "lng": -7.5328,
+          "label": "Entrepôt Casablanca"
+        },
+        {
+          "lat": 33.597789999999996,
+          "lng": -7.5472485625
+        },
+        {
+          "lat": 33.587565,
+          "lng": -7.56228325
+        },
+        {
+          "lat": 33.578824999999995,
+          "lng": -7.5779040625
+        },
+        {
+          "lat": 33.571569999999994,
+          "lng": -7.594111
+        },
+        {
+          "lat": 33.565799999999996,
+          "lng": -7.6109040625
+        },
+        {
+          "lat": 33.561515,
+          "lng": -7.628283250000001
+        },
+        {
+          "lat": 33.558715,
+          "lng": -7.6462485625
+        },
+        {
+          "lat": 33.5574,
+          "lng": -7.6648,
+          "label": "Marché Hay Hassani"
+        },
+        {
+          "lat": 33.561825750000004,
+          "lng": -7.6617422500000005
+        },
+        {
+          "lat": 33.565887000000004,
+          "lng": -7.6584010000000005
+        },
+        {
+          "lat": 33.56958375,
+          "lng": -7.654776249999999
+        },
+        {
+          "lat": 33.572916,
+          "lng": -7.650868
+        },
+        {
+          "lat": 33.57588375,
+          "lng": -7.64667625
+        },
+        {
+          "lat": 33.578487,
+          "lng": -7.642201
+        },
+        {
+          "lat": 33.58072575,
+          "lng": -7.637442249999999
+        },
+        {
+          "lat": 33.5826,
+          "lng": -7.6324,
+          "label": "Supermarché Atlas"
+        },
+        {
+          "lat": 33.58259175,
+          "lng": -7.63190275
+        },
+        {
+          "lat": 33.582543,
+          "lng": -7.631419
+        },
+        {
+          "lat": 33.58245375,
+          "lng": -7.63094875
+        },
+        {
+          "lat": 33.582324,
+          "lng": -7.630492
+        },
+        {
+          "lat": 33.58215375,
+          "lng": -7.63004875
+        },
+        {
+          "lat": 33.581943,
+          "lng": -7.629619
+        },
+        {
+          "lat": 33.581691750000005,
+          "lng": -7.62920275
+        },
+        {
+          "lat": 33.5814,
+          "lng": -7.6288,
+          "label": "Épicerie Maarif"
+        },
+        {
+          "lat": 33.5810145,
+          "lng": -7.6332953125
+        },
+        {
+          "lat": 33.581007,
+          "lng": -7.63770625
+        },
+        {
+          "lat": 33.5813775,
+          "lng": -7.6420328125
+        },
+        {
+          "lat": 33.582126,
+          "lng": -7.646274999999999
+        },
+        {
+          "lat": 33.5832525,
+          "lng": -7.6504328125
+        },
+        {
+          "lat": 33.584757,
+          "lng": -7.654506250000001
+        },
+        {
+          "lat": 33.586639500000004,
+          "lng": -7.6584953125
+        },
+        {
+          "lat": 33.5889,
+          "lng": -7.6624,
+          "label": "Épicerie Anfa"
+        },
+        {
+          "lat": 33.58923575000001,
+          "lng": -7.6619011875
+        },
+        {
+          "lat": 33.589522,
+          "lng": -7.66138775
+        },
+        {
+          "lat": 33.58975875,
+          "lng": -7.6608596875
+        },
+        {
+          "lat": 33.589946000000005,
+          "lng": -7.660317
+        },
+        {
+          "lat": 33.590083750000005,
+          "lng": -7.659759687500001
+        },
+        {
+          "lat": 33.590172,
+          "lng": -7.659187749999999
+        },
+        {
+          "lat": 33.590210750000004,
+          "lng": -7.6586011875
+        },
+        {
+          "lat": 33.5902,
+          "lng": -7.658,
+          "label": "Boulangerie Anfa"
+        },
+        {
+          "lat": 33.5901071875,
+          "lng": -7.660650125
+        },
+        {
+          "lat": 33.59023375,
+          "lng": -7.663239499999999
+        },
+        {
+          "lat": 33.590579687500004,
+          "lng": -7.665768125
+        },
+        {
+          "lat": 33.591145,
+          "lng": -7.668236
+        },
+        {
+          "lat": 33.5919296875,
+          "lng": -7.670643125
+        },
+        {
+          "lat": 33.59293375,
+          "lng": -7.6729895
+        },
+        {
+          "lat": 33.594157187499995,
+          "lng": -7.675275125
+        },
+        {
+          "lat": 33.5956,
+          "lng": -7.6775,
+          "label": "Carrefour Ain Diab"
+        },
+        {
+          "lat": 33.5949519375,
+          "lng": -7.672665375
+        },
+        {
+          "lat": 33.59392475,
+          "lng": -7.6680085
+        },
+        {
+          "lat": 33.5925184375,
+          "lng": -7.663529375
+        },
+        {
+          "lat": 33.590733,
+          "lng": -7.659228000000001
+        },
+        {
+          "lat": 33.588568437499994,
+          "lng": -7.6551043750000005
+        },
+        {
+          "lat": 33.58602474999999,
+          "lng": -7.651158500000001
+        },
+        {
+          "lat": 33.5831019375,
+          "lng": -7.6473903750000005
+        },
+        {
+          "lat": 33.5798,
+          "lng": -7.6438,
+          "label": "Pharmacie Ghandi"
+        },
+        {
+          "lat": 33.582159312499996,
+          "lng": -7.642853125
+        },
+        {
+          "lat": 33.584380249999995,
+          "lng": -7.6417375000000005
+        },
+        {
+          "lat": 33.5864628125,
+          "lng": -7.640453125
+        },
+        {
+          "lat": 33.588407,
+          "lng": -7.638999999999999
+        },
+        {
+          "lat": 33.5902128125,
+          "lng": -7.637378125
+        },
+        {
+          "lat": 33.59188025,
+          "lng": -7.6355875
+        },
+        {
+          "lat": 33.5934093125,
+          "lng": -7.6336281249999995
+        },
+        {
+          "lat": 33.5948,
+          "lng": -7.6315,
+          "label": "Casino Bourgogne"
+        },
+        {
+          "lat": 33.595364437499995,
+          "lng": -7.629795375
+        },
+        {
+          "lat": 33.59577475,
+          "lng": -7.6280885
+        },
+        {
+          "lat": 33.5960309375,
+          "lng": -7.626379375
+        },
+        {
+          "lat": 33.596132999999995,
+          "lng": -7.624668
+        },
+        {
+          "lat": 33.5960809375,
+          "lng": -7.622954375
+        },
+        {
+          "lat": 33.59587475,
+          "lng": -7.6212385
+        },
+        {
+          "lat": 33.5955144375,
+          "lng": -7.6195203750000005
+        },
+        {
+          "lat": 33.595,
+          "lng": -7.6178,
+          "label": "Marché Central"
+        },
+        {
+          "lat": 33.593360624999995,
+          "lng": -7.6201690625
+        },
+        {
+          "lat": 33.5919575,
+          "lng": -7.62261125
+        },
+        {
+          "lat": 33.590790625000004,
+          "lng": -7.6251265625
+        },
+        {
+          "lat": 33.58986,
+          "lng": -7.627715
+        },
+        {
+          "lat": 33.58916562500001,
+          "lng": -7.6303765625
+        },
+        {
+          "lat": 33.588707500000005,
+          "lng": -7.633111250000001
+        },
+        {
+          "lat": 33.588485625000004,
+          "lng": -7.6359190625
+        },
+        {
+          "lat": 33.5885,
+          "lng": -7.6388,
+          "label": "Super Croc Racine"
+        },
+        {
+          "lat": 33.585904375,
+          "lng": -7.6394938125
+        },
+        {
+          "lat": 33.5834325,
+          "lng": -7.64038225
+        },
+        {
+          "lat": 33.581084375,
+          "lng": -7.641465312499999
+        },
+        {
+          "lat": 33.57886,
+          "lng": -7.642742999999999
+        },
+        {
+          "lat": 33.576759374999995,
+          "lng": -7.644215312499999
+        },
+        {
+          "lat": 33.5747825,
+          "lng": -7.64588225
+        },
+        {
+          "lat": 33.572929375,
+          "lng": -7.6477438125
+        },
+        {
+          "lat": 33.5712,
+          "lng": -7.6498,
+          "label": "Market Beauséjour"
+        }
+      ],
+      "currentPosition": {
+        "lat": 33.59127966853775,
+        "lng": -7.567235895564239
+      },
+      "progress": 13,
+      "lines": [
+        {
+          "productId": "prd-sucre",
+          "productName": "Sucre 1kg",
+          "sku": "SUC-1K",
+          "unit": "sac",
+          "quantity": 65
+        },
+        {
+          "productId": "prd-eau",
+          "productName": "Eau 1.5L",
+          "sku": "EAU-15",
+          "unit": "pack",
+          "quantity": 71
+        },
+        {
+          "productId": "prd-pate",
+          "productName": "Pâtes 500g",
+          "sku": "PAT-500",
+          "unit": "paquet",
+          "quantity": 81
+        },
+        {
+          "productId": "prd-savon",
+          "productName": "Savon liquide",
+          "sku": "SAV-LIQ",
+          "unit": "flacon",
+          "quantity": 59
+        },
+        {
+          "productId": "prd-lait",
+          "productName": "Lait en poudre",
+          "sku": "LAI-UHT",
+          "unit": "brique",
+          "quantity": 61
+        },
+        {
+          "productId": "prd-riz",
+          "productName": "Riz 5kg",
+          "sku": "RIZ-5K",
+          "unit": "sac",
+          "quantity": 44
+        },
+        {
+          "productId": "prd-farine",
+          "productName": "Farine 10kg",
+          "sku": "FAR-10",
+          "unit": "sac",
+          "quantity": 27
+        },
+        {
+          "productId": "prd-huile",
+          "productName": "Huile végétale 5L",
+          "sku": "HUI-5L",
+          "unit": "bidon",
+          "quantity": 33
+        }
+      ],
+      "shippingNoteIds": [
+        "bl-481",
+        "bl-482",
+        "bl-487",
+        "bl-483",
+        "bl-489",
+        "bl-484",
+        "bl-491",
+        "bl-492",
+        "bl-493",
+        "bl-494",
+        "bl-496"
+      ],
+      "eta": "2026-08-26T16:30:00.000Z"
+    },
+    {
+      "id": "shp-91",
+      "originWarehouseId": "wh-casa",
+      "destination": "Tournée Casa sud",
+      "vehicleId": "veh-07",
+      "driverId": "drv-hassan",
+      "routeId": "rt-26b",
+      "date": "2026-08-26T07:45:00.000Z",
+      "status": "in_transit",
+      "origin": {
+        "lat": 33.6095,
+        "lng": -7.5328,
+        "label": "Entrepôt Casablanca"
+      },
+      "destinationLocation": {
+        "lat": 33.5348,
+        "lng": -7.5972,
+        "label": "Relais Aïn Chock"
+      },
+      "path": [
+        {
+          "lat": 33.6095,
+          "lng": -7.5328,
+          "label": "Entrepôt Casablanca"
+        },
+        {
+          "lat": 33.602101125,
+          "lng": -7.540279937499999
+        },
+        {
+          "lat": 33.5955055,
+          "lng": -7.54817275
+        },
+        {
+          "lat": 33.589713124999996,
+          "lng": -7.5564784375
+        },
+        {
+          "lat": 33.584723999999994,
+          "lng": -7.5651969999999995
+        },
+        {
+          "lat": 33.580538125,
+          "lng": -7.5743284375
+        },
+        {
+          "lat": 33.5771555,
+          "lng": -7.583872749999999
+        },
+        {
+          "lat": 33.574576125,
+          "lng": -7.5938299375
+        },
+        {
+          "lat": 33.5728,
+          "lng": -7.6042,
+          "label": "Market Derb Sultan"
+        },
+        {
+          "lat": 33.569191375,
+          "lng": -7.607542625
+        },
+        {
+          "lat": 33.5659495,
+          "lng": -7.611094499999999
+        },
+        {
+          "lat": 33.563074375,
+          "lng": -7.614855625
+        },
+        {
+          "lat": 33.560566,
+          "lng": -7.618826
+        },
+        {
+          "lat": 33.558424375,
+          "lng": -7.623005624999999
+        },
+        {
+          "lat": 33.5566495,
+          "lng": -7.627394499999999
+        },
+        {
+          "lat": 33.555241375,
+          "lng": -7.631992625
+        },
+        {
+          "lat": 33.5542,
+          "lng": -7.6368,
+          "label": "Mini Market Oasis"
+        },
+        {
+          "lat": 33.551958625,
+          "lng": -7.63711075
+        },
+        {
+          "lat": 33.5498005,
+          "lng": -7.6375969999999995
+        },
+        {
+          "lat": 33.547725625000005,
+          "lng": -7.638258749999999
+        },
+        {
+          "lat": 33.545734,
+          "lng": -7.639096
+        },
+        {
+          "lat": 33.543825625000004,
+          "lng": -7.64010875
+        },
+        {
+          "lat": 33.5420005,
+          "lng": -7.641297
+        },
+        {
+          "lat": 33.54025862500001,
+          "lng": -7.642660749999999
+        },
+        {
+          "lat": 33.5386,
+          "lng": -7.6442,
+          "label": "Atacadao Sidi Maârouf"
+        },
+        {
+          "lat": 33.543231312500005,
+          "lng": -7.6425398125
+        },
+        {
+          "lat": 33.54760725,
+          "lng": -7.6405432499999995
+        },
+        {
+          "lat": 33.551727812500005,
+          "lng": -7.638210312499999
+        },
+        {
+          "lat": 33.555593,
+          "lng": -7.635541
+        },
+        {
+          "lat": 33.559202812500004,
+          "lng": -7.6325353125
+        },
+        {
+          "lat": 33.56255725,
+          "lng": -7.62919325
+        },
+        {
+          "lat": 33.5656563125,
+          "lng": -7.6255148125000005
+        },
+        {
+          "lat": 33.5685,
+          "lng": -7.6215,
+          "label": "Hanout Palmier"
+        },
+        {
+          "lat": 33.568885,
+          "lng": -7.6199724375
+        },
+        {
+          "lat": 33.569135,
+          "lng": -7.618452749999999
+        },
+        {
+          "lat": 33.569250000000004,
+          "lng": -7.616940937499999
+        },
+        {
+          "lat": 33.569230000000005,
+          "lng": -7.615437
+        },
+        {
+          "lat": 33.569075,
+          "lng": -7.613940937499999
+        },
+        {
+          "lat": 33.568785,
+          "lng": -7.612452749999999
+        },
+        {
+          "lat": 33.56836,
+          "lng": -7.610972437499999
+        },
+        {
+          "lat": 33.5678,
+          "lng": -7.6095,
+          "label": "Épicerie 2 Mars"
+        },
+        {
+          "lat": 33.564159312499996,
+          "lng": -7.606663125
+        },
+        {
+          "lat": 33.560380249999994,
+          "lng": -7.604197500000001
+        },
+        {
+          "lat": 33.5564628125,
+          "lng": -7.602103125
+        },
+        {
+          "lat": 33.552406999999995,
+          "lng": -7.60038
+        },
+        {
+          "lat": 33.5482128125,
+          "lng": -7.599028125
+        },
+        {
+          "lat": 33.54388025,
+          "lng": -7.5980475
+        },
+        {
+          "lat": 33.5394093125,
+          "lng": -7.597438125
+        },
+        {
+          "lat": 33.5348,
+          "lng": -7.5972,
+          "label": "Relais Aïn Chock"
+        }
+      ],
+      "currentPosition": {
+        "lat": 33.566958498260185,
+        "lng": -7.591459533445686
+      },
+      "progress": 27,
+      "lines": [
+        {
+          "productId": "prd-sucre",
+          "productName": "Sucre 1kg",
+          "sku": "SUC-1K",
+          "unit": "sac",
+          "quantity": 32
+        },
+        {
+          "productId": "prd-eau",
+          "productName": "Eau 1.5L",
+          "sku": "EAU-15",
+          "unit": "pack",
+          "quantity": 43
+        },
+        {
+          "productId": "prd-pate",
+          "productName": "Pâtes 500g",
+          "sku": "PAT-500",
+          "unit": "paquet",
+          "quantity": 54
+        },
+        {
+          "productId": "prd-savon",
+          "productName": "Savon liquide",
+          "sku": "SAV-LIQ",
+          "unit": "flacon",
+          "quantity": 21
+        },
+        {
+          "productId": "prd-lait",
+          "productName": "Lait en poudre",
+          "sku": "LAI-UHT",
+          "unit": "brique",
+          "quantity": 26
+        },
+        {
+          "productId": "prd-riz",
+          "productName": "Riz 5kg",
+          "sku": "RIZ-5K",
+          "unit": "sac",
+          "quantity": 31
+        },
+        {
+          "productId": "prd-farine",
+          "productName": "Farine 10kg",
+          "sku": "FAR-10",
+          "unit": "sac",
+          "quantity": 15
+        },
+        {
+          "productId": "prd-huile",
+          "productName": "Huile végétale 5L",
+          "sku": "HUI-5L",
+          "unit": "bidon",
+          "quantity": 21
+        }
+      ],
+      "shippingNoteIds": [
+        "bl-485",
+        "bl-486",
+        "bl-488",
+        "bl-495",
+        "bl-497",
+        "bl-498"
+      ],
+      "eta": "2026-08-26T16:10:00.000Z"
+    },
+    {
+      "id": "shp-89",
+      "originWarehouseId": "wh-rabat",
+      "destination": "Tournée Rabat nord",
+      "vehicleId": "veh-03",
+      "driverId": "drv-hassan",
+      "routeId": "rt-27b",
+      "date": "2026-08-27T07:00:00.000Z",
+      "status": "preparing",
+      "origin": {
+        "lat": 34.0384,
+        "lng": -6.7969,
+        "label": "Entrepôt Rabat"
+      },
+      "destinationLocation": {
+        "lat": 33.9985,
+        "lng": -6.8512,
+        "label": "Market Agdal"
+      },
+      "path": [
+        {
+          "lat": 34.0384,
+          "lng": -6.7969,
+          "label": "Entrepôt Rabat"
+        },
+        {
+          "lat": 34.0312744375,
+          "lng": -6.8021164375
+        },
+        {
+          "lat": 34.02475975,
+          "lng": -6.80778175
+        },
+        {
+          "lat": 34.0188559375,
+          "lng": -6.8138959375
+        },
+        {
+          "lat": 34.013563000000005,
+          "lng": -6.820459
+        },
+        {
+          "lat": 34.0088809375,
+          "lng": -6.827470937499999
+        },
+        {
+          "lat": 34.00480975,
+          "lng": -6.83493175
+        },
+        {
+          "lat": 34.001349437500004,
+          "lng": -6.8428414375
+        },
+        {
+          "lat": 33.9985,
+          "lng": -6.8512,
+          "label": "Market Agdal"
+        }
+      ],
+      "currentPosition": {
+        "lat": 34.0384,
+        "lng": -6.7969,
+        "label": "Entrepôt Rabat"
+      },
+      "progress": 0,
+      "lines": [
+        {
+          "productId": "prd-sucre",
+          "productName": "Sucre 1kg",
+          "sku": "SUC-1K",
+          "unit": "sac",
+          "quantity": 7
+        },
+        {
+          "productId": "prd-eau",
+          "productName": "Eau 1.5L",
+          "sku": "EAU-15",
+          "unit": "pack",
+          "quantity": 12
+        },
+        {
+          "productId": "prd-pate",
+          "productName": "Pâtes 500g",
+          "sku": "PAT-500",
+          "unit": "paquet",
+          "quantity": 17
+        },
+        {
+          "productId": "prd-savon",
+          "productName": "Savon liquide",
+          "sku": "SAV-LIQ",
+          "unit": "flacon",
+          "quantity": 6
+        }
+      ],
+      "shippingNoteIds": [
+        "bl-490"
+      ],
+      "eta": "2026-08-27T12:00:00.000Z"
+    },
+    {
+      "id": "shp-90",
+      "originWarehouseId": "wh-casa",
+      "destination": "Entrepôt Marrakech",
+      "destinationWarehouseId": "wh-marrakech",
+      "vehicleId": "veh-12",
+      "driverId": "drv-mehdi",
+      "date": "2026-08-26T06:10:00.000Z",
+      "status": "delayed",
+      "origin": {
+        "lat": 33.6095,
+        "lng": -7.5328,
+        "label": "Entrepôt Casablanca"
+      },
+      "destinationLocation": {
+        "lat": 31.6469,
+        "lng": -8.0106,
+        "label": "Entrepôt Marrakech"
+      },
+      "path": [
+        {
+          "lat": 33.6095,
+          "lng": -7.5328,
+          "label": "Casablanca"
+        },
+        {
+          "lat": 33.545156666666664,
+          "lng": -7.527158333333333
+        },
+        {
+          "lat": 33.482317333333334,
+          "lng": -7.528786666666668
+        },
+        {
+          "lat": 33.420982,
+          "lng": -7.537685000000001
+        },
+        {
+          "lat": 33.36115066666667,
+          "lng": -7.5538533333333335
+        },
+        {
+          "lat": 33.302823333333336,
+          "lng": -7.577291666666667
+        },
+        {
+          "lat": 33.246,
+          "lng": -7.608,
+          "label": "Berrechid"
+        },
+        {
+          "lat": 33.22410000000001,
+          "lng": -7.565096666666667
+        },
+        {
+          "lat": 33.19820000000001,
+          "lng": -7.526021333333334
+        },
+        {
+          "lat": 33.1683,
+          "lng": -7.490774
+        },
+        {
+          "lat": 33.1344,
+          "lng": -7.459354666666667
+        },
+        {
+          "lat": 33.0965,
+          "lng": -7.431763333333334
+        },
+        {
+          "lat": 33.0546,
+          "lng": -7.408,
+          "label": "Settat"
+        },
+        {
+          "lat": 32.92465,
+          "lng": -7.406620000000001
+        },
+        {
+          "lat": 32.798840000000006,
+          "lng": -7.419592000000001
+        },
+        {
+          "lat": 32.677170000000004,
+          "lng": -7.446916
+        },
+        {
+          "lat": 32.55964,
+          "lng": -7.488592000000001
+        },
+        {
+          "lat": 32.446250000000006,
+          "lng": -7.54462
+        },
+        {
+          "lat": 32.337,
+          "lng": -7.615,
+          "label": "Kelaa"
+        },
+        {
+          "lat": 32.20220333333334,
+          "lng": -7.646428333333334
+        },
+        {
+          "lat": 32.075318666666675,
+          "lng": -7.691658666666668
+        },
+        {
+          "lat": 31.956346000000003,
+          "lng": -7.750691
+        },
+        {
+          "lat": 31.845285333333337,
+          "lng": -7.823525333333334
+        },
+        {
+          "lat": 31.742136666666667,
+          "lng": -7.910161666666666
+        },
+        {
+          "lat": 31.6469,
+          "lng": -8.0106,
+          "label": "Marrakech"
+        }
+      ],
+      "currentPosition": {
+        "lat": 32.78010692687179,
+        "lng": -7.423798973700628
+      },
+      "progress": 42,
+      "notes": "Contrôle gendarmerie à la sortie de Settat — 40 min de retard.",
+      "eta": "2026-08-26T11:40:00.000Z",
+      "lines": [
+        {
+          "productId": "prd-huile",
+          "productName": "Huile végétale 5L",
+          "sku": "HUI-5L",
+          "unit": "bidon",
+          "quantity": 80
+        },
+        {
+          "productId": "prd-farine",
+          "productName": "Farine 10kg",
+          "sku": "FAR-10",
+          "unit": "sac",
+          "quantity": 40
+        },
+        {
+          "productId": "prd-riz",
+          "productName": "Riz 5kg",
+          "sku": "RIZ-5K",
+          "unit": "sac",
+          "quantity": 36
+        },
+        {
+          "productId": "prd-eau",
+          "productName": "Eau 1.5L",
+          "sku": "EAU-15",
+          "unit": "pack",
+          "quantity": 120
+        }
+      ],
+      "shippingNoteIds": [
+        "bl-transfer-90"
+      ]
+    }
+  ],
+  "deliveries": [
+    {
+      "id": "dlv-481",
+      "client": "Marché Hay Hassani",
+      "address": "Bd Mohamed VI",
+      "city": "Casablanca",
+      "scheduledAt": "2026-08-26T08:15:00.000Z",
+      "status": "delivered",
+      "driverId": "drv-mehdi",
+      "vehicleId": "veh-12",
+      "routeId": "rt-26a",
+      "sequence": 1,
+      "warehouseId": "wh-casa",
+      "location": {
+        "lat": 33.5574,
+        "lng": -7.6648,
+        "label": "Marché Hay Hassani"
+      },
+      "path": [
+        {
+          "lat": 33.6095,
+          "lng": -7.5328,
+          "label": "Entrepôt Casablanca"
+        },
+        {
+          "lat": 33.597789999999996,
+          "lng": -7.5472485625
+        },
+        {
+          "lat": 33.587565,
+          "lng": -7.56228325
+        },
+        {
+          "lat": 33.578824999999995,
+          "lng": -7.5779040625
+        },
+        {
+          "lat": 33.571569999999994,
+          "lng": -7.594111
+        },
+        {
+          "lat": 33.565799999999996,
+          "lng": -7.6109040625
+        },
+        {
+          "lat": 33.561515,
+          "lng": -7.628283250000001
+        },
+        {
+          "lat": 33.558715,
+          "lng": -7.6462485625
+        },
+        {
+          "lat": 33.5574,
+          "lng": -7.6648,
+          "label": "Marché Hay Hassani"
+        }
+      ],
+      "currentPosition": {
+        "lat": 33.5574,
+        "lng": -7.6648,
+        "label": "Marché Hay Hassani"
+      },
+      "progress": 100,
+      "lines": [
+        {
+          "productId": "prd-sucre",
+          "productName": "Sucre 1kg",
+          "sku": "SUC-1K",
+          "unit": "sac",
+          "quantity": 7
+        },
+        {
+          "productId": "prd-eau",
+          "productName": "Eau 1.5L",
+          "sku": "EAU-15",
+          "unit": "pack",
+          "quantity": 12
+        },
+        {
+          "productId": "prd-pate",
+          "productName": "Pâtes 500g",
+          "sku": "PAT-500",
+          "unit": "paquet",
+          "quantity": 17
+        },
+        {
+          "productId": "prd-savon",
+          "productName": "Savon liquide",
+          "sku": "SAV-LIQ",
+          "unit": "flacon",
+          "quantity": 6
+        }
+      ],
+      "signedAt": "2026-08-26T08:37:00.000Z",
+      "signedBy": "Réception magasin",
+      "eta": "2026-08-26T08:15:00.000Z",
+      "shippingNoteId": "bl-481"
+    },
+    {
+      "id": "dlv-482",
+      "client": "Supermarché Atlas",
+      "address": "Maarif, rue Ibnou Katir",
+      "city": "Casablanca",
+      "scheduledAt": "2026-08-26T09:30:00.000Z",
+      "status": "at_risk",
+      "driverId": "drv-mehdi",
+      "vehicleId": "veh-12",
+      "routeId": "rt-26a",
+      "sequence": 2,
+      "notes": "Circulation dense — créneau serré",
+      "warehouseId": "wh-casa",
+      "location": {
+        "lat": 33.5826,
+        "lng": -7.6324,
+        "label": "Supermarché Atlas"
+      },
+      "path": [
+        {
+          "lat": 33.6095,
+          "lng": -7.5328,
+          "label": "Entrepôt Casablanca"
+        },
+        {
+          "lat": 33.60221575,
+          "lng": -7.544190812499999
+        },
+        {
+          "lat": 33.596052,
+          "lng": -7.555884249999999
+        },
+        {
+          "lat": 33.59100875,
+          "lng": -7.5678803125
+        },
+        {
+          "lat": 33.587086,
+          "lng": -7.580179
+        },
+        {
+          "lat": 33.58428375,
+          "lng": -7.5927803124999995
+        },
+        {
+          "lat": 33.582602,
+          "lng": -7.6056842499999995
+        },
+        {
+          "lat": 33.58204075,
+          "lng": -7.618890812499999
+        },
+        {
+          "lat": 33.5826,
+          "lng": -7.6324,
+          "label": "Supermarché Atlas"
+        }
+      ],
+      "currentPosition": {
+        "lat": 33.59127966853775,
+        "lng": -7.567235895564239
+      },
+      "progress": 38,
+      "lines": [
+        {
+          "productId": "prd-lait",
+          "productName": "Lait en poudre",
+          "sku": "LAI-UHT",
+          "unit": "brique",
+          "quantity": 10
+        },
+        {
+          "productId": "prd-riz",
+          "productName": "Riz 5kg",
+          "sku": "RIZ-5K",
+          "unit": "sac",
+          "quantity": 15
+        },
+        {
+          "productId": "prd-farine",
+          "productName": "Farine 10kg",
+          "sku": "FAR-10",
+          "unit": "sac",
+          "quantity": 4
+        }
+      ],
+      "eta": "2026-08-26T09:30:00.000Z",
+      "shippingNoteId": "bl-482"
+    },
+    {
+      "id": "dlv-487",
+      "client": "Épicerie Maarif",
+      "address": "Rue Soudanie",
+      "city": "Casablanca",
+      "scheduledAt": "2026-08-26T09:50:00.000Z",
+      "status": "prepared",
+      "driverId": "drv-mehdi",
+      "vehicleId": "veh-12",
+      "routeId": "rt-26a",
+      "sequence": 3,
+      "warehouseId": "wh-casa",
+      "location": {
+        "lat": 33.5814,
+        "lng": -7.6288,
+        "label": "Épicerie Maarif"
+      },
+      "path": [
+        {
+          "lat": 33.6095,
+          "lng": -7.5328,
+          "label": "Entrepôt Casablanca"
+        },
+        {
+          "lat": 33.6022075,
+          "lng": -7.543693562500001
+        },
+        {
+          "lat": 33.595995,
+          "lng": -7.55490325
+        },
+        {
+          "lat": 33.5908625,
+          "lng": -7.5664290625
+        },
+        {
+          "lat": 33.58681,
+          "lng": -7.578271000000001
+        },
+        {
+          "lat": 33.5838375,
+          "lng": -7.5904290625
+        },
+        {
+          "lat": 33.581945000000005,
+          "lng": -7.602903250000001
+        },
+        {
+          "lat": 33.5811325,
+          "lng": -7.6156935625
+        },
+        {
+          "lat": 33.5814,
+          "lng": -7.6288,
+          "label": "Épicerie Maarif"
+        }
+      ],
+      "currentPosition": {
+        "lat": 33.6095,
+        "lng": -7.5328,
+        "label": "Entrepôt Casablanca"
+      },
+      "progress": 0,
+      "lines": [
+        {
+          "productId": "prd-eau",
+          "productName": "Eau 1.5L",
+          "sku": "EAU-15",
+          "unit": "pack",
+          "quantity": 13
+        },
+        {
+          "productId": "prd-pate",
+          "productName": "Pâtes 500g",
+          "sku": "PAT-500",
+          "unit": "paquet",
+          "quantity": 18
+        },
+        {
+          "productId": "prd-savon",
+          "productName": "Savon liquide",
+          "sku": "SAV-LIQ",
+          "unit": "flacon",
+          "quantity": 7
+        },
+        {
+          "productId": "prd-sucre",
+          "productName": "Sucre 1kg",
+          "sku": "SUC-1K",
+          "unit": "sac",
+          "quantity": 12
+        }
+      ],
+      "eta": "2026-08-26T09:50:00.000Z",
+      "shippingNoteId": "bl-487"
+    },
+    {
+      "id": "dlv-483",
+      "client": "Épicerie Anfa",
+      "address": "Boulevard d’Anfa",
+      "city": "Casablanca",
+      "scheduledAt": "2026-08-26T11:00:00.000Z",
+      "status": "prepared",
+      "driverId": "drv-mehdi",
+      "vehicleId": "veh-12",
+      "routeId": "rt-26a",
+      "sequence": 4,
+      "warehouseId": "wh-casa",
+      "location": {
+        "lat": 33.5889,
+        "lng": -7.6624,
+        "label": "Épicerie Anfa"
+      },
+      "path": [
+        {
+          "lat": 33.6095,
+          "lng": -7.5328,
+          "label": "Entrepôt Casablanca"
+        },
+        {
+          "lat": 33.601822,
+          "lng": -7.548188875
+        },
+        {
+          "lat": 33.595602,
+          "lng": -7.5638095000000005
+        },
+        {
+          "lat": 33.59084,
+          "lng": -7.579661875000001
+        },
+        {
+          "lat": 33.587536,
+          "lng": -7.595746
+        },
+        {
+          "lat": 33.58569,
+          "lng": -7.612061875000001
+        },
+        {
+          "lat": 33.585302,
+          "lng": -7.628609500000001
+        },
+        {
+          "lat": 33.586372000000004,
+          "lng": -7.645388875
+        },
+        {
+          "lat": 33.5889,
+          "lng": -7.6624,
+          "label": "Épicerie Anfa"
+        }
+      ],
+      "currentPosition": {
+        "lat": 33.6095,
+        "lng": -7.5328,
+        "label": "Entrepôt Casablanca"
+      },
+      "progress": 0,
+      "lines": [
+        {
+          "productId": "prd-riz",
+          "productName": "Riz 5kg",
+          "sku": "RIZ-5K",
+          "unit": "sac",
+          "quantity": 16
+        },
+        {
+          "productId": "prd-farine",
+          "productName": "Farine 10kg",
+          "sku": "FAR-10",
+          "unit": "sac",
+          "quantity": 5
+        },
+        {
+          "productId": "prd-huile",
+          "productName": "Huile végétale 5L",
+          "sku": "HUI-5L",
+          "unit": "bidon",
+          "quantity": 10
+        }
+      ],
+      "eta": "2026-08-26T11:00:00.000Z",
+      "shippingNoteId": "bl-483"
+    },
+    {
+      "id": "dlv-489",
+      "client": "Boulangerie Anfa",
+      "address": "Bd d’Anfa",
+      "city": "Casablanca",
+      "scheduledAt": "2026-08-26T10:45:00.000Z",
+      "status": "prepared",
+      "driverId": "drv-mehdi",
+      "vehicleId": "veh-12",
+      "routeId": "rt-26a",
+      "sequence": 5,
+      "warehouseId": "wh-casa",
+      "location": {
+        "lat": 33.5902,
+        "lng": -7.658,
+        "label": "Boulangerie Anfa"
+      },
+      "path": [
+        {
+          "lat": 33.6095,
+          "lng": -7.5328,
+          "label": "Entrepôt Casablanca"
+        },
+        {
+          "lat": 33.602157749999996,
+          "lng": -7.5476900625
+        },
+        {
+          "lat": 33.596224,
+          "lng": -7.56279725
+        },
+        {
+          "lat": 33.59169875,
+          "lng": -7.5781215625
+        },
+        {
+          "lat": 33.588582,
+          "lng": -7.593663000000001
+        },
+        {
+          "lat": 33.58687375,
+          "lng": -7.6094215625000015
+        },
+        {
+          "lat": 33.586574,
+          "lng": -7.625397250000001
+        },
+        {
+          "lat": 33.58768275,
+          "lng": -7.641590062500001
+        },
+        {
+          "lat": 33.5902,
+          "lng": -7.658,
+          "label": "Boulangerie Anfa"
+        }
+      ],
+      "currentPosition": {
+        "lat": 33.6095,
+        "lng": -7.5328,
+        "label": "Entrepôt Casablanca"
+      },
+      "progress": 0,
+      "lines": [
+        {
+          "productId": "prd-pate",
+          "productName": "Pâtes 500g",
+          "sku": "PAT-500",
+          "unit": "paquet",
+          "quantity": 19
+        },
+        {
+          "productId": "prd-savon",
+          "productName": "Savon liquide",
+          "sku": "SAV-LIQ",
+          "unit": "flacon",
+          "quantity": 8
+        },
+        {
+          "productId": "prd-sucre",
+          "productName": "Sucre 1kg",
+          "sku": "SUC-1K",
+          "unit": "sac",
+          "quantity": 13
+        },
+        {
+          "productId": "prd-eau",
+          "productName": "Eau 1.5L",
+          "sku": "EAU-15",
+          "unit": "pack",
+          "quantity": 18
+        }
+      ],
+      "eta": "2026-08-26T10:45:00.000Z",
+      "shippingNoteId": "bl-489"
+    },
+    {
+      "id": "dlv-484",
+      "client": "Carrefour Ain Diab",
+      "address": "Corniche",
+      "city": "Casablanca",
+      "scheduledAt": "2026-08-26T13:30:00.000Z",
+      "status": "prepared",
+      "driverId": "drv-mehdi",
+      "vehicleId": "veh-12",
+      "routeId": "rt-26a",
+      "sequence": 6,
+      "warehouseId": "wh-casa",
+      "location": {
+        "lat": 33.5956,
+        "lng": -7.6775,
+        "label": "Carrefour Ain Diab"
+      },
+      "path": [
+        {
+          "lat": 33.6095,
+          "lng": -7.5328,
+          "label": "Entrepôt Casablanca"
+        },
+        {
+          "lat": 33.602064937499996,
+          "lng": -7.5503401875
+        },
+        {
+          "lat": 33.59625775,
+          "lng": -7.568036749999999
+        },
+        {
+          "lat": 33.59207843749999,
+          "lng": -7.5858896875
+        },
+        {
+          "lat": 33.589527,
+          "lng": -7.603899
+        },
+        {
+          "lat": 33.5886034375,
+          "lng": -7.6220646875
+        },
+        {
+          "lat": 33.589307749999996,
+          "lng": -7.640386749999999
+        },
+        {
+          "lat": 33.5916399375,
+          "lng": -7.6588651875
+        },
+        {
+          "lat": 33.5956,
+          "lng": -7.6775,
+          "label": "Carrefour Ain Diab"
+        }
+      ],
+      "currentPosition": {
+        "lat": 33.6095,
+        "lng": -7.5328,
+        "label": "Entrepôt Casablanca"
+      },
+      "progress": 0,
+      "lines": [
+        {
+          "productId": "prd-farine",
+          "productName": "Farine 10kg",
+          "sku": "FAR-10",
+          "unit": "sac",
+          "quantity": 6
+        },
+        {
+          "productId": "prd-huile",
+          "productName": "Huile végétale 5L",
+          "sku": "HUI-5L",
+          "unit": "bidon",
+          "quantity": 11
+        },
+        {
+          "productId": "prd-lait",
+          "productName": "Lait en poudre",
+          "sku": "LAI-UHT",
+          "unit": "brique",
+          "quantity": 16
+        }
+      ],
+      "eta": "2026-08-26T13:30:00.000Z",
+      "shippingNoteId": "bl-484"
+    },
+    {
+      "id": "dlv-491",
+      "client": "Pharmacie Ghandi",
+      "address": "Bd Ghandi",
+      "city": "Casablanca",
+      "scheduledAt": "2026-08-26T11:15:00.000Z",
+      "status": "prepared",
+      "driverId": "drv-mehdi",
+      "vehicleId": "veh-12",
+      "routeId": "rt-26a",
+      "sequence": 7,
+      "warehouseId": "wh-casa",
+      "location": {
+        "lat": 33.5798,
+        "lng": -7.6438,
+        "label": "Pharmacie Ghandi"
+      },
+      "path": [
+        {
+          "lat": 33.6095,
+          "lng": -7.5328,
+          "label": "Entrepôt Casablanca"
+        },
+        {
+          "lat": 33.601416875,
+          "lng": -7.5455055625
+        },
+        {
+          "lat": 33.5945825,
+          "lng": -7.55854525
+        },
+        {
+          "lat": 33.588996875,
+          "lng": -7.5719190625
+        },
+        {
+          "lat": 33.58466,
+          "lng": -7.585627000000001
+        },
+        {
+          "lat": 33.581571875,
+          "lng": -7.5996690625
+        },
+        {
+          "lat": 33.5797325,
+          "lng": -7.61404525
+        },
+        {
+          "lat": 33.579141875000005,
+          "lng": -7.6287555625
+        },
+        {
+          "lat": 33.5798,
+          "lng": -7.6438,
+          "label": "Pharmacie Ghandi"
+        }
+      ],
+      "currentPosition": {
+        "lat": 33.6095,
+        "lng": -7.5328,
+        "label": "Entrepôt Casablanca"
+      },
+      "progress": 0,
+      "lines": [
+        {
+          "productId": "prd-savon",
+          "productName": "Savon liquide",
+          "sku": "SAV-LIQ",
+          "unit": "flacon",
+          "quantity": 9
+        },
+        {
+          "productId": "prd-sucre",
+          "productName": "Sucre 1kg",
+          "sku": "SUC-1K",
+          "unit": "sac",
+          "quantity": 14
+        },
+        {
+          "productId": "prd-eau",
+          "productName": "Eau 1.5L",
+          "sku": "EAU-15",
+          "unit": "pack",
+          "quantity": 19
+        },
+        {
+          "productId": "prd-pate",
+          "productName": "Pâtes 500g",
+          "sku": "PAT-500",
+          "unit": "paquet",
+          "quantity": 8
+        }
+      ],
+      "eta": "2026-08-26T11:15:00.000Z",
+      "shippingNoteId": "bl-491"
+    },
+    {
+      "id": "dlv-492",
+      "client": "Casino Bourgogne",
+      "address": "Quartier Bourgogne",
+      "city": "Casablanca",
+      "scheduledAt": "2026-08-26T11:40:00.000Z",
+      "status": "prepared",
+      "driverId": "drv-mehdi",
+      "vehicleId": "veh-12",
+      "routeId": "rt-26a",
+      "sequence": 8,
+      "warehouseId": "wh-casa",
+      "location": {
+        "lat": 33.5948,
+        "lng": -7.6315,
+        "label": "Casino Bourgogne"
+      },
+      "path": [
+        {
+          "lat": 33.6095,
+          "lng": -7.5328,
+          "label": "Entrepôt Casablanca"
+        },
+        {
+          "lat": 33.603776187499996,
+          "lng": -7.5445586875
+        },
+        {
+          "lat": 33.59916275,
+          "lng": -7.55648275
+        },
+        {
+          "lat": 33.595659687499996,
+          "lng": -7.5685721875
+        },
+        {
+          "lat": 33.593267,
+          "lng": -7.580827
+        },
+        {
+          "lat": 33.591984687499995,
+          "lng": -7.593247187500001
+        },
+        {
+          "lat": 33.591812749999995,
+          "lng": -7.60583275
+        },
+        {
+          "lat": 33.5927511875,
+          "lng": -7.618583687499999
+        },
+        {
+          "lat": 33.5948,
+          "lng": -7.6315,
+          "label": "Casino Bourgogne"
+        }
+      ],
+      "currentPosition": {
+        "lat": 33.6095,
+        "lng": -7.5328,
+        "label": "Entrepôt Casablanca"
+      },
+      "progress": 0,
+      "lines": [
+        {
+          "productId": "prd-huile",
+          "productName": "Huile végétale 5L",
+          "sku": "HUI-5L",
+          "unit": "bidon",
+          "quantity": 12
+        },
+        {
+          "productId": "prd-lait",
+          "productName": "Lait en poudre",
+          "sku": "LAI-UHT",
+          "unit": "brique",
+          "quantity": 17
+        },
+        {
+          "productId": "prd-riz",
+          "productName": "Riz 5kg",
+          "sku": "RIZ-5K",
+          "unit": "sac",
+          "quantity": 6
+        }
+      ],
+      "eta": "2026-08-26T11:40:00.000Z",
+      "shippingNoteId": "bl-492"
+    },
+    {
+      "id": "dlv-493",
+      "client": "Marché Central",
+      "address": "Médina",
+      "city": "Casablanca",
+      "scheduledAt": "2026-08-26T12:10:00.000Z",
+      "status": "prepared",
+      "driverId": "drv-mehdi",
+      "vehicleId": "veh-12",
+      "routeId": "rt-26a",
+      "sequence": 9,
+      "warehouseId": "wh-casa",
+      "location": {
+        "lat": 33.595,
+        "lng": -7.6178,
+        "label": "Marché Central"
+      },
+      "path": [
+        {
+          "lat": 33.6095,
+          "lng": -7.5328,
+          "label": "Entrepôt Casablanca"
+        },
+        {
+          "lat": 33.60434062499999,
+          "lng": -7.5428540625
+        },
+        {
+          "lat": 33.600137499999995,
+          "lng": -7.5530712499999995
+        },
+        {
+          "lat": 33.596890625,
+          "lng": -7.563451562500001
+        },
+        {
+          "lat": 33.5946,
+          "lng": -7.573995
+        },
+        {
+          "lat": 33.593265625,
+          "lng": -7.5847015625
+        },
+        {
+          "lat": 33.592887499999996,
+          "lng": -7.59557125
+        },
+        {
+          "lat": 33.593465625,
+          "lng": -7.6066040625
+        },
+        {
+          "lat": 33.595,
+          "lng": -7.6178,
+          "label": "Marché Central"
+        }
+      ],
+      "currentPosition": {
+        "lat": 33.6095,
+        "lng": -7.5328,
+        "label": "Entrepôt Casablanca"
+      },
+      "progress": 0,
+      "lines": [
+        {
+          "productId": "prd-sucre",
+          "productName": "Sucre 1kg",
+          "sku": "SUC-1K",
+          "unit": "sac",
+          "quantity": 15
+        },
+        {
+          "productId": "prd-eau",
+          "productName": "Eau 1.5L",
+          "sku": "EAU-15",
+          "unit": "pack",
+          "quantity": 4
+        },
+        {
+          "productId": "prd-pate",
+          "productName": "Pâtes 500g",
+          "sku": "PAT-500",
+          "unit": "paquet",
+          "quantity": 9
+        },
+        {
+          "productId": "prd-savon",
+          "productName": "Savon liquide",
+          "sku": "SAV-LIQ",
+          "unit": "flacon",
+          "quantity": 14
+        }
+      ],
+      "eta": "2026-08-26T12:10:00.000Z",
+      "shippingNoteId": "bl-493"
+    },
+    {
+      "id": "dlv-494",
+      "client": "Super Croc Racine",
+      "address": "Bd Racine",
+      "city": "Casablanca",
+      "scheduledAt": "2026-08-26T12:40:00.000Z",
+      "status": "prepared",
+      "driverId": "drv-mehdi",
+      "vehicleId": "veh-12",
+      "routeId": "rt-26a",
+      "sequence": 10,
+      "warehouseId": "wh-casa",
+      "location": {
+        "lat": 33.5885,
+        "lng": -7.6388,
+        "label": "Super Croc Racine"
+      },
+      "path": [
+        {
+          "lat": 33.6095,
+          "lng": -7.5328,
+          "label": "Entrepôt Casablanca"
+        },
+        {
+          "lat": 33.602701249999996,
+          "lng": -7.545223125
+        },
+        {
+          "lat": 33.597094999999996,
+          "lng": -7.5578825
+        },
+        {
+          "lat": 33.59268125,
+          "lng": -7.570778125
+        },
+        {
+          "lat": 33.58946,
+          "lng": -7.58391
+        },
+        {
+          "lat": 33.58743125,
+          "lng": -7.597278125000001
+        },
+        {
+          "lat": 33.586595,
+          "lng": -7.610882500000001
+        },
+        {
+          "lat": 33.58695125,
+          "lng": -7.624723125
+        },
+        {
+          "lat": 33.5885,
+          "lng": -7.6388,
+          "label": "Super Croc Racine"
+        }
+      ],
+      "currentPosition": {
+        "lat": 33.6095,
+        "lng": -7.5328,
+        "label": "Entrepôt Casablanca"
+      },
+      "progress": 0,
+      "lines": [
+        {
+          "productId": "prd-lait",
+          "productName": "Lait en poudre",
+          "sku": "LAI-UHT",
+          "unit": "brique",
+          "quantity": 18
+        },
+        {
+          "productId": "prd-riz",
+          "productName": "Riz 5kg",
+          "sku": "RIZ-5K",
+          "unit": "sac",
+          "quantity": 7
+        },
+        {
+          "productId": "prd-farine",
+          "productName": "Farine 10kg",
+          "sku": "FAR-10",
+          "unit": "sac",
+          "quantity": 12
+        }
+      ],
+      "eta": "2026-08-26T12:40:00.000Z",
+      "shippingNoteId": "bl-494"
+    },
+    {
+      "id": "dlv-496",
+      "client": "Market Beauséjour",
+      "address": "Beauséjour",
+      "city": "Casablanca",
+      "scheduledAt": "2026-08-26T14:20:00.000Z",
+      "status": "prepared",
+      "driverId": "drv-mehdi",
+      "vehicleId": "veh-12",
+      "routeId": "rt-26a",
+      "sequence": 11,
+      "warehouseId": "wh-casa",
+      "location": {
+        "lat": 33.5712,
+        "lng": -7.6498,
+        "label": "Market Beauséjour"
+      },
+      "path": [
+        {
+          "lat": 33.6095,
+          "lng": -7.5328,
+          "label": "Entrepôt Casablanca"
+        },
+        {
+          "lat": 33.600105625,
+          "lng": -7.5459169375
+        },
+        {
+          "lat": 33.5920275,
+          "lng": -7.55946475
+        },
+        {
+          "lat": 33.585265625,
+          "lng": -7.5734434375
+        },
+        {
+          "lat": 33.57982,
+          "lng": -7.587853
+        },
+        {
+          "lat": 33.575690625,
+          "lng": -7.6026934375
+        },
+        {
+          "lat": 33.5728775,
+          "lng": -7.6179647500000005
+        },
+        {
+          "lat": 33.571380624999996,
+          "lng": -7.633666937499999
+        },
+        {
+          "lat": 33.5712,
+          "lng": -7.6498,
+          "label": "Market Beauséjour"
+        }
+      ],
+      "currentPosition": {
+        "lat": 33.6095,
+        "lng": -7.5328,
+        "label": "Entrepôt Casablanca"
+      },
+      "progress": 0,
+      "lines": [
+        {
+          "productId": "prd-eau",
+          "productName": "Eau 1.5L",
+          "sku": "EAU-15",
+          "unit": "pack",
+          "quantity": 5
+        },
+        {
+          "productId": "prd-pate",
+          "productName": "Pâtes 500g",
+          "sku": "PAT-500",
+          "unit": "paquet",
+          "quantity": 10
+        },
+        {
+          "productId": "prd-savon",
+          "productName": "Savon liquide",
+          "sku": "SAV-LIQ",
+          "unit": "flacon",
+          "quantity": 15
+        },
+        {
+          "productId": "prd-sucre",
+          "productName": "Sucre 1kg",
+          "sku": "SUC-1K",
+          "unit": "sac",
+          "quantity": 4
+        }
+      ],
+      "eta": "2026-08-26T14:20:00.000Z",
+      "shippingNoteId": "bl-496"
+    },
+    {
+      "id": "dlv-485",
+      "client": "Market Derb Sultan",
+      "address": "Rue des Hôpitaux",
+      "city": "Casablanca",
+      "scheduledAt": "2026-08-26T08:45:00.000Z",
+      "status": "delivered",
+      "driverId": "drv-hassan",
+      "vehicleId": "veh-07",
+      "routeId": "rt-26b",
+      "sequence": 1,
+      "warehouseId": "wh-casa",
+      "location": {
+        "lat": 33.5728,
+        "lng": -7.6042,
+        "label": "Market Derb Sultan"
+      },
+      "path": [
+        {
+          "lat": 33.6095,
+          "lng": -7.5328,
+          "label": "Entrepôt Casablanca"
+        },
+        {
+          "lat": 33.602101125,
+          "lng": -7.540279937499999
+        },
+        {
+          "lat": 33.5955055,
+          "lng": -7.54817275
+        },
+        {
+          "lat": 33.589713124999996,
+          "lng": -7.5564784375
+        },
+        {
+          "lat": 33.584723999999994,
+          "lng": -7.5651969999999995
+        },
+        {
+          "lat": 33.580538125,
+          "lng": -7.5743284375
+        },
+        {
+          "lat": 33.5771555,
+          "lng": -7.583872749999999
+        },
+        {
+          "lat": 33.574576125,
+          "lng": -7.5938299375
+        },
+        {
+          "lat": 33.5728,
+          "lng": -7.6042,
+          "label": "Market Derb Sultan"
+        }
+      ],
+      "currentPosition": {
+        "lat": 33.5728,
+        "lng": -7.6042,
+        "label": "Market Derb Sultan"
+      },
+      "progress": 100,
+      "lines": [
+        {
+          "productId": "prd-sucre",
+          "productName": "Sucre 1kg",
+          "sku": "SUC-1K",
+          "unit": "sac",
+          "quantity": 7
+        },
+        {
+          "productId": "prd-eau",
+          "productName": "Eau 1.5L",
+          "sku": "EAU-15",
+          "unit": "pack",
+          "quantity": 12
+        },
+        {
+          "productId": "prd-pate",
+          "productName": "Pâtes 500g",
+          "sku": "PAT-500",
+          "unit": "paquet",
+          "quantity": 17
+        },
+        {
+          "productId": "prd-savon",
+          "productName": "Savon liquide",
+          "sku": "SAV-LIQ",
+          "unit": "flacon",
+          "quantity": 6
+        }
+      ],
+      "signedAt": "2026-08-26T09:07:00.000Z",
+      "signedBy": "Réception magasin",
+      "eta": "2026-08-26T08:45:00.000Z",
+      "shippingNoteId": "bl-485"
+    },
+    {
+      "id": "dlv-486",
+      "client": "Mini Market Oasis",
+      "address": "Californie",
+      "city": "Casablanca",
+      "scheduledAt": "2026-08-26T09:10:00.000Z",
+      "status": "in_transit",
+      "driverId": "drv-hassan",
+      "vehicleId": "veh-07",
+      "routeId": "rt-26b",
+      "sequence": 2,
+      "warehouseId": "wh-casa",
+      "location": {
+        "lat": 33.5542,
+        "lng": -7.6368,
+        "label": "Mini Market Oasis"
+      },
+      "path": [
+        {
+          "lat": 33.6095,
+          "lng": -7.5328,
+          "label": "Entrepôt Casablanca"
+        },
+        {
+          "lat": 33.5984925,
+          "lng": -7.5436225624999995
+        },
+        {
+          "lat": 33.588655,
+          "lng": -7.555067249999999
+        },
+        {
+          "lat": 33.5799875,
+          "lng": -7.5671340625
+        },
+        {
+          "lat": 33.57249,
+          "lng": -7.579823
+        },
+        {
+          "lat": 33.566162500000004,
+          "lng": -7.593134062499999
+        },
+        {
+          "lat": 33.561005,
+          "lng": -7.60706725
+        },
+        {
+          "lat": 33.5570175,
+          "lng": -7.6216225625
+        },
+        {
+          "lat": 33.5542,
+          "lng": -7.6368,
+          "label": "Mini Market Oasis"
+        }
+      ],
+      "currentPosition": {
+        "lat": 33.566958498260185,
+        "lng": -7.591459533445686
+      },
+      "progress": 62,
+      "lines": [
+        {
+          "productId": "prd-lait",
+          "productName": "Lait en poudre",
+          "sku": "LAI-UHT",
+          "unit": "brique",
+          "quantity": 10
+        },
+        {
+          "productId": "prd-riz",
+          "productName": "Riz 5kg",
+          "sku": "RIZ-5K",
+          "unit": "sac",
+          "quantity": 15
+        },
+        {
+          "productId": "prd-farine",
+          "productName": "Farine 10kg",
+          "sku": "FAR-10",
+          "unit": "sac",
+          "quantity": 4
+        }
+      ],
+      "eta": "2026-08-26T09:10:00.000Z",
+      "shippingNoteId": "bl-486"
+    },
+    {
+      "id": "dlv-488",
+      "client": "Atacadao Sidi Maârouf",
+      "address": "Sidi Maârouf",
+      "city": "Casablanca",
+      "scheduledAt": "2026-08-26T10:20:00.000Z",
+      "status": "prepared",
+      "driverId": "drv-hassan",
+      "vehicleId": "veh-07",
+      "routeId": "rt-26b",
+      "sequence": 3,
+      "warehouseId": "wh-casa",
+      "location": {
+        "lat": 33.5386,
+        "lng": -7.6442,
+        "label": "Atacadao Sidi Maârouf"
+      },
+      "path": [
+        {
+          "lat": 33.6095,
+          "lng": -7.5328,
+          "label": "Entrepôt Casablanca"
+        },
+        {
+          "lat": 33.596251124999995,
+          "lng": -7.5439333125
+        },
+        {
+          "lat": 33.5842555,
+          "lng": -7.55586425
+        },
+        {
+          "lat": 33.573513125,
+          "lng": -7.5685928125
+        },
+        {
+          "lat": 33.564024,
+          "lng": -7.5821190000000005
+        },
+        {
+          "lat": 33.555788125,
+          "lng": -7.596442812500001
+        },
+        {
+          "lat": 33.5488055,
+          "lng": -7.611564250000001
+        },
+        {
+          "lat": 33.543076125,
+          "lng": -7.6274833125
+        },
+        {
+          "lat": 33.5386,
+          "lng": -7.6442,
+          "label": "Atacadao Sidi Maârouf"
+        }
+      ],
+      "currentPosition": {
+        "lat": 33.6095,
+        "lng": -7.5328,
+        "label": "Entrepôt Casablanca"
+      },
+      "progress": 0,
+      "lines": [
+        {
+          "productId": "prd-eau",
+          "productName": "Eau 1.5L",
+          "sku": "EAU-15",
+          "unit": "pack",
+          "quantity": 13
+        },
+        {
+          "productId": "prd-pate",
+          "productName": "Pâtes 500g",
+          "sku": "PAT-500",
+          "unit": "paquet",
+          "quantity": 18
+        },
+        {
+          "productId": "prd-savon",
+          "productName": "Savon liquide",
+          "sku": "SAV-LIQ",
+          "unit": "flacon",
+          "quantity": 7
+        },
+        {
+          "productId": "prd-sucre",
+          "productName": "Sucre 1kg",
+          "sku": "SUC-1K",
+          "unit": "sac",
+          "quantity": 12
+        }
+      ],
+      "eta": "2026-08-26T10:20:00.000Z",
+      "shippingNoteId": "bl-488"
+    },
+    {
+      "id": "dlv-495",
+      "client": "Hanout Palmier",
+      "address": "Palmier",
+      "city": "Casablanca",
+      "scheduledAt": "2026-08-26T13:05:00.000Z",
+      "status": "prepared",
+      "driverId": "drv-hassan",
+      "vehicleId": "veh-07",
+      "routeId": "rt-26b",
+      "sequence": 4,
+      "warehouseId": "wh-casa",
+      "location": {
+        "lat": 33.5685,
+        "lng": -7.6215,
+        "label": "Hanout Palmier"
+      },
+      "path": [
+        {
+          "lat": 33.6095,
+          "lng": -7.5328,
+          "label": "Entrepôt Casablanca"
+        },
+        {
+          "lat": 33.6008824375,
+          "lng": -7.542273125
+        },
+        {
+          "lat": 33.59326275,
+          "lng": -7.5522075
+        },
+        {
+          "lat": 33.5866409375,
+          "lng": -7.562603125
+        },
+        {
+          "lat": 33.581017,
+          "lng": -7.57346
+        },
+        {
+          "lat": 33.5763909375,
+          "lng": -7.584778125
+        },
+        {
+          "lat": 33.572762749999995,
+          "lng": -7.596557500000001
+        },
+        {
+          "lat": 33.5701324375,
+          "lng": -7.608798125
+        },
+        {
+          "lat": 33.5685,
+          "lng": -7.6215,
+          "label": "Hanout Palmier"
+        }
+      ],
+      "currentPosition": {
+        "lat": 33.6095,
+        "lng": -7.5328,
+        "label": "Entrepôt Casablanca"
+      },
+      "progress": 0,
+      "lines": [
+        {
+          "productId": "prd-riz",
+          "productName": "Riz 5kg",
+          "sku": "RIZ-5K",
+          "unit": "sac",
+          "quantity": 16
+        },
+        {
+          "productId": "prd-farine",
+          "productName": "Farine 10kg",
+          "sku": "FAR-10",
+          "unit": "sac",
+          "quantity": 5
+        },
+        {
+          "productId": "prd-huile",
+          "productName": "Huile végétale 5L",
+          "sku": "HUI-5L",
+          "unit": "bidon",
+          "quantity": 10
+        }
+      ],
+      "eta": "2026-08-26T13:05:00.000Z",
+      "shippingNoteId": "bl-495"
+    },
+    {
+      "id": "dlv-497",
+      "client": "Épicerie 2 Mars",
+      "address": "Bd 2 Mars",
+      "city": "Casablanca",
+      "scheduledAt": "2026-08-26T15:00:00.000Z",
+      "status": "prepared",
+      "driverId": "drv-hassan",
+      "vehicleId": "veh-07",
+      "routeId": "rt-26b",
+      "sequence": 5,
+      "warehouseId": "wh-casa",
+      "location": {
+        "lat": 33.5678,
+        "lng": -7.6095,
+        "label": "Épicerie 2 Mars"
+      },
+      "path": [
+        {
+          "lat": 33.6095,
+          "lng": -7.5328,
+          "label": "Entrepôt Casablanca"
+        },
+        {
+          "lat": 33.6012674375,
+          "lng": -7.5407455625
+        },
+        {
+          "lat": 33.593897750000004,
+          "lng": -7.54916025
+        },
+        {
+          "lat": 33.5873909375,
+          "lng": -7.5580440625000005
+        },
+        {
+          "lat": 33.581747,
+          "lng": -7.567397000000001
+        },
+        {
+          "lat": 33.5769659375,
+          "lng": -7.577219062499999
+        },
+        {
+          "lat": 33.57304775,
+          "lng": -7.58751025
+        },
+        {
+          "lat": 33.5699924375,
+          "lng": -7.5982705625
+        },
+        {
+          "lat": 33.5678,
+          "lng": -7.6095,
+          "label": "Épicerie 2 Mars"
+        }
+      ],
+      "currentPosition": {
+        "lat": 33.6095,
+        "lng": -7.5328,
+        "label": "Entrepôt Casablanca"
+      },
+      "progress": 0,
+      "lines": [
+        {
+          "productId": "prd-pate",
+          "productName": "Pâtes 500g",
+          "sku": "PAT-500",
+          "unit": "paquet",
+          "quantity": 19
+        },
+        {
+          "productId": "prd-savon",
+          "productName": "Savon liquide",
+          "sku": "SAV-LIQ",
+          "unit": "flacon",
+          "quantity": 8
+        },
+        {
+          "productId": "prd-sucre",
+          "productName": "Sucre 1kg",
+          "sku": "SUC-1K",
+          "unit": "sac",
+          "quantity": 13
+        },
+        {
+          "productId": "prd-eau",
+          "productName": "Eau 1.5L",
+          "sku": "EAU-15",
+          "unit": "pack",
+          "quantity": 18
+        }
+      ],
+      "eta": "2026-08-26T15:00:00.000Z",
+      "shippingNoteId": "bl-497"
+    },
+    {
+      "id": "dlv-498",
+      "client": "Relais Aïn Chock",
+      "address": "Aïn Chock",
+      "city": "Casablanca",
+      "scheduledAt": "2026-08-26T16:10:00.000Z",
+      "status": "prepared",
+      "driverId": "drv-hassan",
+      "vehicleId": "veh-07",
+      "routeId": "rt-26b",
+      "sequence": 6,
+      "warehouseId": "wh-casa",
+      "location": {
+        "lat": 33.5348,
+        "lng": -7.5972,
+        "label": "Relais Aïn Chock"
+      },
+      "path": [
+        {
+          "lat": 33.6095,
+          "lng": -7.5328,
+          "label": "Entrepôt Casablanca"
+        },
+        {
+          "lat": 33.597626749999996,
+          "lng": -7.537908687499999
+        },
+        {
+          "lat": 33.586478,
+          "lng": -7.54385775
+        },
+        {
+          "lat": 33.57605374999999,
+          "lng": -7.5506471875
+        },
+        {
+          "lat": 33.566354,
+          "lng": -7.558277
+        },
+        {
+          "lat": 33.55737875,
+          "lng": -7.5667471875
+        },
+        {
+          "lat": 33.549127999999996,
+          "lng": -7.5760577499999995
+        },
+        {
+          "lat": 33.54160175,
+          "lng": -7.586208687499999
+        },
+        {
+          "lat": 33.5348,
+          "lng": -7.5972,
+          "label": "Relais Aïn Chock"
+        }
+      ],
+      "currentPosition": {
+        "lat": 33.6095,
+        "lng": -7.5328,
+        "label": "Entrepôt Casablanca"
+      },
+      "progress": 0,
+      "lines": [
+        {
+          "productId": "prd-farine",
+          "productName": "Farine 10kg",
+          "sku": "FAR-10",
+          "unit": "sac",
+          "quantity": 6
+        },
+        {
+          "productId": "prd-huile",
+          "productName": "Huile végétale 5L",
+          "sku": "HUI-5L",
+          "unit": "bidon",
+          "quantity": 11
+        },
+        {
+          "productId": "prd-lait",
+          "productName": "Lait en poudre",
+          "sku": "LAI-UHT",
+          "unit": "brique",
+          "quantity": 16
+        }
+      ],
+      "eta": "2026-08-26T16:10:00.000Z",
+      "shippingNoteId": "bl-498"
+    },
+    {
+      "id": "dlv-490",
+      "client": "Market Agdal",
+      "address": "Avenue de France",
+      "city": "Rabat",
+      "scheduledAt": "2026-08-27T09:00:00.000Z",
+      "status": "prepared",
+      "driverId": "drv-hassan",
+      "vehicleId": "veh-03",
+      "routeId": "rt-27b",
+      "sequence": 1,
+      "warehouseId": "wh-rabat",
+      "location": {
+        "lat": 33.9985,
+        "lng": -6.8512,
+        "label": "Market Agdal"
+      },
+      "path": [
+        {
+          "lat": 34.0384,
+          "lng": -6.7969,
+          "label": "Entrepôt Rabat"
+        },
+        {
+          "lat": 34.0312744375,
+          "lng": -6.8021164375
+        },
+        {
+          "lat": 34.02475975,
+          "lng": -6.80778175
+        },
+        {
+          "lat": 34.0188559375,
+          "lng": -6.8138959375
+        },
+        {
+          "lat": 34.013563000000005,
+          "lng": -6.820459
+        },
+        {
+          "lat": 34.0088809375,
+          "lng": -6.827470937499999
+        },
+        {
+          "lat": 34.00480975,
+          "lng": -6.83493175
+        },
+        {
+          "lat": 34.001349437500004,
+          "lng": -6.8428414375
+        },
+        {
+          "lat": 33.9985,
+          "lng": -6.8512,
+          "label": "Market Agdal"
+        }
+      ],
+      "currentPosition": {
+        "lat": 34.0384,
+        "lng": -6.7969,
+        "label": "Entrepôt Rabat"
+      },
+      "progress": 0,
+      "lines": [
+        {
+          "productId": "prd-sucre",
+          "productName": "Sucre 1kg",
+          "sku": "SUC-1K",
+          "unit": "sac",
+          "quantity": 7
+        },
+        {
+          "productId": "prd-eau",
+          "productName": "Eau 1.5L",
+          "sku": "EAU-15",
+          "unit": "pack",
+          "quantity": 12
+        },
+        {
+          "productId": "prd-pate",
+          "productName": "Pâtes 500g",
+          "sku": "PAT-500",
+          "unit": "paquet",
+          "quantity": 17
+        },
+        {
+          "productId": "prd-savon",
+          "productName": "Savon liquide",
+          "sku": "SAV-LIQ",
+          "unit": "flacon",
+          "quantity": 6
+        }
+      ],
+      "eta": "2026-08-27T09:00:00.000Z",
+      "shippingNoteId": "bl-490"
+    }
+  ],
+  "routes": [
+    {
+      "id": "rt-26a",
+      "name": "Casa centre — 26 août",
+      "date": "2026-08-26",
+      "driverId": "drv-mehdi",
+      "vehicleId": "veh-12",
+      "warehouseId": "wh-casa",
+      "status": "in_progress",
+      "distanceKm": 42,
+      "path": [
+        {
+          "lat": 33.6095,
+          "lng": -7.5328,
+          "label": "Entrepôt Casablanca"
+        },
+        {
+          "lat": 33.597789999999996,
+          "lng": -7.5472485625
+        },
+        {
+          "lat": 33.587565,
+          "lng": -7.56228325
+        },
+        {
+          "lat": 33.578824999999995,
+          "lng": -7.5779040625
+        },
+        {
+          "lat": 33.571569999999994,
+          "lng": -7.594111
+        },
+        {
+          "lat": 33.565799999999996,
+          "lng": -7.6109040625
+        },
+        {
+          "lat": 33.561515,
+          "lng": -7.628283250000001
+        },
+        {
+          "lat": 33.558715,
+          "lng": -7.6462485625
+        },
+        {
+          "lat": 33.5574,
+          "lng": -7.6648,
+          "label": "Marché Hay Hassani"
+        },
+        {
+          "lat": 33.561825750000004,
+          "lng": -7.6617422500000005
+        },
+        {
+          "lat": 33.565887000000004,
+          "lng": -7.6584010000000005
+        },
+        {
+          "lat": 33.56958375,
+          "lng": -7.654776249999999
+        },
+        {
+          "lat": 33.572916,
+          "lng": -7.650868
+        },
+        {
+          "lat": 33.57588375,
+          "lng": -7.64667625
+        },
+        {
+          "lat": 33.578487,
+          "lng": -7.642201
+        },
+        {
+          "lat": 33.58072575,
+          "lng": -7.637442249999999
+        },
+        {
+          "lat": 33.5826,
+          "lng": -7.6324,
+          "label": "Supermarché Atlas"
+        },
+        {
+          "lat": 33.58259175,
+          "lng": -7.63190275
+        },
+        {
+          "lat": 33.582543,
+          "lng": -7.631419
+        },
+        {
+          "lat": 33.58245375,
+          "lng": -7.63094875
+        },
+        {
+          "lat": 33.582324,
+          "lng": -7.630492
+        },
+        {
+          "lat": 33.58215375,
+          "lng": -7.63004875
+        },
+        {
+          "lat": 33.581943,
+          "lng": -7.629619
+        },
+        {
+          "lat": 33.581691750000005,
+          "lng": -7.62920275
+        },
+        {
+          "lat": 33.5814,
+          "lng": -7.6288,
+          "label": "Épicerie Maarif"
+        },
+        {
+          "lat": 33.5810145,
+          "lng": -7.6332953125
+        },
+        {
+          "lat": 33.581007,
+          "lng": -7.63770625
+        },
+        {
+          "lat": 33.5813775,
+          "lng": -7.6420328125
+        },
+        {
+          "lat": 33.582126,
+          "lng": -7.646274999999999
+        },
+        {
+          "lat": 33.5832525,
+          "lng": -7.6504328125
+        },
+        {
+          "lat": 33.584757,
+          "lng": -7.654506250000001
+        },
+        {
+          "lat": 33.586639500000004,
+          "lng": -7.6584953125
+        },
+        {
+          "lat": 33.5889,
+          "lng": -7.6624,
+          "label": "Épicerie Anfa"
+        },
+        {
+          "lat": 33.58923575000001,
+          "lng": -7.6619011875
+        },
+        {
+          "lat": 33.589522,
+          "lng": -7.66138775
+        },
+        {
+          "lat": 33.58975875,
+          "lng": -7.6608596875
+        },
+        {
+          "lat": 33.589946000000005,
+          "lng": -7.660317
+        },
+        {
+          "lat": 33.590083750000005,
+          "lng": -7.659759687500001
+        },
+        {
+          "lat": 33.590172,
+          "lng": -7.659187749999999
+        },
+        {
+          "lat": 33.590210750000004,
+          "lng": -7.6586011875
+        },
+        {
+          "lat": 33.5902,
+          "lng": -7.658,
+          "label": "Boulangerie Anfa"
+        },
+        {
+          "lat": 33.5901071875,
+          "lng": -7.660650125
+        },
+        {
+          "lat": 33.59023375,
+          "lng": -7.663239499999999
+        },
+        {
+          "lat": 33.590579687500004,
+          "lng": -7.665768125
+        },
+        {
+          "lat": 33.591145,
+          "lng": -7.668236
+        },
+        {
+          "lat": 33.5919296875,
+          "lng": -7.670643125
+        },
+        {
+          "lat": 33.59293375,
+          "lng": -7.6729895
+        },
+        {
+          "lat": 33.594157187499995,
+          "lng": -7.675275125
+        },
+        {
+          "lat": 33.5956,
+          "lng": -7.6775,
+          "label": "Carrefour Ain Diab"
+        },
+        {
+          "lat": 33.5949519375,
+          "lng": -7.672665375
+        },
+        {
+          "lat": 33.59392475,
+          "lng": -7.6680085
+        },
+        {
+          "lat": 33.5925184375,
+          "lng": -7.663529375
+        },
+        {
+          "lat": 33.590733,
+          "lng": -7.659228000000001
+        },
+        {
+          "lat": 33.588568437499994,
+          "lng": -7.6551043750000005
+        },
+        {
+          "lat": 33.58602474999999,
+          "lng": -7.651158500000001
+        },
+        {
+          "lat": 33.5831019375,
+          "lng": -7.6473903750000005
+        },
+        {
+          "lat": 33.5798,
+          "lng": -7.6438,
+          "label": "Pharmacie Ghandi"
+        },
+        {
+          "lat": 33.582159312499996,
+          "lng": -7.642853125
+        },
+        {
+          "lat": 33.584380249999995,
+          "lng": -7.6417375000000005
+        },
+        {
+          "lat": 33.5864628125,
+          "lng": -7.640453125
+        },
+        {
+          "lat": 33.588407,
+          "lng": -7.638999999999999
+        },
+        {
+          "lat": 33.5902128125,
+          "lng": -7.637378125
+        },
+        {
+          "lat": 33.59188025,
+          "lng": -7.6355875
+        },
+        {
+          "lat": 33.5934093125,
+          "lng": -7.6336281249999995
+        },
+        {
+          "lat": 33.5948,
+          "lng": -7.6315,
+          "label": "Casino Bourgogne"
+        },
+        {
+          "lat": 33.595364437499995,
+          "lng": -7.629795375
+        },
+        {
+          "lat": 33.59577475,
+          "lng": -7.6280885
+        },
+        {
+          "lat": 33.5960309375,
+          "lng": -7.626379375
+        },
+        {
+          "lat": 33.596132999999995,
+          "lng": -7.624668
+        },
+        {
+          "lat": 33.5960809375,
+          "lng": -7.622954375
+        },
+        {
+          "lat": 33.59587475,
+          "lng": -7.6212385
+        },
+        {
+          "lat": 33.5955144375,
+          "lng": -7.6195203750000005
+        },
+        {
+          "lat": 33.595,
+          "lng": -7.6178,
+          "label": "Marché Central"
+        },
+        {
+          "lat": 33.593360624999995,
+          "lng": -7.6201690625
+        },
+        {
+          "lat": 33.5919575,
+          "lng": -7.62261125
+        },
+        {
+          "lat": 33.590790625000004,
+          "lng": -7.6251265625
+        },
+        {
+          "lat": 33.58986,
+          "lng": -7.627715
+        },
+        {
+          "lat": 33.58916562500001,
+          "lng": -7.6303765625
+        },
+        {
+          "lat": 33.588707500000005,
+          "lng": -7.633111250000001
+        },
+        {
+          "lat": 33.588485625000004,
+          "lng": -7.6359190625
+        },
+        {
+          "lat": 33.5885,
+          "lng": -7.6388,
+          "label": "Super Croc Racine"
+        },
+        {
+          "lat": 33.585904375,
+          "lng": -7.6394938125
+        },
+        {
+          "lat": 33.5834325,
+          "lng": -7.64038225
+        },
+        {
+          "lat": 33.581084375,
+          "lng": -7.641465312499999
+        },
+        {
+          "lat": 33.57886,
+          "lng": -7.642742999999999
+        },
+        {
+          "lat": 33.576759374999995,
+          "lng": -7.644215312499999
+        },
+        {
+          "lat": 33.5747825,
+          "lng": -7.64588225
+        },
+        {
+          "lat": 33.572929375,
+          "lng": -7.6477438125
+        },
+        {
+          "lat": 33.5712,
+          "lng": -7.6498,
+          "label": "Market Beauséjour"
+        }
+      ],
+      "currentPosition": {
+        "lat": 33.59127966853775,
+        "lng": -7.567235895564239
+      },
+      "progress": 13
+    },
+    {
+      "id": "rt-26b",
+      "name": "Casa sud — 26 août",
+      "date": "2026-08-26",
+      "driverId": "drv-hassan",
+      "vehicleId": "veh-07",
+      "warehouseId": "wh-casa",
+      "status": "in_progress",
+      "distanceKm": 28,
+      "path": [
+        {
+          "lat": 33.6095,
+          "lng": -7.5328,
+          "label": "Entrepôt Casablanca"
+        },
+        {
+          "lat": 33.602101125,
+          "lng": -7.540279937499999
+        },
+        {
+          "lat": 33.5955055,
+          "lng": -7.54817275
+        },
+        {
+          "lat": 33.589713124999996,
+          "lng": -7.5564784375
+        },
+        {
+          "lat": 33.584723999999994,
+          "lng": -7.5651969999999995
+        },
+        {
+          "lat": 33.580538125,
+          "lng": -7.5743284375
+        },
+        {
+          "lat": 33.5771555,
+          "lng": -7.583872749999999
+        },
+        {
+          "lat": 33.574576125,
+          "lng": -7.5938299375
+        },
+        {
+          "lat": 33.5728,
+          "lng": -7.6042,
+          "label": "Market Derb Sultan"
+        },
+        {
+          "lat": 33.569191375,
+          "lng": -7.607542625
+        },
+        {
+          "lat": 33.5659495,
+          "lng": -7.611094499999999
+        },
+        {
+          "lat": 33.563074375,
+          "lng": -7.614855625
+        },
+        {
+          "lat": 33.560566,
+          "lng": -7.618826
+        },
+        {
+          "lat": 33.558424375,
+          "lng": -7.623005624999999
+        },
+        {
+          "lat": 33.5566495,
+          "lng": -7.627394499999999
+        },
+        {
+          "lat": 33.555241375,
+          "lng": -7.631992625
+        },
+        {
+          "lat": 33.5542,
+          "lng": -7.6368,
+          "label": "Mini Market Oasis"
+        },
+        {
+          "lat": 33.551958625,
+          "lng": -7.63711075
+        },
+        {
+          "lat": 33.5498005,
+          "lng": -7.6375969999999995
+        },
+        {
+          "lat": 33.547725625000005,
+          "lng": -7.638258749999999
+        },
+        {
+          "lat": 33.545734,
+          "lng": -7.639096
+        },
+        {
+          "lat": 33.543825625000004,
+          "lng": -7.64010875
+        },
+        {
+          "lat": 33.5420005,
+          "lng": -7.641297
+        },
+        {
+          "lat": 33.54025862500001,
+          "lng": -7.642660749999999
+        },
+        {
+          "lat": 33.5386,
+          "lng": -7.6442,
+          "label": "Atacadao Sidi Maârouf"
+        },
+        {
+          "lat": 33.543231312500005,
+          "lng": -7.6425398125
+        },
+        {
+          "lat": 33.54760725,
+          "lng": -7.6405432499999995
+        },
+        {
+          "lat": 33.551727812500005,
+          "lng": -7.638210312499999
+        },
+        {
+          "lat": 33.555593,
+          "lng": -7.635541
+        },
+        {
+          "lat": 33.559202812500004,
+          "lng": -7.6325353125
+        },
+        {
+          "lat": 33.56255725,
+          "lng": -7.62919325
+        },
+        {
+          "lat": 33.5656563125,
+          "lng": -7.6255148125000005
+        },
+        {
+          "lat": 33.5685,
+          "lng": -7.6215,
+          "label": "Hanout Palmier"
+        },
+        {
+          "lat": 33.568885,
+          "lng": -7.6199724375
+        },
+        {
+          "lat": 33.569135,
+          "lng": -7.618452749999999
+        },
+        {
+          "lat": 33.569250000000004,
+          "lng": -7.616940937499999
+        },
+        {
+          "lat": 33.569230000000005,
+          "lng": -7.615437
+        },
+        {
+          "lat": 33.569075,
+          "lng": -7.613940937499999
+        },
+        {
+          "lat": 33.568785,
+          "lng": -7.612452749999999
+        },
+        {
+          "lat": 33.56836,
+          "lng": -7.610972437499999
+        },
+        {
+          "lat": 33.5678,
+          "lng": -7.6095,
+          "label": "Épicerie 2 Mars"
+        },
+        {
+          "lat": 33.564159312499996,
+          "lng": -7.606663125
+        },
+        {
+          "lat": 33.560380249999994,
+          "lng": -7.604197500000001
+        },
+        {
+          "lat": 33.5564628125,
+          "lng": -7.602103125
+        },
+        {
+          "lat": 33.552406999999995,
+          "lng": -7.60038
+        },
+        {
+          "lat": 33.5482128125,
+          "lng": -7.599028125
+        },
+        {
+          "lat": 33.54388025,
+          "lng": -7.5980475
+        },
+        {
+          "lat": 33.5394093125,
+          "lng": -7.597438125
+        },
+        {
+          "lat": 33.5348,
+          "lng": -7.5972,
+          "label": "Relais Aïn Chock"
+        }
+      ],
+      "currentPosition": {
+        "lat": 33.566958498260185,
+        "lng": -7.591459533445686
+      },
+      "progress": 27
+    },
+    {
+      "id": "rt-27b",
+      "name": "Rabat nord — 27 août",
+      "date": "2026-08-27",
+      "driverId": "drv-hassan",
+      "vehicleId": "veh-03",
+      "warehouseId": "wh-rabat",
+      "status": "planned",
+      "distanceKm": 31,
+      "progress": 0,
+      "path": [
+        {
+          "lat": 34.0384,
+          "lng": -6.7969,
+          "label": "Entrepôt Rabat"
+        },
+        {
+          "lat": 34.0312744375,
+          "lng": -6.8021164375
+        },
+        {
+          "lat": 34.02475975,
+          "lng": -6.80778175
+        },
+        {
+          "lat": 34.0188559375,
+          "lng": -6.8138959375
+        },
+        {
+          "lat": 34.013563000000005,
+          "lng": -6.820459
+        },
+        {
+          "lat": 34.0088809375,
+          "lng": -6.827470937499999
+        },
+        {
+          "lat": 34.00480975,
+          "lng": -6.83493175
+        },
+        {
+          "lat": 34.001349437500004,
+          "lng": -6.8428414375
+        },
+        {
+          "lat": 33.9985,
+          "lng": -6.8512,
+          "label": "Market Agdal"
+        }
+      ],
+      "currentPosition": {
+        "lat": 34.0384,
+        "lng": -6.7969,
+        "label": "Entrepôt Rabat"
+      }
+    }
+  ],
+  "vehicles": [
+    {
+      "id": "veh-12",
+      "name": "Fourgon 12",
+      "plate": "A 45821",
+      "status": "on_mission",
+      "warehouseId": "wh-casa"
+    },
+    {
+      "id": "veh-07",
+      "name": "Fourgon 07",
+      "plate": "A 22910",
+      "status": "on_mission",
+      "warehouseId": "wh-casa"
+    },
+    {
+      "id": "veh-03",
+      "name": "Camion 03",
+      "plate": "A 11002",
+      "status": "available",
+      "warehouseId": "wh-rabat"
+    },
+    {
+      "id": "veh-09",
+      "name": "Fourgon 09",
+      "plate": "A 77441",
+      "status": "maintenance",
+      "warehouseId": "wh-marrakech"
+    }
+  ],
+  "drivers": [
+    {
+      "id": "drv-mehdi",
+      "userId": "usr-driver",
+      "vehicleId": "veh-12",
+      "phone": "+212 661 20 14 88",
+      "status": "on_route"
+    },
+    {
+      "id": "drv-hassan",
+      "userId": "usr-driver-2",
+      "vehicleId": "veh-07",
+      "phone": "+212 662 33 90 11",
+      "status": "on_route"
+    }
+  ],
+  "shippingNotes": [
+    {
+      "id": "bl-481",
+      "code": "BL-2026-00481",
+      "warehouseId": "wh-casa",
+      "client": "Marché Hay Hassani",
+      "address": "Bd Mohamed VI",
+      "city": "Casablanca",
+      "lines": [
+        {
+          "productId": "prd-sucre",
+          "productName": "Sucre 1kg",
+          "sku": "SUC-1K",
+          "unit": "sac",
+          "quantity": 7
+        },
+        {
+          "productId": "prd-eau",
+          "productName": "Eau 1.5L",
+          "sku": "EAU-15",
+          "unit": "pack",
+          "quantity": 12
+        },
+        {
+          "productId": "prd-pate",
+          "productName": "Pâtes 500g",
+          "sku": "PAT-500",
+          "unit": "paquet",
+          "quantity": 17
+        },
+        {
+          "productId": "prd-savon",
+          "productName": "Savon liquide",
+          "sku": "SAV-LIQ",
+          "unit": "flacon",
+          "quantity": 6
+        }
+      ],
+      "status": "delivered",
+      "deliveryId": "dlv-481",
+      "shipmentId": "shp-88"
+    },
+    {
+      "id": "bl-482",
+      "code": "BL-2026-00482",
+      "warehouseId": "wh-casa",
+      "client": "Supermarché Atlas",
+      "address": "Maarif, rue Ibnou Katir",
+      "city": "Casablanca",
+      "lines": [
+        {
+          "productId": "prd-lait",
+          "productName": "Lait en poudre",
+          "sku": "LAI-UHT",
+          "unit": "brique",
+          "quantity": 10
+        },
+        {
+          "productId": "prd-riz",
+          "productName": "Riz 5kg",
+          "sku": "RIZ-5K",
+          "unit": "sac",
+          "quantity": 15
+        },
+        {
+          "productId": "prd-farine",
+          "productName": "Farine 10kg",
+          "sku": "FAR-10",
+          "unit": "sac",
+          "quantity": 4
+        }
+      ],
+      "status": "assigned",
+      "deliveryId": "dlv-482",
+      "shipmentId": "shp-88",
+      "notes": "Circulation dense — créneau serré"
+    },
+    {
+      "id": "bl-487",
+      "code": "BL-2026-00487",
+      "warehouseId": "wh-casa",
+      "client": "Épicerie Maarif",
+      "address": "Rue Soudanie",
+      "city": "Casablanca",
+      "lines": [
+        {
+          "productId": "prd-eau",
+          "productName": "Eau 1.5L",
+          "sku": "EAU-15",
+          "unit": "pack",
+          "quantity": 13
+        },
+        {
+          "productId": "prd-pate",
+          "productName": "Pâtes 500g",
+          "sku": "PAT-500",
+          "unit": "paquet",
+          "quantity": 18
+        },
+        {
+          "productId": "prd-savon",
+          "productName": "Savon liquide",
+          "sku": "SAV-LIQ",
+          "unit": "flacon",
+          "quantity": 7
+        },
+        {
+          "productId": "prd-sucre",
+          "productName": "Sucre 1kg",
+          "sku": "SUC-1K",
+          "unit": "sac",
+          "quantity": 12
+        }
+      ],
+      "status": "assigned",
+      "deliveryId": "dlv-487",
+      "shipmentId": "shp-88"
+    },
+    {
+      "id": "bl-483",
+      "code": "BL-2026-00483",
+      "warehouseId": "wh-casa",
+      "client": "Épicerie Anfa",
+      "address": "Boulevard d’Anfa",
+      "city": "Casablanca",
+      "lines": [
+        {
+          "productId": "prd-riz",
+          "productName": "Riz 5kg",
+          "sku": "RIZ-5K",
+          "unit": "sac",
+          "quantity": 16
+        },
+        {
+          "productId": "prd-farine",
+          "productName": "Farine 10kg",
+          "sku": "FAR-10",
+          "unit": "sac",
+          "quantity": 5
+        },
+        {
+          "productId": "prd-huile",
+          "productName": "Huile végétale 5L",
+          "sku": "HUI-5L",
+          "unit": "bidon",
+          "quantity": 10
+        }
+      ],
+      "status": "assigned",
+      "deliveryId": "dlv-483",
+      "shipmentId": "shp-88"
+    },
+    {
+      "id": "bl-489",
+      "code": "BL-2026-00489",
+      "warehouseId": "wh-casa",
+      "client": "Boulangerie Anfa",
+      "address": "Bd d’Anfa",
+      "city": "Casablanca",
+      "lines": [
+        {
+          "productId": "prd-pate",
+          "productName": "Pâtes 500g",
+          "sku": "PAT-500",
+          "unit": "paquet",
+          "quantity": 19
+        },
+        {
+          "productId": "prd-savon",
+          "productName": "Savon liquide",
+          "sku": "SAV-LIQ",
+          "unit": "flacon",
+          "quantity": 8
+        },
+        {
+          "productId": "prd-sucre",
+          "productName": "Sucre 1kg",
+          "sku": "SUC-1K",
+          "unit": "sac",
+          "quantity": 13
+        },
+        {
+          "productId": "prd-eau",
+          "productName": "Eau 1.5L",
+          "sku": "EAU-15",
+          "unit": "pack",
+          "quantity": 18
+        }
+      ],
+      "status": "assigned",
+      "deliveryId": "dlv-489",
+      "shipmentId": "shp-88"
+    },
+    {
+      "id": "bl-484",
+      "code": "BL-2026-00484",
+      "warehouseId": "wh-casa",
+      "client": "Carrefour Ain Diab",
+      "address": "Corniche",
+      "city": "Casablanca",
+      "lines": [
+        {
+          "productId": "prd-farine",
+          "productName": "Farine 10kg",
+          "sku": "FAR-10",
+          "unit": "sac",
+          "quantity": 6
+        },
+        {
+          "productId": "prd-huile",
+          "productName": "Huile végétale 5L",
+          "sku": "HUI-5L",
+          "unit": "bidon",
+          "quantity": 11
+        },
+        {
+          "productId": "prd-lait",
+          "productName": "Lait en poudre",
+          "sku": "LAI-UHT",
+          "unit": "brique",
+          "quantity": 16
+        }
+      ],
+      "status": "assigned",
+      "deliveryId": "dlv-484",
+      "shipmentId": "shp-88"
+    },
+    {
+      "id": "bl-491",
+      "code": "BL-2026-00491",
+      "warehouseId": "wh-casa",
+      "client": "Pharmacie Ghandi",
+      "address": "Bd Ghandi",
+      "city": "Casablanca",
+      "lines": [
+        {
+          "productId": "prd-savon",
+          "productName": "Savon liquide",
+          "sku": "SAV-LIQ",
+          "unit": "flacon",
+          "quantity": 9
+        },
+        {
+          "productId": "prd-sucre",
+          "productName": "Sucre 1kg",
+          "sku": "SUC-1K",
+          "unit": "sac",
+          "quantity": 14
+        },
+        {
+          "productId": "prd-eau",
+          "productName": "Eau 1.5L",
+          "sku": "EAU-15",
+          "unit": "pack",
+          "quantity": 19
+        },
+        {
+          "productId": "prd-pate",
+          "productName": "Pâtes 500g",
+          "sku": "PAT-500",
+          "unit": "paquet",
+          "quantity": 8
+        }
+      ],
+      "status": "assigned",
+      "deliveryId": "dlv-491",
+      "shipmentId": "shp-88"
+    },
+    {
+      "id": "bl-492",
+      "code": "BL-2026-00492",
+      "warehouseId": "wh-casa",
+      "client": "Casino Bourgogne",
+      "address": "Quartier Bourgogne",
+      "city": "Casablanca",
+      "lines": [
+        {
+          "productId": "prd-huile",
+          "productName": "Huile végétale 5L",
+          "sku": "HUI-5L",
+          "unit": "bidon",
+          "quantity": 12
+        },
+        {
+          "productId": "prd-lait",
+          "productName": "Lait en poudre",
+          "sku": "LAI-UHT",
+          "unit": "brique",
+          "quantity": 17
+        },
+        {
+          "productId": "prd-riz",
+          "productName": "Riz 5kg",
+          "sku": "RIZ-5K",
+          "unit": "sac",
+          "quantity": 6
+        }
+      ],
+      "status": "assigned",
+      "deliveryId": "dlv-492",
+      "shipmentId": "shp-88"
+    },
+    {
+      "id": "bl-493",
+      "code": "BL-2026-00493",
+      "warehouseId": "wh-casa",
+      "client": "Marché Central",
+      "address": "Médina",
+      "city": "Casablanca",
+      "lines": [
+        {
+          "productId": "prd-sucre",
+          "productName": "Sucre 1kg",
+          "sku": "SUC-1K",
+          "unit": "sac",
+          "quantity": 15
+        },
+        {
+          "productId": "prd-eau",
+          "productName": "Eau 1.5L",
+          "sku": "EAU-15",
+          "unit": "pack",
+          "quantity": 4
+        },
+        {
+          "productId": "prd-pate",
+          "productName": "Pâtes 500g",
+          "sku": "PAT-500",
+          "unit": "paquet",
+          "quantity": 9
+        },
+        {
+          "productId": "prd-savon",
+          "productName": "Savon liquide",
+          "sku": "SAV-LIQ",
+          "unit": "flacon",
+          "quantity": 14
+        }
+      ],
+      "status": "assigned",
+      "deliveryId": "dlv-493",
+      "shipmentId": "shp-88"
+    },
+    {
+      "id": "bl-494",
+      "code": "BL-2026-00494",
+      "warehouseId": "wh-casa",
+      "client": "Super Croc Racine",
+      "address": "Bd Racine",
+      "city": "Casablanca",
+      "lines": [
+        {
+          "productId": "prd-lait",
+          "productName": "Lait en poudre",
+          "sku": "LAI-UHT",
+          "unit": "brique",
+          "quantity": 18
+        },
+        {
+          "productId": "prd-riz",
+          "productName": "Riz 5kg",
+          "sku": "RIZ-5K",
+          "unit": "sac",
+          "quantity": 7
+        },
+        {
+          "productId": "prd-farine",
+          "productName": "Farine 10kg",
+          "sku": "FAR-10",
+          "unit": "sac",
+          "quantity": 12
+        }
+      ],
+      "status": "assigned",
+      "deliveryId": "dlv-494",
+      "shipmentId": "shp-88"
+    },
+    {
+      "id": "bl-496",
+      "code": "BL-2026-00496",
+      "warehouseId": "wh-casa",
+      "client": "Market Beauséjour",
+      "address": "Beauséjour",
+      "city": "Casablanca",
+      "lines": [
+        {
+          "productId": "prd-eau",
+          "productName": "Eau 1.5L",
+          "sku": "EAU-15",
+          "unit": "pack",
+          "quantity": 5
+        },
+        {
+          "productId": "prd-pate",
+          "productName": "Pâtes 500g",
+          "sku": "PAT-500",
+          "unit": "paquet",
+          "quantity": 10
+        },
+        {
+          "productId": "prd-savon",
+          "productName": "Savon liquide",
+          "sku": "SAV-LIQ",
+          "unit": "flacon",
+          "quantity": 15
+        },
+        {
+          "productId": "prd-sucre",
+          "productName": "Sucre 1kg",
+          "sku": "SUC-1K",
+          "unit": "sac",
+          "quantity": 4
+        }
+      ],
+      "status": "assigned",
+      "deliveryId": "dlv-496",
+      "shipmentId": "shp-88"
+    },
+    {
+      "id": "bl-485",
+      "code": "BL-2026-00485",
+      "warehouseId": "wh-casa",
+      "client": "Market Derb Sultan",
+      "address": "Rue des Hôpitaux",
+      "city": "Casablanca",
+      "lines": [
+        {
+          "productId": "prd-sucre",
+          "productName": "Sucre 1kg",
+          "sku": "SUC-1K",
+          "unit": "sac",
+          "quantity": 7
+        },
+        {
+          "productId": "prd-eau",
+          "productName": "Eau 1.5L",
+          "sku": "EAU-15",
+          "unit": "pack",
+          "quantity": 12
+        },
+        {
+          "productId": "prd-pate",
+          "productName": "Pâtes 500g",
+          "sku": "PAT-500",
+          "unit": "paquet",
+          "quantity": 17
+        },
+        {
+          "productId": "prd-savon",
+          "productName": "Savon liquide",
+          "sku": "SAV-LIQ",
+          "unit": "flacon",
+          "quantity": 6
+        }
+      ],
+      "status": "delivered",
+      "deliveryId": "dlv-485",
+      "shipmentId": "shp-91"
+    },
+    {
+      "id": "bl-486",
+      "code": "BL-2026-00486",
+      "warehouseId": "wh-casa",
+      "client": "Mini Market Oasis",
+      "address": "Californie",
+      "city": "Casablanca",
+      "lines": [
+        {
+          "productId": "prd-lait",
+          "productName": "Lait en poudre",
+          "sku": "LAI-UHT",
+          "unit": "brique",
+          "quantity": 10
+        },
+        {
+          "productId": "prd-riz",
+          "productName": "Riz 5kg",
+          "sku": "RIZ-5K",
+          "unit": "sac",
+          "quantity": 15
+        },
+        {
+          "productId": "prd-farine",
+          "productName": "Farine 10kg",
+          "sku": "FAR-10",
+          "unit": "sac",
+          "quantity": 4
+        }
+      ],
+      "status": "assigned",
+      "deliveryId": "dlv-486",
+      "shipmentId": "shp-91"
+    },
+    {
+      "id": "bl-488",
+      "code": "BL-2026-00488",
+      "warehouseId": "wh-casa",
+      "client": "Atacadao Sidi Maârouf",
+      "address": "Sidi Maârouf",
+      "city": "Casablanca",
+      "lines": [
+        {
+          "productId": "prd-eau",
+          "productName": "Eau 1.5L",
+          "sku": "EAU-15",
+          "unit": "pack",
+          "quantity": 13
+        },
+        {
+          "productId": "prd-pate",
+          "productName": "Pâtes 500g",
+          "sku": "PAT-500",
+          "unit": "paquet",
+          "quantity": 18
+        },
+        {
+          "productId": "prd-savon",
+          "productName": "Savon liquide",
+          "sku": "SAV-LIQ",
+          "unit": "flacon",
+          "quantity": 7
+        },
+        {
+          "productId": "prd-sucre",
+          "productName": "Sucre 1kg",
+          "sku": "SUC-1K",
+          "unit": "sac",
+          "quantity": 12
+        }
+      ],
+      "status": "assigned",
+      "deliveryId": "dlv-488",
+      "shipmentId": "shp-91"
+    },
+    {
+      "id": "bl-495",
+      "code": "BL-2026-00495",
+      "warehouseId": "wh-casa",
+      "client": "Hanout Palmier",
+      "address": "Palmier",
+      "city": "Casablanca",
+      "lines": [
+        {
+          "productId": "prd-riz",
+          "productName": "Riz 5kg",
+          "sku": "RIZ-5K",
+          "unit": "sac",
+          "quantity": 16
+        },
+        {
+          "productId": "prd-farine",
+          "productName": "Farine 10kg",
+          "sku": "FAR-10",
+          "unit": "sac",
+          "quantity": 5
+        },
+        {
+          "productId": "prd-huile",
+          "productName": "Huile végétale 5L",
+          "sku": "HUI-5L",
+          "unit": "bidon",
+          "quantity": 10
+        }
+      ],
+      "status": "assigned",
+      "deliveryId": "dlv-495",
+      "shipmentId": "shp-91"
+    },
+    {
+      "id": "bl-497",
+      "code": "BL-2026-00497",
+      "warehouseId": "wh-casa",
+      "client": "Épicerie 2 Mars",
+      "address": "Bd 2 Mars",
+      "city": "Casablanca",
+      "lines": [
+        {
+          "productId": "prd-pate",
+          "productName": "Pâtes 500g",
+          "sku": "PAT-500",
+          "unit": "paquet",
+          "quantity": 19
+        },
+        {
+          "productId": "prd-savon",
+          "productName": "Savon liquide",
+          "sku": "SAV-LIQ",
+          "unit": "flacon",
+          "quantity": 8
+        },
+        {
+          "productId": "prd-sucre",
+          "productName": "Sucre 1kg",
+          "sku": "SUC-1K",
+          "unit": "sac",
+          "quantity": 13
+        },
+        {
+          "productId": "prd-eau",
+          "productName": "Eau 1.5L",
+          "sku": "EAU-15",
+          "unit": "pack",
+          "quantity": 18
+        }
+      ],
+      "status": "assigned",
+      "deliveryId": "dlv-497",
+      "shipmentId": "shp-91"
+    },
+    {
+      "id": "bl-498",
+      "code": "BL-2026-00498",
+      "warehouseId": "wh-casa",
+      "client": "Relais Aïn Chock",
+      "address": "Aïn Chock",
+      "city": "Casablanca",
+      "lines": [
+        {
+          "productId": "prd-farine",
+          "productName": "Farine 10kg",
+          "sku": "FAR-10",
+          "unit": "sac",
+          "quantity": 6
+        },
+        {
+          "productId": "prd-huile",
+          "productName": "Huile végétale 5L",
+          "sku": "HUI-5L",
+          "unit": "bidon",
+          "quantity": 11
+        },
+        {
+          "productId": "prd-lait",
+          "productName": "Lait en poudre",
+          "sku": "LAI-UHT",
+          "unit": "brique",
+          "quantity": 16
+        }
+      ],
+      "status": "assigned",
+      "deliveryId": "dlv-498",
+      "shipmentId": "shp-91"
+    },
+    {
+      "id": "bl-490",
+      "code": "BL-2026-00490",
+      "warehouseId": "wh-rabat",
+      "client": "Market Agdal",
+      "address": "Avenue de France",
+      "city": "Rabat",
+      "lines": [
+        {
+          "productId": "prd-sucre",
+          "productName": "Sucre 1kg",
+          "sku": "SUC-1K",
+          "unit": "sac",
+          "quantity": 7
+        },
+        {
+          "productId": "prd-eau",
+          "productName": "Eau 1.5L",
+          "sku": "EAU-15",
+          "unit": "pack",
+          "quantity": 12
+        },
+        {
+          "productId": "prd-pate",
+          "productName": "Pâtes 500g",
+          "sku": "PAT-500",
+          "unit": "paquet",
+          "quantity": 17
+        },
+        {
+          "productId": "prd-savon",
+          "productName": "Savon liquide",
+          "sku": "SAV-LIQ",
+          "unit": "flacon",
+          "quantity": 6
+        }
+      ],
+      "status": "assigned",
+      "deliveryId": "dlv-490",
+      "shipmentId": "shp-89"
+    },
+    {
+      "id": "bl-ready-01",
+      "code": "BL-2026-00901",
+      "warehouseId": "wh-casa",
+      "client": "Pharmacie des Habous",
+      "address": "Quartier des Habous",
+      "city": "Casablanca",
+      "lines": [
+        {
+          "productId": "prd-sucre",
+          "productName": "Sucre 1kg",
+          "sku": "SUC-1K",
+          "unit": "sac",
+          "quantity": 8
+        },
+        {
+          "productId": "prd-eau",
+          "productName": "Eau 1.5L",
+          "sku": "EAU-15",
+          "unit": "pack",
+          "quantity": 12
+        },
+        {
+          "productId": "prd-the",
+          "productName": "Thé vert 200g",
+          "sku": "THE-200",
+          "unit": "boîte",
+          "quantity": 16
+        }
+      ],
+      "status": "ready"
+    },
+    {
+      "id": "bl-ready-02",
+      "code": "BL-2026-00902",
+      "warehouseId": "wh-casa",
+      "client": "Café Bianca",
+      "address": "Gauthier, rue du 6 novembre",
+      "city": "Casablanca",
+      "lines": [
+        {
+          "productId": "prd-lait",
+          "productName": "Lait en poudre",
+          "sku": "LAI-UHT",
+          "unit": "brique",
+          "quantity": 10
+        },
+        {
+          "productId": "prd-riz",
+          "productName": "Riz 5kg",
+          "sku": "RIZ-5K",
+          "unit": "sac",
+          "quantity": 14
+        },
+        {
+          "productId": "prd-huile",
+          "productName": "Huile végétale 5L",
+          "sku": "HUI-5L",
+          "unit": "bidon",
+          "quantity": 18
+        },
+        {
+          "productId": "prd-lait",
+          "productName": "Lait en poudre",
+          "sku": "LAI-UHT",
+          "unit": "brique",
+          "quantity": 8
+        }
+      ],
+      "status": "ready"
+    },
+    {
+      "id": "bl-ready-03",
+      "code": "BL-2026-00903",
+      "warehouseId": "wh-casa",
+      "client": "Superette Racine 2",
+      "address": "Bd Racine",
+      "city": "Casablanca",
+      "lines": [
+        {
+          "productId": "prd-eau",
+          "productName": "Eau 1.5L",
+          "sku": "EAU-15",
+          "unit": "pack",
+          "quantity": 12
+        },
+        {
+          "productId": "prd-the",
+          "productName": "Thé vert 200g",
+          "sku": "THE-200",
+          "unit": "boîte",
+          "quantity": 16
+        },
+        {
+          "productId": "prd-sucre",
+          "productName": "Sucre 1kg",
+          "sku": "SUC-1K",
+          "unit": "sac",
+          "quantity": 6
+        }
+      ],
+      "status": "ready"
+    },
+    {
+      "id": "bl-ready-04",
+      "code": "BL-2026-00904",
+      "warehouseId": "wh-casa",
+      "client": "Hanout Mers Sultan",
+      "address": "Mers Sultan",
+      "city": "Casablanca",
+      "lines": [
+        {
+          "productId": "prd-riz",
+          "productName": "Riz 5kg",
+          "sku": "RIZ-5K",
+          "unit": "sac",
+          "quantity": 14
+        },
+        {
+          "productId": "prd-huile",
+          "productName": "Huile végétale 5L",
+          "sku": "HUI-5L",
+          "unit": "bidon",
+          "quantity": 18
+        }
+      ],
+      "status": "ready"
+    },
+    {
+      "id": "bl-ready-05",
+      "code": "BL-2026-00905",
+      "warehouseId": "wh-rabat",
+      "client": "Épicerie Hassan",
+      "address": "Avenue Allal Ben Abdellah",
+      "city": "Rabat",
+      "lines": [
+        {
+          "productId": "prd-the",
+          "productName": "Thé vert 200g",
+          "sku": "THE-200",
+          "unit": "boîte",
+          "quantity": 16
+        },
+        {
+          "productId": "prd-sucre",
+          "productName": "Sucre 1kg",
+          "sku": "SUC-1K",
+          "unit": "sac",
+          "quantity": 6
+        },
+        {
+          "productId": "prd-eau",
+          "productName": "Eau 1.5L",
+          "sku": "EAU-15",
+          "unit": "pack",
+          "quantity": 10
+        }
+      ],
+      "status": "ready"
+    },
+    {
+      "id": "bl-ready-06",
+      "code": "BL-2026-00906",
+      "warehouseId": "wh-marrakech",
+      "client": "Relais Gueliz",
+      "address": "Avenue Mohammed V",
+      "city": "Marrakech",
+      "lines": [
+        {
+          "productId": "prd-huile",
+          "productName": "Huile végétale 5L",
+          "sku": "HUI-5L",
+          "unit": "bidon",
+          "quantity": 18
+        },
+        {
+          "productId": "prd-lait",
+          "productName": "Lait en poudre",
+          "sku": "LAI-UHT",
+          "unit": "brique",
+          "quantity": 8
+        },
+        {
+          "productId": "prd-riz",
+          "productName": "Riz 5kg",
+          "sku": "RIZ-5K",
+          "unit": "sac",
+          "quantity": 12
+        },
+        {
+          "productId": "prd-huile",
+          "productName": "Huile végétale 5L",
+          "sku": "HUI-5L",
+          "unit": "bidon",
+          "quantity": 16
+        }
+      ],
+      "status": "ready"
+    },
+    {
+      "id": "bl-transfer-90",
+      "code": "BL-2026-00907",
+      "warehouseId": "wh-casa",
+      "client": "Entrepôt Marrakech",
+      "address": "Zone industrielle Sidi Ghanem",
+      "city": "Marrakech",
+      "lines": [
+        {
+          "productId": "prd-huile",
+          "productName": "Huile végétale 5L",
+          "sku": "HUI-5L",
+          "unit": "bidon",
+          "quantity": 80
+        },
+        {
+          "productId": "prd-farine",
+          "productName": "Farine 10kg",
+          "sku": "FAR-10",
+          "unit": "sac",
+          "quantity": 40
+        },
+        {
+          "productId": "prd-riz",
+          "productName": "Riz 5kg",
+          "sku": "RIZ-5K",
+          "unit": "sac",
+          "quantity": 36
+        },
+        {
+          "productId": "prd-eau",
+          "productName": "Eau 1.5L",
+          "sku": "EAU-15",
+          "unit": "pack",
+          "quantity": 120
+        }
+      ],
+      "status": "assigned",
+      "shipmentId": "shp-90"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "tsk-01",
+      "title": "Valider 3 demandes d’approvisionnement",
+      "description": "Demandes en attente pour Casablanca et Rabat.",
+      "assigneeId": "usr-manager",
+      "dueAt": "2026-08-26T09:00:00",
+      "status": "todo",
+      "priority": "high",
+      "relatedType": "procurement",
+      "relatedId": "pr-204"
+    },
+    {
+      "id": "tsk-02",
+      "title": "Relancer Atlas Distribution",
+      "description": "Commande PO-1042 en retard de 2 jours.",
+      "assigneeId": "usr-manager",
+      "dueAt": "2026-08-26T11:00:00.000Z",
+      "status": "todo",
+      "priority": "high",
+      "relatedType": "purchase",
+      "relatedId": "po-1042"
+    },
+    {
+      "id": "tsk-03",
+      "title": "Valider la demande Huile végétale 5L",
+      "description": "Youssef a soumis une demande de 250 unités pour Casablanca.",
+      "assigneeId": "usr-manager",
+      "dueAt": "2026-08-26T11:30:00.000Z",
+      "status": "todo",
+      "priority": "high",
+      "relatedType": "procurement",
+      "relatedId": "pr-204"
+    },
+    {
+      "id": "tsk-04",
+      "title": "Arbitrer le transfert Casa → Rabat",
+      "description": "Lait en poudre sous le seuil à Casablanca.",
+      "assigneeId": "usr-manager",
+      "dueAt": "2026-08-26T14:00:00.000Z",
+      "status": "todo",
+      "priority": "medium",
+      "relatedType": "stock",
+      "relatedId": "prd-lait"
+    },
+    {
+      "id": "tsk-05",
+      "title": "Brief tournée de demain",
+      "description": "Rabat nord — 1 livraison prévue.",
+      "assigneeId": "usr-manager",
+      "dueAt": "2026-08-26T16:00:00.000Z",
+      "status": "todo",
+      "priority": "medium",
+      "relatedType": "route",
+      "relatedId": "rt-27b"
+    },
+    {
+      "id": "tsk-06",
+      "title": "Inventaire partiel farine",
+      "description": "Écart suspecté sur Casablanca.",
+      "assigneeId": "usr-manager",
+      "dueAt": "2026-08-26T17:00:00.000Z",
+      "status": "todo",
+      "priority": "medium",
+      "relatedType": "stock",
+      "relatedId": "prd-farine"
+    },
+    {
+      "id": "tsk-07",
+      "title": "Préparer le point du soir",
+      "description": "Synthèse ruptures, retards, livraisons à risque.",
+      "assigneeId": "usr-manager",
+      "dueAt": "2026-08-26T18:00:00.000Z",
+      "status": "todo",
+      "priority": "low",
+      "relatedType": "task",
+      "relatedId": "tsk-07"
+    },
+    {
+      "id": "tsk-08",
+      "title": "Relancer Atlas Distribution",
+      "description": "Commande PO-1042 en retard de 2 jours.",
+      "assigneeId": "usr-procurement",
+      "dueAt": "2026-08-26T16:00:00.000Z",
+      "status": "todo",
+      "priority": "high",
+      "relatedType": "purchase",
+      "relatedId": "po-1042"
+    },
+    {
+      "id": "tsk-09",
+      "title": "Regrouper DA-2026-00126 et DA-2026-00127",
+      "description": "Lait et huile Casa — créer un OA unique.",
+      "assigneeId": "usr-procurement",
+      "dueAt": "2026-08-26T10:00:00.000Z",
+      "status": "todo",
+      "priority": "high",
+      "relatedType": "procurement",
+      "relatedId": "pr-206"
+    },
+    {
+      "id": "tsk-10",
+      "title": "Sortir le stock — DA-2026-00124",
+      "description": "Renfort week-end Rabat. Stock suffisant, sortie magasin à faire.",
+      "assigneeId": "usr-warehouse",
+      "dueAt": "2026-08-26T10:30:00.000Z",
+      "status": "todo",
+      "priority": "medium",
+      "relatedType": "procurement",
+      "relatedId": "pr-203"
+    },
+    {
+      "id": "tsk-11",
+      "title": "Réceptionner BR-2026-00013",
+      "description": "Contrôler l’arrivage riz Casa (OA-2026-01041).",
+      "assigneeId": "usr-warehouse",
+      "dueAt": "2026-08-28T10:00:00.000Z",
+      "status": "todo",
+      "priority": "high",
+      "relatedType": "receipt",
+      "relatedId": "rcp-13"
+    },
+    {
+      "id": "tsk-12",
+      "title": "Réceptionner BR-2026-00014",
+      "description": "Contrôler l’arrivage lait Rabat (OA-2026-01040).",
+      "assigneeId": "usr-warehouse",
+      "dueAt": "2026-08-29T10:00:00.000Z",
+      "status": "todo",
+      "priority": "medium",
+      "relatedType": "receipt",
+      "relatedId": "rcp-14"
+    },
+    {
+      "id": "tsk-13",
+      "title": "Débloquer le créneau Atlas",
+      "description": "Livraison #482 sous tension — circulation dense à Maarif.",
+      "assigneeId": "usr-dispatcher",
+      "dueAt": "2026-08-26T09:45:00.000Z",
+      "status": "todo",
+      "priority": "high",
+      "relatedType": "route",
+      "relatedId": "dlv-482"
+    },
+    {
+      "id": "tsk-14",
+      "title": "Régulariser la facture INV-88",
+      "description": "Atlas Distribution — 486 000 MAD, échéance dépassée.",
+      "assigneeId": "usr-finance",
+      "dueAt": "2026-08-26T12:00:00.000Z",
+      "status": "todo",
+      "priority": "high",
+      "relatedType": "finance",
+      "relatedId": "inv-88"
+    },
+    {
+      "id": "tsk-15",
+      "title": "Contrôler le budget transport",
+      "description": "Consommation élevée sur le mois en cours.",
+      "assigneeId": "usr-finance",
+      "dueAt": "2026-08-27T11:00:00.000Z",
+      "status": "todo",
+      "priority": "medium",
+      "relatedType": "finance",
+      "relatedId": "bdg-tr"
+    },
+    {
+      "id": "tsk-16",
+      "title": "Affecter BL-2026-00901",
+      "description": "Pharmacie des Habous — Casablanca. Bon prêt à l’entrepôt Casa, à placer sur une tournée.",
+      "assigneeId": "usr-dispatcher",
+      "dueAt": "2026-08-26T17:00:00.000Z",
+      "status": "todo",
+      "priority": "medium",
+      "relatedType": "shipping_note",
+      "relatedId": "bl-ready-01"
+    }
+  ],
+  "alerts": [
+    {
+      "id": "al-01",
+      "title": "Huile végétale 5L",
+      "message": "Risque de rupture dans 3 jours à Casablanca.",
+      "severity": "critical",
+      "createdAt": "2026-08-26T06:40:00.000Z",
+      "read": false,
+      "domain": "stock",
+      "relatedId": "prd-huile",
+      "warehouseId": "wh-casa",
+      "roles": [
+        "WAREHOUSE_MANAGER",
+        "PROCUREMENT",
+        "MANAGER",
+        "DISPATCHER"
+      ]
+    },
+    {
+      "id": "al-02",
+      "title": "Commande OA-2026-01042",
+      "message": "Retard fournisseur Atlas Distribution.",
+      "severity": "warning",
+      "createdAt": "2026-08-26T07:00:00.000Z",
+      "read": false,
+      "domain": "procurement",
+      "relatedId": "po-1042",
+      "warehouseId": "wh-casa",
+      "roles": [
+        "PROCUREMENT",
+        "WAREHOUSE_MANAGER",
+        "MANAGER"
+      ]
+    },
+    {
+      "id": "al-03",
+      "title": "Livraison #482",
+      "message": "Risque de retard — Supermarché Atlas.",
+      "severity": "warning",
+      "createdAt": "2026-08-26T08:50:00.000Z",
+      "read": false,
+      "domain": "logistics",
+      "relatedId": "dlv-482",
+      "warehouseId": "wh-casa",
+      "userId": "usr-driver",
+      "roles": [
+        "DISPATCHER",
+        "WAREHOUSE_MANAGER",
+        "MANAGER"
+      ]
+    },
+    {
+      "id": "al-04",
+      "title": "Réception validée",
+      "message": "400 briques de lait reçues à Casablanca.",
+      "severity": "info",
+      "createdAt": "2026-08-23T14:05:00.000Z",
+      "read": true,
+      "domain": "stock",
+      "relatedId": "rcp-12",
+      "warehouseId": "wh-casa",
+      "roles": [
+        "WAREHOUSE_MANAGER",
+        "PROCUREMENT"
+      ]
+    },
+    {
+      "id": "al-05",
+      "title": "Lait en poudre",
+      "message": "Couverture faible à Casablanca.",
+      "severity": "critical",
+      "createdAt": "2026-08-26T07:10:00.000Z",
+      "read": false,
+      "domain": "stock",
+      "relatedId": "prd-lait",
+      "warehouseId": "wh-casa",
+      "roles": [
+        "WAREHOUSE_MANAGER",
+        "PROCUREMENT",
+        "MANAGER",
+        "DISPATCHER"
+      ]
+    },
+    {
+      "id": "al-06",
+      "title": "Budget transport",
+      "message": "Consommation à 78 % du budget mensuel.",
+      "severity": "warning",
+      "createdAt": "2026-08-26T09:15:00.000Z",
+      "read": false,
+      "domain": "finance",
+      "relatedId": "bdg-tr",
+      "roles": [
+        "FINANCE",
+        "MANAGER"
+      ]
+    },
+    {
+      "id": "al-07",
+      "title": "Facture INV-88",
+      "message": "Échéance dépassée — Atlas Distribution, 486 000 MAD.",
+      "severity": "critical",
+      "createdAt": "2026-08-26T08:00:00.000Z",
+      "read": false,
+      "domain": "finance",
+      "relatedId": "inv-88",
+      "roles": [
+        "FINANCE",
+        "MANAGER"
+      ]
+    },
+    {
+      "id": "al-08",
+      "title": "Tournée Rabat demain",
+      "message": "Market Agdal — 27 août à 9 h.",
+      "severity": "info",
+      "createdAt": "2026-08-26T16:00:00.000Z",
+      "read": false,
+      "domain": "logistics",
+      "relatedId": "dlv-490",
+      "warehouseId": "wh-rabat",
+      "userId": "usr-driver-2",
+      "roles": [
+        "DISPATCHER",
+        "WAREHOUSE_MANAGER",
+        "MANAGER"
+      ]
+    },
+    {
+      "id": "al-09",
+      "title": "BR-2026-00015 à réceptionner",
+      "message": "Arrivage huile 5L attendu à Casablanca — commande en retard.",
+      "severity": "warning",
+      "createdAt": "2026-08-26T07:20:00.000Z",
+      "read": false,
+      "domain": "stock",
+      "relatedId": "rcp-15",
+      "warehouseId": "wh-casa",
+      "roles": [
+        "WAREHOUSE_MANAGER"
+      ]
+    },
+    {
+      "id": "al-10",
+      "title": "BL-2026-00901 prêt à expédier",
+      "message": "Pharmacie des Habous — Casablanca. Bon préparé à Casablanca.",
+      "severity": "info",
+      "createdAt": "2026-08-26T08:10:00.000Z",
+      "read": false,
+      "domain": "logistics",
+      "relatedId": "bl-ready-01",
+      "warehouseId": "wh-casa",
+      "roles": [
+        "DISPATCHER"
+      ]
+    }
+  ],
+  "planning": [
+    {
+      "id": "pl-01",
+      "title": "Réception ABC Supply",
+      "date": "2026-08-26T08:30:00",
+      "type": "receipt",
+      "relatedId": "rcp-13"
+    },
+    {
+      "id": "pl-02",
+      "title": "Tournée Casa centre",
+      "date": "2026-08-26T09:00:00",
+      "type": "delivery",
+      "relatedId": "rt-26a"
+    },
+    {
+      "id": "pl-03",
+      "title": "Point fournisseurs",
+      "date": "2026-08-26T11:00:00",
+      "type": "meeting",
+      "relatedId": "po-1042"
+    },
+    {
+      "id": "pl-04",
+      "title": "Retour véhicules",
+      "date": "2026-08-26T16:30:00",
+      "type": "delivery",
+      "relatedId": "rt-26a"
+    },
+    {
+      "id": "pl-05",
+      "title": "Inventaire farine Casa",
+      "date": "2026-08-26T17:00:00",
+      "type": "inventory",
+      "relatedId": "inv-01"
+    },
+    {
+      "id": "pl-06",
+      "title": "Tournée Rabat nord",
+      "date": "2026-08-27T09:00:00",
+      "type": "delivery",
+      "relatedId": "rt-27b"
+    },
+    {
+      "id": "pl-07",
+      "title": "Réception riz Casa",
+      "date": "2026-08-28T10:00:00",
+      "type": "receipt",
+      "relatedId": "rcp-13"
+    },
+    {
+      "id": "pl-08",
+      "title": "Réception lait Rabat",
+      "date": "2026-08-29T09:30:00",
+      "type": "receipt",
+      "relatedId": "rcp-14"
+    },
+    {
+      "id": "pl-09",
+      "title": "Point ruptures de la semaine",
+      "date": "2026-08-28T15:00:00",
+      "type": "meeting",
+      "relatedId": "prd-lait"
+    }
+  ],
+  "invoices": [
+    {
+      "id": "inv-92",
+      "supplierId": "sup-abc",
+      "purchaseOrderId": "po-1051",
+      "amount": 428000,
+      "status": "paid",
+      "dueDate": "2026-08-18"
+    },
+    {
+      "id": "inv-91",
+      "supplierId": "sup-global",
+      "purchaseOrderId": "po-1048",
+      "amount": 312000,
+      "status": "paid",
+      "dueDate": "2026-08-20"
+    },
+    {
+      "id": "inv-90",
+      "supplierId": "sup-atlas",
+      "purchaseOrderId": "po-1046",
+      "amount": 286000,
+      "status": "paid",
+      "dueDate": "2026-08-22"
+    },
+    {
+      "id": "inv-89",
+      "supplierId": "sup-maghreb",
+      "purchaseOrderId": "po-1044",
+      "amount": 334000,
+      "status": "paid",
+      "dueDate": "2026-08-24"
+    },
+    {
+      "id": "inv-88",
+      "supplierId": "sup-atlas",
+      "purchaseOrderId": "po-1042",
+      "amount": 486000,
+      "status": "overdue",
+      "dueDate": "2026-08-25"
+    },
+    {
+      "id": "inv-87",
+      "supplierId": "sup-nord",
+      "purchaseOrderId": "po-1038",
+      "amount": 214000,
+      "status": "pending",
+      "dueDate": "2026-08-30"
+    },
+    {
+      "id": "inv-86",
+      "supplierId": "sup-abc",
+      "purchaseOrderId": "po-1041",
+      "amount": 248000,
+      "status": "pending",
+      "dueDate": "2026-09-05"
+    },
+    {
+      "id": "inv-85",
+      "supplierId": "sup-global",
+      "purchaseOrderId": "po-1039",
+      "amount": 172000,
+      "status": "pending",
+      "dueDate": "2026-09-08"
+    }
+  ],
+  "payments": [
+    {
+      "id": "pay-25",
+      "invoiceId": "inv-92",
+      "amount": 428000,
+      "date": "2026-08-18T10:00:00.000Z"
+    },
+    {
+      "id": "pay-24",
+      "invoiceId": "inv-91",
+      "amount": 312000,
+      "date": "2026-08-20T11:20:00.000Z"
+    },
+    {
+      "id": "pay-23",
+      "invoiceId": "inv-90",
+      "amount": 286000,
+      "date": "2026-08-22T09:40:00.000Z"
+    },
+    {
+      "id": "pay-22",
+      "invoiceId": "inv-89",
+      "amount": 334000,
+      "date": "2026-08-24T10:00:00.000Z"
+    }
+  ],
+  "budgets": [
+    {
+      "id": "bdg-achats",
+      "name": "Achats août",
+      "period": "2026-08",
+      "allocated": 3200000,
+      "spent": 1480000
+    },
+    {
+      "id": "bdg-log",
+      "name": "Logistique août",
+      "period": "2026-08",
+      "allocated": 1200000,
+      "spent": 620000
+    },
+    {
+      "id": "bdg-tr",
+      "name": "Transport août",
+      "period": "2026-08",
+      "allocated": 800000,
+      "spent": 280000
+    },
+    {
+      "id": "bdg-flotte",
+      "name": "Flotte août",
+      "period": "2026-08",
+      "allocated": 520000,
+      "spent": 100000
+    }
+  ],
+  "expenses": [
+    {
+      "id": "exp-01",
+      "label": "Commandes fournisseurs",
+      "amount": 1480000,
+      "date": "2026-08-20",
+      "category": "Achats"
+    },
+    {
+      "id": "exp-02",
+      "label": "Gasoil et tournées",
+      "amount": 620000,
+      "date": "2026-08-26",
+      "category": "Logistique"
+    },
+    {
+      "id": "exp-03",
+      "label": "Transport inter-dépôts",
+      "amount": 280000,
+      "date": "2026-08-22",
+      "category": "Transport"
+    },
+    {
+      "id": "exp-04",
+      "label": "Maintenance flotte",
+      "amount": 100000,
+      "date": "2026-08-21",
+      "category": "Autres"
+    }
+  ],
+  "notifications": [
+    {
+      "id": "ntf-01",
+      "title": "Risque de rupture",
+      "message": "Huile végétale 5L — Casablanca, couverture 3 jours.",
+      "createdAt": "2026-08-26T06:40:00.000Z",
+      "read": false,
+      "type": "critical"
+    },
+    {
+      "id": "ntf-02",
+      "title": "Livraison retardée",
+      "message": "Livraison #482 — Supermarché Atlas.",
+      "createdAt": "2026-08-26T08:50:00.000Z",
+      "read": false,
+      "type": "warning"
+    },
+    {
+      "id": "ntf-03",
+      "title": "Réception validée",
+      "message": "Lait UHT — 400 unités à Casablanca.",
+      "createdAt": "2026-08-23T14:05:00.000Z",
+      "read": true,
+      "type": "info"
+    },
+    {
+      "id": "ntf-04",
+      "title": "Nouvelle tâche",
+      "message": "Valider 3 demandes d’approvisionnement.",
+      "createdAt": "2026-08-26T07:20:00.000Z",
+      "read": true,
+      "type": "info"
+    },
+    {
+      "id": "ntf-05",
+      "title": "Bon de livraison prêt",
+      "message": "BL-2026-00901 · Pharmacie des Habous (Casablanca)",
+      "createdAt": "2026-08-26T08:10:00.000Z",
+      "read": false,
+      "type": "info",
+      "userId": "usr-dispatcher"
+    }
+  ],
+  "auditLogs": [
+    {
+      "id": "aud-01",
+      "userId": "usr-warehouse",
+      "action": "Réception validée",
+      "entity": "receipt",
+      "entityId": "rcp-12",
+      "createdAt": "2026-08-23T14:00:00.000Z"
+    },
+    {
+      "id": "aud-02",
+      "userId": "usr-procurement",
+      "action": "Commande envoyée",
+      "entity": "purchase",
+      "entityId": "po-1040",
+      "createdAt": "2026-08-25T12:00:00.000Z"
+    }
+  ],
+  "companies": [
+    {
+      "id": "co-atlas",
+      "name": "Atlas Distribution",
+      "legalName": "Atlas Distribution SARL",
+      "ice": "001845632000089",
+      "city": "Casablanca",
+      "email": "admin@bravo.stock",
+      "phone": "0522 40 12 80",
+      "status": "active",
+      "createdAt": "2025-11-04",
+      "usersCount": 10,
+      "warehousesCount": 4
+    },
+    {
+      "id": "co-maghreb",
+      "name": "Maghreb Fresh",
+      "legalName": "Maghreb Fresh SA",
+      "ice": "001923410000056",
+      "city": "Rabat",
+      "email": "direction@maghrebfresh.ma",
+      "phone": "0537 72 18 40",
+      "status": "active",
+      "createdAt": "2026-01-14",
+      "usersCount": 18,
+      "warehousesCount": 6
+    },
+    {
+      "id": "co-sud",
+      "name": "Sud Logistique",
+      "legalName": "Sud Logistique SARL",
+      "ice": "002201198000033",
+      "city": "Marrakech",
+      "email": "contact@sudlogistique.ma",
+      "phone": "0524 33 90 12",
+      "status": "trial",
+      "createdAt": "2026-08-12",
+      "usersCount": 3,
+      "warehousesCount": 1
+    },
+    {
+      "id": "co-nord",
+      "name": "Nord Transit",
+      "legalName": "Nord Transit SARL",
+      "ice": "001776540000021",
+      "city": "Tanger",
+      "email": "compta@nordtransit.ma",
+      "phone": "0539 94 21 70",
+      "status": "active",
+      "createdAt": "2026-03-02",
+      "usersCount": 11,
+      "warehousesCount": 3
+    },
+    {
+      "id": "co-oasis",
+      "name": "Oasis Négoce",
+      "legalName": "Oasis Négoce SARL",
+      "ice": "002410880000014",
+      "city": "Agadir",
+      "email": "hello@oasisnegoce.ma",
+      "phone": "0528 84 03 55",
+      "status": "suspended",
+      "createdAt": "2026-02-20",
+      "usersCount": 7,
+      "warehousesCount": 2
+    }
+  ],
+  "plans": [
+    {
+      "id": "plan-starter",
+      "name": "Starter",
+      "code": "starter",
+      "description": "Un site, l’essentiel du stock et des demandes.",
+      "monthlyPrice": 890,
+      "yearlyPrice": 8900,
+      "maxUsers": 5,
+      "maxWarehouses": 1,
+      "modules": [
+        "stock",
+        "procurement"
+      ],
+      "active": true
+    },
+    {
+      "id": "plan-pro",
+      "name": "Pro",
+      "code": "pro",
+      "description": "Multi-sites, logistique et assistant opérationnel.",
+      "monthlyPrice": 2490,
+      "yearlyPrice": 24900,
+      "maxUsers": 25,
+      "maxWarehouses": 5,
+      "modules": [
+        "stock",
+        "procurement",
+        "purchasing",
+        "logistics",
+        "assistant"
+      ],
+      "active": true
+    },
+    {
+      "id": "plan-business",
+      "name": "Business",
+      "code": "business",
+      "description": "Sans plafond, analytics et finance inclus.",
+      "monthlyPrice": 5900,
+      "yearlyPrice": 59000,
+      "maxUsers": 0,
+      "maxWarehouses": 0,
+      "modules": [
+        "stock",
+        "procurement",
+        "purchasing",
+        "logistics",
+        "assistant",
+        "analytics",
+        "finance"
+      ],
+      "active": true
+    }
+  ],
+  "subscriptions": [
+    {
+      "id": "sub-atlas",
+      "companyId": "co-atlas",
+      "planId": "plan-pro",
+      "status": "active",
+      "interval": "monthly",
+      "startedAt": "2025-11-04",
+      "currentPeriodEnd": "2026-09-04",
+      "seats": 10
+    },
+    {
+      "id": "sub-maghreb",
+      "companyId": "co-maghreb",
+      "planId": "plan-business",
+      "status": "active",
+      "interval": "yearly",
+      "startedAt": "2026-01-14",
+      "currentPeriodEnd": "2027-01-14",
+      "seats": 18
+    },
+    {
+      "id": "sub-sud",
+      "companyId": "co-sud",
+      "planId": "plan-starter",
+      "status": "trialing",
+      "interval": "monthly",
+      "startedAt": "2026-08-12",
+      "currentPeriodEnd": "2026-08-26",
+      "trialEndsAt": "2026-08-26",
+      "seats": 3
+    },
+    {
+      "id": "sub-nord",
+      "companyId": "co-nord",
+      "planId": "plan-pro",
+      "status": "past_due",
+      "interval": "monthly",
+      "startedAt": "2026-03-02",
+      "currentPeriodEnd": "2026-08-02",
+      "seats": 11
+    },
+    {
+      "id": "sub-oasis",
+      "companyId": "co-oasis",
+      "planId": "plan-pro",
+      "status": "paused",
+      "interval": "monthly",
+      "startedAt": "2026-02-20",
+      "currentPeriodEnd": "2026-07-20",
+      "seats": 7
+    }
+  ],
+  "platformInvoices": [
+    {
+      "id": "pinv-atlas-08",
+      "companyId": "co-atlas",
+      "subscriptionId": "sub-atlas",
+      "number": "BS-2026-014",
+      "amount": 2490,
+      "status": "open",
+      "issuedAt": "2026-08-04",
+      "dueDate": "2026-09-04"
+    },
+    {
+      "id": "pinv-atlas-07",
+      "companyId": "co-atlas",
+      "subscriptionId": "sub-atlas",
+      "number": "BS-2026-009",
+      "amount": 2490,
+      "status": "paid",
+      "issuedAt": "2026-07-04",
+      "dueDate": "2026-08-04",
+      "paidAt": "2026-07-06"
+    },
+    {
+      "id": "pinv-maghreb-01",
+      "companyId": "co-maghreb",
+      "subscriptionId": "sub-maghreb",
+      "number": "BS-2026-003",
+      "amount": 59000,
+      "status": "paid",
+      "issuedAt": "2026-01-14",
+      "dueDate": "2026-01-28",
+      "paidAt": "2026-01-16"
+    },
+    {
+      "id": "pinv-nord-08",
+      "companyId": "co-nord",
+      "subscriptionId": "sub-nord",
+      "number": "BS-2026-011",
+      "amount": 2490,
+      "status": "overdue",
+      "issuedAt": "2026-07-02",
+      "dueDate": "2026-08-02"
+    },
+    {
+      "id": "pinv-nord-07",
+      "companyId": "co-nord",
+      "subscriptionId": "sub-nord",
+      "number": "BS-2026-007",
+      "amount": 2490,
+      "status": "paid",
+      "issuedAt": "2026-06-02",
+      "dueDate": "2026-07-02",
+      "paidAt": "2026-06-18"
+    },
+    {
+      "id": "pinv-oasis-07",
+      "companyId": "co-oasis",
+      "subscriptionId": "sub-oasis",
+      "number": "BS-2026-008",
+      "amount": 2490,
+      "status": "overdue",
+      "issuedAt": "2026-06-20",
+      "dueDate": "2026-07-20"
+    }
+  ]
+}
