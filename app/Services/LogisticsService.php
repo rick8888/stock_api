@@ -15,6 +15,7 @@ use App\Repositories\Eloquent\TaskItemRepository;
 use App\Repositories\Eloquent\VehicleRepository;
 use App\Repositories\Eloquent\WarehouseRepository;
 use App\Support\DemoDate;
+use App\Support\Geo;
 use App\Support\Tenant;
 use App\Support\Uid;
 use Illuminate\Support\Collection;
@@ -38,6 +39,7 @@ class LogisticsService
         private readonly OpsNotifier $notifier,
         private readonly Tenant $tenant,
         private readonly CustomerRepository $customers,
+        private readonly DeliveryService $deliveryService,
     ) {}
 
     public function shipments(): Collection
@@ -295,40 +297,84 @@ class LogisticsService
 
     public function createRoute(array $input): array
     {
-        $warehouse = $this->warehouses->find($input['warehouseId'] ?? '');
-        $point = [
-            'lat' => $warehouse['lat'] ?? 33.5731,
-            'lng' => $warehouse['lng'] ?? -7.5898,
-            'label' => $warehouse['name'] ?? 'Entrepôt',
-        ];
+        return DB::transaction(function () use ($input) {
+            $this->tenant->assertWarehouseAccess($input['warehouseId'] ?? '');
+            $warehouse = $this->warehouses->find($input['warehouseId'] ?? '');
+            $point = [
+                'lat' => (float) ($warehouse['lat'] ?? 33.5731),
+                'lng' => (float) ($warehouse['lng'] ?? -7.5898),
+                'label' => $warehouse['name'] ?? 'Entrepôt',
+            ];
 
-        return $this->routes->put([
-            'id' => Uid::make('rt'),
-            'name' => $input['name'],
-            'date' => $input['date'],
-            'driverId' => $input['driverId'],
-            'vehicleId' => $input['vehicleId'],
-            'warehouseId' => $input['warehouseId'],
-            'status' => $input['status'] ?? 'planned',
-            'distanceKm' => 1,
-            'path' => [$point],
-            'currentPosition' => $point,
-            'progress' => 0,
-        ]);
+            $route = $this->routes->put($this->tenant->stamp([
+                'id' => Uid::make('rt'),
+                'name' => $input['name'],
+                'date' => $input['date'],
+                'driverId' => $input['driverId'],
+                'vehicleId' => $input['vehicleId'],
+                'warehouseId' => $input['warehouseId'],
+                'status' => $input['status'] ?? 'planned',
+                'distanceKm' => 1,
+                'path' => [$point],
+                'currentPosition' => $point,
+                'progress' => 0,
+            ]));
+
+            if (array_key_exists('stops', $input) && is_array($input['stops'])) {
+                $this->syncRouteStops($route, $input['stops']);
+                $route = $this->refreshRouteGeometry($route);
+            }
+
+            return $route;
+        });
     }
 
     public function updateRoute(string $id, array $input): array
     {
-        $route = $this->routes->findOrFail($id, 'Tournée introuvable');
+        return DB::transaction(function () use ($id, $input) {
+            $route = $this->routes->findOrFail($id, 'Tournée introuvable');
+            $this->tenant->assertWarehouseAccess($route['warehouseId'] ?? '');
+            if (! empty($input['warehouseId'])) {
+                $this->tenant->assertWarehouseAccess($input['warehouseId']);
+            }
 
-        return $this->routes->merge($id, array_filter([
-            'name' => $input['name'] ?? null,
-            'date' => $input['date'] ?? null,
-            'driverId' => $input['driverId'] ?? null,
-            'vehicleId' => $input['vehicleId'] ?? null,
-            'warehouseId' => $input['warehouseId'] ?? null,
-            'status' => $input['status'] ?? null,
-        ], fn ($value) => $value !== null), 'Tournée introuvable');
+            $route = $this->routes->merge($id, array_filter([
+                'name' => $input['name'] ?? null,
+                'date' => $input['date'] ?? null,
+                'driverId' => $input['driverId'] ?? null,
+                'vehicleId' => $input['vehicleId'] ?? null,
+                'warehouseId' => $input['warehouseId'] ?? null,
+                'status' => $input['status'] ?? null,
+            ], fn ($value) => $value !== null), 'Tournée introuvable');
+
+            if (array_key_exists('stops', $input) && is_array($input['stops'])) {
+                $this->syncRouteStops($route, $input['stops']);
+            } else {
+                $this->relinkRouteDeliveries($route);
+            }
+
+            return $this->refreshRouteGeometry($route);
+        });
+    }
+
+    /**
+     * Démarre la préparation (picking) d'un BL : ready → picking.
+     */
+    public function startPicking(string $id): array
+    {
+        return DB::transaction(function () use ($id) {
+            $note = $this->notes->findOrFail($id, 'Bon introuvable');
+            $this->tenant->assertWarehouseAccess($note['warehouseId'] ?? '');
+            $status = $note['status'] ?? 'ready';
+            if (! in_array($status, ['ready', 'picking'], true)) {
+                throw new DomainException('Seuls les bons disponibles peuvent entrer en préparation.');
+            }
+            $note['status'] = 'picking';
+            $this->notes->put($note);
+            $this->notifier->audit('Préparation démarrée', 'shipping_note', $note['id'], $this->tenant->actorId());
+
+            return $note;
+        });
     }
 
     public function createShipment(array $input): array
@@ -411,6 +457,10 @@ class LogisticsService
             if (! empty($note['loadedAt'])) {
                 throw new DomainException('Ce bon est déjà chargé.');
             }
+            $status = $note['status'] ?? 'ready';
+            if (! in_array($status, ['ready', 'picking', 'loaded', 'assigned'], true)) {
+                throw new DomainException('Ce bon ne peut plus être chargé.');
+            }
             $now = now()->toIso8601String();
             $shipment = $this->shipments->find($note['shipmentId'] ?? '');
             $destinationWarehouseId = $shipment['destinationWarehouseId'] ?? null;
@@ -447,6 +497,10 @@ class LogisticsService
             $note['loadedAt'] = $now;
             $note['loadedByUserId'] = $userId;
             $note['stockReserved'] = false;
+            // Cycle préparation : ready/picking → loaded ; déjà affecté → assigned.
+            if (in_array($status, ['ready', 'picking', 'loaded'], true) && empty($note['deliveryId']) && empty($note['shipmentId'])) {
+                $note['status'] = 'loaded';
+            }
             if ($destinationWarehouseId) {
                 $note['inTransitToWarehouseId'] = $destinationWarehouseId;
             }
@@ -664,7 +718,7 @@ class LogisticsService
             }
             if (in_array($note['id'], $ids, true)) {
                 $note['shipmentId'] = $shipment['id'];
-                if (($note['status'] ?? '') === 'ready' || ($note['status'] ?? '') === 'assigned') {
+                if (in_array($note['status'] ?? '', ['ready', 'picking', 'loaded', 'assigned'], true)) {
                     $note['status'] = ($shipment['status'] ?? '') === 'done' ? 'delivered' : 'assigned';
                     if (($shipment['status'] ?? '') !== 'done') {
                         $this->reserveNoteStock($note);
@@ -679,6 +733,128 @@ class LogisticsService
                 $this->tasks->put($task);
             }
         }
+    }
+
+    /**
+     * Crée / met à jour / retire les arrêts d'une tournée à partir des stops du formulaire.
+     *
+     * @param  list<array<string, mixed>>  $stops
+     */
+    private function syncRouteStops(array $route, array $stops): void
+    {
+        $warehouseId = $route['warehouseId'] ?? '';
+        $existing = $this->deliveries->forWarehouses([$warehouseId])
+            ->filter(fn (array $item) => ($item['routeId'] ?? null) === $route['id'])
+            ->keyBy('id');
+
+        $keep = [];
+        foreach ($stops as $stop) {
+            if (! empty($stop['id'])) {
+                $keep[] = (string) $stop['id'];
+            }
+        }
+
+        foreach ($existing as $delivery) {
+            if (! in_array($delivery['id'], $keep, true)) {
+                $this->deliveryService->remove($delivery['id']);
+            }
+        }
+
+        foreach (array_values($stops) as $index => $stop) {
+            if (empty($stop['shippingNoteId']) && empty($stop['client'])) {
+                throw new DomainException('Chaque arrêt doit avoir un bon de livraison.');
+            }
+            $payload = [
+                'shippingNoteId' => $stop['shippingNoteId'] ?? '',
+                'client' => $stop['client'] ?? null,
+                'address' => $stop['address'] ?? null,
+                'city' => $stop['city'] ?? null,
+                'scheduledAt' => $stop['scheduledAt'] ?? ($route['date'].'T09:00:00.000Z'),
+                'routeId' => $route['id'],
+                'status' => $stop['status'] ?? 'prepared',
+                'sequence' => $index + 1,
+                'notes' => $stop['notes'] ?? null,
+                'lat' => $stop['lat'] ?? null,
+                'lng' => $stop['lng'] ?? null,
+            ];
+            $stopId = $stop['id'] ?? null;
+            if ($stopId && $existing->has($stopId)) {
+                $this->deliveryService->update((string) $stopId, $payload);
+            } else {
+                $this->deliveryService->create($payload);
+            }
+        }
+    }
+
+    private function relinkRouteDeliveries(array $route): void
+    {
+        $stops = $this->deliveries->forWarehouses([$route['warehouseId'] ?? ''])
+            ->filter(fn (array $item) => ($item['routeId'] ?? null) === $route['id']);
+
+        foreach ($stops as $stop) {
+            if (($stop['status'] ?? '') === 'delivered') {
+                continue;
+            }
+            $this->deliveries->merge($stop['id'], [
+                'driverId' => $route['driverId'] ?? $stop['driverId'],
+                'vehicleId' => $route['vehicleId'] ?? $stop['vehicleId'],
+                'warehouseId' => $route['warehouseId'] ?? $stop['warehouseId'],
+            ], 'Livraison introuvable');
+        }
+    }
+
+    private function refreshRouteGeometry(array $route): array
+    {
+        $warehouse = $this->warehouses->find($route['warehouseId'] ?? '');
+        $origin = [
+            'lat' => (float) ($warehouse['lat'] ?? 33.5731),
+            'lng' => (float) ($warehouse['lng'] ?? -7.5898),
+            'label' => 'Entrepôt '.($warehouse['name'] ?? ''),
+        ];
+        $stops = $this->deliveries->forWarehouses([$route['warehouseId'] ?? ''])
+            ->filter(fn (array $item) => ($item['routeId'] ?? null) === $route['id'])
+            ->sortBy(fn (array $item) => $item['sequence'] ?? 0)
+            ->values();
+
+        $path = [$origin];
+        foreach ($stops as $stop) {
+            if (! empty($stop['location']['lat']) && ! empty($stop['location']['lng'])) {
+                $path[] = [
+                    'lat' => (float) $stop['location']['lat'],
+                    'lng' => (float) $stop['location']['lng'],
+                    'label' => $stop['client'] ?? null,
+                ];
+            }
+        }
+
+        $delivered = $stops->where('status', 'delivered')->count();
+        $active = $stops->first(
+            fn (array $item) => in_array($item['status'] ?? '', ['in_transit', 'at_risk'], true),
+        );
+        $status = $route['status'] ?? 'planned';
+        if ($stops->isNotEmpty() && $delivered === $stops->count()) {
+            $status = 'done';
+        } elseif ($active || $delivered > 0) {
+            $status = $status === 'planned' ? 'in_progress' : $status;
+        }
+
+        $progress = 0;
+        if ($stops->isNotEmpty()) {
+            $seq = (int) ($active['sequence'] ?? $delivered);
+            $partial = $active ? 1 - (((int) ($active['progress'] ?? 0)) / 100) : 0;
+            $progress = (int) min(100, max(0, round((($seq - $partial) / $stops->count()) * 100)));
+        }
+
+        $current = $active['currentPosition']
+            ?? ($path ? Geo::pointAlong($path, min(1, max(0, $progress / 100))) : $origin);
+
+        return $this->routes->merge($route['id'], [
+            'status' => $status,
+            'distanceKm' => max(1, (int) round(Geo::pathLengthKm($path))),
+            'path' => $path,
+            'currentPosition' => $current,
+            'progress' => $progress,
+        ], 'Tournée introuvable');
     }
 
     private function reserveNoteStock(array &$note): void

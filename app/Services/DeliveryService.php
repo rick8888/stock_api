@@ -101,6 +101,14 @@ class DeliveryService
     ): array {
         return DB::transaction(function () use ($id, $status, $note, $signedBy, $proof) {
             $delivery = $this->deliveries->findOrFail($id, 'Livraison introuvable');
+            $linked = $this->notes->all()->first(
+                fn (array $item) => $item['id'] === ($delivery['shippingNoteId'] ?? null) || ($item['deliveryId'] ?? null) === $delivery['id'],
+            );
+
+            if (in_array($status, ['in_transit', 'at_risk', 'delivered'], true) && $linked) {
+                $this->ensureNoteLoaded($linked, $delivery);
+            }
+
             $delivery['status'] = $status;
             if ($note) {
                 $delivery['notes'] = $note;
@@ -120,10 +128,8 @@ class DeliveryService
                         'at' => $delivery['signedAt'],
                     ];
                 }
-                $linked = $this->notes->all()->first(
-                    fn (array $item) => $item['id'] === ($delivery['shippingNoteId'] ?? null) || ($item['deliveryId'] ?? null) === $delivery['id'],
-                );
                 if ($linked) {
+                    $linked = $this->notes->find($linked['id']) ?? $linked;
                     $linked['status'] = 'delivered';
                     $this->notes->put($linked);
                 }
@@ -133,10 +139,8 @@ class DeliveryService
                 $this->notifier->notify('Livraison effectuée', ($delivery['client'] ?? '').' — '.($delivery['city'] ?? ''));
             }
             if ($status === 'failed') {
-                $linked = $this->notes->all()->first(
-                    fn (array $item) => $item['id'] === ($delivery['shippingNoteId'] ?? null) || ($item['deliveryId'] ?? null) === $delivery['id'],
-                );
                 if ($linked && ($linked['status'] ?? '') !== 'delivered') {
+                    $linked = $this->notes->find($linked['id']) ?? $linked;
                     if (! empty($linked['loadedAt'])) {
                         foreach ($linked['lines'] ?? [] as $line) {
                             $item = $this->stock->ensureLine($line['productId'], $linked['warehouseId']);
@@ -154,16 +158,47 @@ class DeliveryService
                             );
                         }
                         $linked['loadedAt'] = null;
+                        $linked['loadedByUserId'] = null;
                         $linked['stockReserved'] = false;
                     } else {
                         $this->releaseNoteReservation($linked);
                     }
+                    // Remet le BL disponible pour replanification.
+                    $linked['deliveryId'] = null;
+                    $linked['status'] = 'ready';
                     $this->notes->put($linked);
+                    $delivery['shippingNoteId'] = null;
                 }
             }
             $this->deliveries->put($delivery);
 
             return $delivery;
+        });
+    }
+
+    /**
+     * Retire un arrêt de tournée et libère le BL associé.
+     */
+    public function remove(string $id): void
+    {
+        DB::transaction(function () use ($id) {
+            $delivery = $this->deliveries->findOrFail($id, 'Livraison introuvable');
+            if (($delivery['status'] ?? '') === 'delivered') {
+                throw new DomainException('Impossible de retirer une livraison déjà effectuée.');
+            }
+            $note = $this->notes->find($delivery['shippingNoteId'] ?? '');
+            if ($note) {
+                if (! empty($note['loadedAt'])) {
+                    throw new DomainException('Retirez d’abord le chargement du bon '.$note['code'].' avant de l’enlever de la tournée.');
+                }
+                $this->releaseNoteReservation($note);
+                $note['deliveryId'] = null;
+                if (($note['status'] ?? '') === 'assigned' && empty($note['shipmentId'])) {
+                    $note['status'] = ! empty($note['loadedAt']) ? 'loaded' : 'ready';
+                }
+                $this->notes->put($note);
+            }
+            $this->deliveries->delete($id);
         });
     }
 
@@ -274,7 +309,7 @@ class DeliveryService
                 $this->releaseNoteReservation($note);
                 $note['deliveryId'] = null;
                 if (($note['status'] ?? '') === 'assigned' && empty($note['shipmentId'])) {
-                    $note['status'] = 'ready';
+                    $note['status'] = ! empty($note['loadedAt']) ? 'loaded' : 'ready';
                 }
                 $this->notes->put($note);
             }
@@ -283,12 +318,55 @@ class DeliveryService
         if (! $note) {
             return;
         }
+        if (($note['deliveryId'] ?? null) && $note['deliveryId'] !== $delivery['id']) {
+            throw new DomainException('Ce bon de livraison est déjà affecté à un autre arrêt.');
+        }
         $note['deliveryId'] = $delivery['id'];
         $note['status'] = ($delivery['status'] ?? '') === 'delivered' ? 'delivered' : 'assigned';
         if (($delivery['status'] ?? '') !== 'delivered') {
             $this->reserveNoteStock($note);
         }
         $this->notes->put($note);
+    }
+
+    /**
+     * Garantit que le stock du BL a bien été sorti avant départ / POD.
+     * Si réservé mais pas chargé → consommation auto. Sinon erreur.
+     *
+     * @param  array<string, mixed>  $note
+     * @param  array<string, mixed>  $delivery
+     */
+    private function ensureNoteLoaded(array &$note, array $delivery): void
+    {
+        if (! ($note['lines'] ?? [])) {
+            return;
+        }
+        if (! empty($note['loadedAt'])) {
+            return;
+        }
+
+        if (! empty($note['stockReserved'])) {
+            foreach ($note['lines'] as $line) {
+                $this->stock->consumeReservation(
+                    $line['productId'],
+                    $note['warehouseId'],
+                    (int) $line['quantity'],
+                    $this->tenant->actorId(),
+                    'Chargement auto POD '.($note['code'] ?? ''),
+                    $note['code'] ?? $delivery['id'],
+                );
+            }
+            $note['loadedAt'] = now()->toIso8601String();
+            $note['loadedByUserId'] = $this->tenant->actorId();
+            $note['stockReserved'] = false;
+            $this->notes->put($note);
+
+            return;
+        }
+
+        throw new DomainException(
+            'Le bon '.($note['code'] ?? '').' doit être chargé avant le départ ou la preuve de livraison.',
+        );
     }
 
     private function reserveNoteStock(array &$note): void

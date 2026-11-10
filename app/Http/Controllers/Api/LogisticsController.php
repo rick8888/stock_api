@@ -94,6 +94,11 @@ class LogisticsController extends ApiController
         return $this->one($this->logistics->markShippingNoteLabelPrinted($id));
     }
 
+    public function startPicking(string $id)
+    {
+        return $this->one($this->logistics->startPicking($id));
+    }
+
     public function carriers()
     {
         return $this->items(collect($this->logistics->carriers()));

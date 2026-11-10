@@ -136,6 +136,7 @@ Route::middleware('auth:api')->group(function () {
         Route::patch('/shipping-notes/{id}', [LogisticsController::class, 'updateShippingNote'])->middleware('permission:delivery.prepare,delivery.update');
         Route::patch('/shipping-notes/{id}/carrier', [LogisticsController::class, 'assignCarrier'])->middleware('permission:delivery.prepare,delivery.update,delivery.create');
         Route::post('/shipping-notes/{id}/label-printed', [LogisticsController::class, 'markLabelPrinted'])->middleware('permission:delivery.prepare,delivery.view');
+        Route::post('/shipping-notes/{id}/start-picking', [LogisticsController::class, 'startPicking'])->middleware('permission:delivery.prepare,delivery.create');
         Route::post('/shipping-notes/{id}/load', [LogisticsController::class, 'loadShippingNote'])->middleware('permission:stock.issue,delivery.prepare');
 
         // Suivi GPS : lecture pour le dispatch, écriture pour le chauffeur en mission.
