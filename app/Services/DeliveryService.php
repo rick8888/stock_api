@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Exceptions\DomainException;
+use App\Repositories\Eloquent\CustomerRepository;
 use App\Repositories\Eloquent\DeliveryRepository;
 use App\Repositories\Eloquent\ProductRepository;
 use App\Repositories\Eloquent\RouteRepository;
@@ -29,6 +30,7 @@ class DeliveryService
         private readonly StockService $stock,
         private readonly OpsNotifier $notifier,
         private readonly Tenant $tenant,
+        private readonly CustomerRepository $customers,
     ) {}
 
     public function list(): Collection
@@ -190,15 +192,17 @@ class DeliveryService
         if (! $lines && $note) {
             $lines = $note['lines'] ?? [];
         }
-        $point = [
-            'lat' => $warehouse['lat'] ?? 33.5731,
-            'lng' => $warehouse['lng'] ?? -7.5898,
-            'label' => $input['city'] ?? ($warehouse['city'] ?? 'Stop'),
-        ];
+        $client = $input['client'] ?? ($note['client'] ?? '');
+        $point = $this->resolveStopPoint($input, $note, $warehouse, $client);
         $seq = $this->deliveries->countAll() + 1;
+        $origin = [
+            'lat' => (float) ($warehouse['lat'] ?? 33.5731),
+            'lng' => (float) ($warehouse['lng'] ?? -7.5898),
+            'label' => 'Entrepôt '.($warehouse['name'] ?? ''),
+        ];
 
         return [
-            'client' => $input['client'] ?? ($note['client'] ?? ''),
+            'client' => $client,
             'address' => $input['address'] ?? ($note['address'] ?? ''),
             'city' => $input['city'] ?? ($note['city'] ?? ''),
             'scheduledAt' => $input['scheduledAt'],
@@ -211,11 +215,55 @@ class DeliveryService
             'code' => $existing['code'] ?? 'BL-2026-'.str_pad((string) $seq, 5, '0', STR_PAD_LEFT),
             'warehouseId' => $route['warehouseId'],
             'location' => $existing['location'] ?? $point,
-            'path' => $existing['path'] ?? [$point],
-            'currentPosition' => $existing['currentPosition'] ?? $point,
+            'path' => $existing['path'] ?? [$origin, $point],
+            'currentPosition' => $existing['currentPosition'] ?? $origin,
             'progress' => $existing['progress'] ?? 0,
             'lines' => $lines,
             'shippingNoteId' => $input['shippingNoteId'] ?? ($existing['shippingNoteId'] ?? null),
+        ];
+    }
+
+    /**
+     * Priorité des coords : saisie explicite → adresse client → entrepôt.
+     *
+     * @param  array<string, mixed>  $input
+     * @param  array<string, mixed>|null  $note
+     * @param  array<string, mixed>|null  $warehouse
+     * @return array{lat: float, lng: float, label: string}
+     */
+    private function resolveStopPoint(array $input, ?array $note, ?array $warehouse, string $label): array
+    {
+        if (isset($input['lat'], $input['lng'])) {
+            return ['lat' => (float) $input['lat'], 'lng' => (float) $input['lng'], 'label' => $label];
+        }
+
+        if ($note) {
+            $customerId = $note['customerId'] ?? null;
+            $addressId = $note['addressId'] ?? null;
+            if ($customerId) {
+                $customer = $this->customers->find((string) $customerId);
+                foreach ($customer['addresses'] ?? [] as $address) {
+                    if ($addressId && ($address['id'] ?? null) !== $addressId) {
+                        continue;
+                    }
+                    if (isset($address['lat'], $address['lng'])) {
+                        return [
+                            'lat' => (float) $address['lat'],
+                            'lng' => (float) $address['lng'],
+                            'label' => $label !== '' ? $label : (string) ($address['label'] ?? 'Stop'),
+                        ];
+                    }
+                    if ($addressId) {
+                        break;
+                    }
+                }
+            }
+        }
+
+        return [
+            'lat' => (float) ($warehouse['lat'] ?? 33.5731),
+            'lng' => (float) ($warehouse['lng'] ?? -7.5898),
+            'label' => $label !== '' ? $label : (string) ($warehouse['city'] ?? 'Stop'),
         ];
     }
 

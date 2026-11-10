@@ -9,6 +9,7 @@ class Route extends RelationalDocumentModel
     protected $fillable = [
         'id', 'payload', 'name', 'route_date', 'driver_id', 'vehicle_id', 'warehouse_id',
         'status', 'distance_km', 'progress', 'company_id',
+        'last_lat', 'last_lng', 'last_located_at', 'eta_at',
     ];
 
     protected function casts(): array
@@ -18,6 +19,10 @@ class Route extends RelationalDocumentModel
             'route_date' => 'date',
             'distance_km' => 'float',
             'progress' => 'integer',
+            'last_lat' => 'float',
+            'last_lng' => 'float',
+            'last_located_at' => 'datetime',
+            'eta_at' => 'datetime',
         ];
     }
 
@@ -32,6 +37,10 @@ class Route extends RelationalDocumentModel
             'distanceKm' => 'distance_km',
             'progress' => 'progress',
             'companyId' => 'company_id',
+            'lastLat' => 'last_lat',
+            'lastLng' => 'last_lng',
+            'lastLocatedAt' => 'last_located_at',
+            'etaAt' => 'eta_at',
         ];
     }
 
@@ -43,6 +52,13 @@ class Route extends RelationalDocumentModel
         } elseif (is_array($this->payload) && isset($this->payload['date'])) {
             $doc['date'] = $this->payload['date'];
         }
+        if ($this->last_located_at) {
+            $doc['lastLocatedAt'] = $this->last_located_at->toIso8601String();
+        }
+        if ($this->eta_at) {
+            $doc['eta'] = $this->eta_at->toIso8601String();
+            $doc['etaAt'] = $this->eta_at->toIso8601String();
+        }
 
         return $doc;
     }
@@ -51,6 +67,19 @@ class Route extends RelationalDocumentModel
     {
         if (array_key_exists('date', $data)) {
             $this->route_date = $data['date'] ? \Carbon\Carbon::parse((string) $data['date'])->toDateString() : null;
+        }
+        if (array_key_exists('eta', $data) && ! array_key_exists('etaAt', $data)) {
+            $data['etaAt'] = $data['eta'];
+        }
+        if (array_key_exists('etaAt', $data)) {
+            $this->eta_at = $data['etaAt']
+                ? \Carbon\Carbon::parse((string) $data['etaAt'])
+                : null;
+        }
+        if (array_key_exists('lastLocatedAt', $data)) {
+            $this->last_located_at = $data['lastLocatedAt']
+                ? \Carbon\Carbon::parse((string) $data['lastLocatedAt'])
+                : null;
         }
 
         return parent::fillDocument($data);

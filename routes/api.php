@@ -22,6 +22,7 @@ use App\Http\Controllers\Api\StockPlacementController;
 use App\Http\Controllers\Api\WarehouseLocationController;
 use App\Http\Controllers\Api\SupplierController;
 use App\Http\Controllers\Api\SupplierProductController;
+use App\Http\Controllers\Api\TrackingController;
 use App\Http\Controllers\Api\TaskController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\WarehouseController;
@@ -136,6 +137,11 @@ Route::middleware('auth:api')->group(function () {
         Route::patch('/shipping-notes/{id}/carrier', [LogisticsController::class, 'assignCarrier'])->middleware('permission:delivery.prepare,delivery.update,delivery.create');
         Route::post('/shipping-notes/{id}/label-printed', [LogisticsController::class, 'markLabelPrinted'])->middleware('permission:delivery.prepare,delivery.view');
         Route::post('/shipping-notes/{id}/load', [LogisticsController::class, 'loadShippingNote'])->middleware('permission:stock.issue,delivery.prepare');
+
+        // Suivi GPS : lecture pour le dispatch, écriture pour le chauffeur en mission.
+        Route::get('/tracking/live', [TrackingController::class, 'live'])->middleware('permission:delivery.view');
+        Route::get('/tracking/routes/{id}', [TrackingController::class, 'route'])->middleware('permission:delivery.view');
+        Route::post('/tracking/ping', [TrackingController::class, 'ping'])->middleware('permission:delivery.confirm,delivery.update,delivery.view');
     });
 
     Route::middleware('module:finance')->group(function () {
