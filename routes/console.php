@@ -10,4 +10,7 @@ Artisan::command('inspire', function () {
 
 Schedule::command('ops:alerts')->hourly();
 Schedule::command('billing:expire-trials')->daily();
+// Avant le calcul de la demande : une demande périmée ne doit plus peser sur
+// les propositions de réapprovisionnement du jour.
+Schedule::command('procurement:expire-stale')->dailyAt('01:45');
 Schedule::command('replenishment:compute-demand')->dailyAt('02:00');

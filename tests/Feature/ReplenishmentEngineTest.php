@@ -3,9 +3,11 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use App\Repositories\Eloquent\ProcurementRequestRepository;
 use App\Repositories\Eloquent\PurchaseOrderRepository;
 use App\Repositories\Eloquent\SupplierProductRepository;
 use App\Repositories\Eloquent\SupplierWarehouseTermRepository;
+use App\Services\Procurement\ProcurementExpiryService;
 use App\Services\Replenishment\DemandForecastService;
 use App\Services\Replenishment\ReplenishmentService;
 use App\Support\Uid;
@@ -230,6 +232,23 @@ class ReplenishmentEngineTest extends TestCase
             ->assertJsonPath('0.reorderPoint', 50);
     }
 
+    public function test_a_stale_request_stops_inflating_the_suggestion_once_expired(): void
+    {
+        $this->placeRequest('pr-stale', quantity: 400, submittedDaysAgo: 90);
+
+        // La demande oubliée consomme la position de stock : cible 120 moins
+        // (20 disponibles − 400 engagés) = 500, arrondi au colisage de 30.
+        $before = $this->computeSuggestions()->first();
+        $this->assertSame(400, $before['pendingNeed']);
+        $this->assertSame(510, $before['suggestedQuantity']);
+
+        app(ProcurementExpiryService::class)->expire();
+
+        $row = $this->computeSuggestions()->first();
+        $this->assertSame(0, $row['pendingNeed']);
+        $this->assertSame(120, $row['suggestedQuantity']);
+    }
+
     public function test_endpoint_exposes_the_supplier_purchase_terms(): void
     {
         $this->getJson('/api/supplier-products')
@@ -273,6 +292,22 @@ class ReplenishmentEngineTest extends TestCase
         app(DemandForecastService::class)->recompute(['wh-a']);
 
         return app(ReplenishmentService::class)->compute('wh-a');
+    }
+
+    private function placeRequest(string $id, int $quantity, int $submittedDaysAgo): void
+    {
+        app(ProcurementRequestRepository::class)->put([
+            'id' => $id,
+            'code' => strtoupper($id),
+            'status' => 'submitted',
+            'requesterId' => 'usr-buyer',
+            'warehouseId' => 'wh-a',
+            'companyId' => 'co-test',
+            'priority' => 'medium',
+            'items' => [['productId' => 'prd-1', 'quantity' => $quantity]],
+            'createdAt' => CarbonImmutable::now()->subDays($submittedDaysAgo)->toIso8601String(),
+            'submittedAt' => CarbonImmutable::now()->subDays($submittedDaysAgo)->toIso8601String(),
+        ]);
     }
 
     private function placeOrder(int $quantity, int $expectedInDays): void
