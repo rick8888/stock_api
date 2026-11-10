@@ -2,9 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Exceptions\DomainException;
+use App\Models\Delivery;
 use App\Models\User;
 use App\Repositories\Eloquent\DeliveryRepository;
 use App\Repositories\Eloquent\RouteRepository;
+use App\Repositories\Eloquent\ShipmentRepository;
 use App\Repositories\Eloquent\ShippingNoteRepository;
 use App\Repositories\Eloquent\StockItemRepository;
 use App\Services\DeliveryService;
@@ -233,6 +236,134 @@ class LogisticsFlowTest extends TestCase
         $this->assertSame('ready', $fresh['status']);
         $this->assertNull($fresh['deliveryId'] ?? null);
         $this->assertFalse((bool) ($fresh['stockReserved'] ?? false));
+    }
+
+    public function test_pod_persists_signature_and_coords_columns(): void
+    {
+        $this->actingAs($this->dispatcher, 'api');
+        $note = $this->makeNote('bl-pod-col', 'Client POD Col');
+        $route = app(RouteRepository::class)->put([
+            'id' => 'rt-pod-col',
+            'name' => 'POD Col',
+            'date' => now()->toDateString(),
+            'driverId' => 'drv-1',
+            'vehicleId' => 'veh-1',
+            'warehouseId' => 'wh-a',
+            'status' => 'in_progress',
+            'progress' => 10,
+            'companyId' => 'co-test',
+        ]);
+        $delivery = app(DeliveryService::class)->create([
+            'shippingNoteId' => $note['id'],
+            'client' => 'Client POD Col',
+            'address' => 'Rue POD',
+            'city' => 'Casablanca',
+            'scheduledAt' => now()->toIso8601String(),
+            'routeId' => $route['id'],
+            'sequence' => 1,
+            'lines' => [],
+        ]);
+
+        $result = app(DeliveryService::class)->updateStatus($delivery['id'], 'delivered', null, 'Magasin', [
+            'signatureDataUrl' => 'data:image/png;base64,aaa',
+            'lat' => 33.5712,
+            'lng' => -7.6211,
+        ]);
+
+        $this->assertSame('data:image/png;base64,aaa', $result['signatureDataUrl'] ?? null);
+        $this->assertSame(33.5712, $result['podLocation']['lat'] ?? null);
+        $row = Delivery::query()->find($delivery['id']);
+        $this->assertSame('data:image/png;base64,aaa', $row->signature_data_url);
+        $this->assertEqualsWithDelta(33.5712, (float) $row->pod_lat, 0.0001);
+        $this->assertEqualsWithDelta(-7.6211, (float) $row->pod_lng, 0.0001);
+        $this->assertNotNull($row->pod_at);
+    }
+
+    public function test_delivered_without_pod_is_rejected(): void
+    {
+        $this->actingAs($this->dispatcher, 'api');
+        $note = $this->makeNote('bl-nopod', 'Client NoPOD');
+        $route = app(RouteRepository::class)->put([
+            'id' => 'rt-nopod',
+            'name' => 'NoPOD',
+            'date' => now()->toDateString(),
+            'driverId' => 'drv-1',
+            'vehicleId' => 'veh-1',
+            'warehouseId' => 'wh-a',
+            'status' => 'in_progress',
+            'progress' => 10,
+            'companyId' => 'co-test',
+        ]);
+        $delivery = app(DeliveryService::class)->create([
+            'shippingNoteId' => $note['id'],
+            'client' => 'Client NoPOD',
+            'address' => 'Rue',
+            'city' => 'Casablanca',
+            'scheduledAt' => now()->toIso8601String(),
+            'routeId' => $route['id'],
+            'sequence' => 1,
+            'lines' => [],
+        ]);
+
+        $this->expectException(DomainException::class);
+        app(DeliveryService::class)->updateStatus($delivery['id'], 'delivered', null, 'Magasin', null);
+    }
+
+    public function test_illegal_status_transition_is_rejected(): void
+    {
+        $this->actingAs($this->dispatcher, 'api');
+        $this->makeNote('bl-status', 'Client Status');
+        app(LogisticsService::class)->startPicking('bl-status');
+        app(LogisticsService::class)->loadShippingNote('bl-status', $this->dispatcher->id);
+
+        $this->expectException(DomainException::class);
+        app(LogisticsService::class)->startPicking('bl-status');
+    }
+
+    public function test_route_progress_syncs_linked_shipment(): void
+    {
+        $this->actingAs($this->dispatcher, 'api');
+        $note = $this->makeNote('bl-sync', 'Client Sync');
+        $route = app(LogisticsService::class)->createRoute([
+            'name' => 'Sync',
+            'date' => now()->toDateString(),
+            'driverId' => 'drv-1',
+            'vehicleId' => 'veh-1',
+            'warehouseId' => 'wh-a',
+            'stops' => [[
+                'shippingNoteId' => $note['id'],
+                'client' => 'Client Sync',
+                'address' => 'Rue Sync',
+                'city' => 'Casablanca',
+                'scheduledAt' => now()->toIso8601String(),
+            ]],
+        ]);
+
+        $shipment = app(ShipmentRepository::class)->put([
+            'id' => 'shp-sync',
+            'code' => 'EX-SYNC',
+            'originWarehouseId' => 'wh-a',
+            'destination' => 'Rabat',
+            'vehicleId' => 'veh-1',
+            'driverId' => 'drv-1',
+            'routeId' => $route['id'],
+            'date' => now()->toDateString(),
+            'status' => 'preparing',
+            'progress' => 0,
+            'companyId' => 'co-test',
+            'shippingNoteIds' => [],
+        ]);
+
+        $delivery = app(DeliveryRepository::class)->forWarehouses(['wh-a'])
+            ->first(fn (array $item) => $item['routeId'] === $route['id']);
+        app(DeliveryService::class)->updateStatus($delivery['id'], 'in_transit');
+
+        $fresh = app(ShipmentRepository::class)->find('shp-sync');
+        $this->assertSame('in_transit', $fresh['status']);
+        $this->assertSame($shipment['id'], $fresh['id']);
+        $routeFresh = app(RouteRepository::class)->find($route['id']);
+        $this->assertSame('in_progress', $routeFresh['status']);
+        $this->assertSame((int) ($routeFresh['progress'] ?? 0), (int) ($fresh['progress'] ?? 0));
     }
 
     public function test_update_route_removes_dropped_stops(): void

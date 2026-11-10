@@ -12,6 +12,7 @@ use App\Repositories\Eloquent\ShippingNoteRepository;
 use App\Repositories\Eloquent\StockItemRepository;
 use App\Repositories\Eloquent\WarehouseRepository;
 use App\Support\DemoDate;
+use App\Support\StatusTransition;
 use App\Support\Tenant;
 use App\Support\Uid;
 use Illuminate\Support\Collection;
@@ -105,6 +106,8 @@ class DeliveryService
                 fn (array $item) => $item['id'] === ($delivery['shippingNoteId'] ?? null) || ($item['deliveryId'] ?? null) === $delivery['id'],
             );
 
+            StatusTransition::assert('delivery', (string) ($delivery['status'] ?? 'prepared'), $status, 'Livraison');
+
             if (in_array($status, ['in_transit', 'at_risk', 'delivered'], true) && $linked) {
                 $this->ensureNoteLoaded($linked, $delivery);
             }
@@ -114,14 +117,21 @@ class DeliveryService
                 $delivery['notes'] = $note;
             }
             if ($status === 'delivered') {
+                $hasSignature = ! empty($proof['signatureDataUrl']);
+                $hasCoords = isset($proof['lat'], $proof['lng']);
+                if (! $hasSignature && ! $hasCoords) {
+                    throw new DomainException(
+                        'Preuve de livraison requise : signature ou coordonnées GPS.',
+                    );
+                }
                 $now = now()->toIso8601String();
                 $delivery['progress'] = 100;
                 $delivery['signedAt'] = $proof['signedAt'] ?? $now;
                 $delivery['signedBy'] = $signedBy ?: ($delivery['signedBy'] ?? 'Destinataire');
-                if (! empty($proof['signatureDataUrl'])) {
+                if ($hasSignature) {
                     $delivery['signatureDataUrl'] = $proof['signatureDataUrl'];
                 }
-                if (isset($proof['lat'], $proof['lng'])) {
+                if ($hasCoords) {
                     $delivery['podLocation'] = [
                         'lat' => (float) $proof['lat'],
                         'lng' => (float) $proof['lng'],
@@ -130,6 +140,12 @@ class DeliveryService
                 }
                 if ($linked) {
                     $linked = $this->notes->find($linked['id']) ?? $linked;
+                    StatusTransition::assert(
+                        'shipping_note',
+                        (string) ($linked['status'] ?? 'assigned'),
+                        'delivered',
+                        'Bon de livraison',
+                    );
                     $linked['status'] = 'delivered';
                     $this->notes->put($linked);
                 }
@@ -164,6 +180,12 @@ class DeliveryService
                         $this->releaseNoteReservation($linked);
                     }
                     // Remet le BL disponible pour replanification.
+                    StatusTransition::assert(
+                        'shipping_note',
+                        (string) ($linked['status'] ?? 'assigned'),
+                        'ready',
+                        'Bon de livraison',
+                    );
                     $linked['deliveryId'] = null;
                     $linked['status'] = 'ready';
                     $this->notes->put($linked);
@@ -172,7 +194,12 @@ class DeliveryService
             }
             $this->deliveries->put($delivery);
 
-            return $delivery;
+            if (! empty($delivery['routeId'])) {
+                // Évite la dépendance circulaire constructeur LogisticsService ↔ DeliveryService.
+                app(LogisticsService::class)->refreshRouteTracking($delivery['routeId']);
+            }
+
+            return $this->deliveries->find($delivery['id']) ?? $delivery;
         });
     }
 

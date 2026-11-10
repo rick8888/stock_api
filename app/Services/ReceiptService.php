@@ -7,6 +7,7 @@ use App\Repositories\Eloquent\ProcurementRequestRepository;
 use App\Repositories\Eloquent\PurchaseOrderRepository;
 use App\Repositories\Eloquent\ReceiptRepository;
 use App\Repositories\Eloquent\WarehouseRepository;
+use App\Support\StatusTransition;
 use App\Support\Tenant;
 use App\Support\Uid;
 use Illuminate\Support\Collection;
@@ -170,13 +171,22 @@ class ReceiptService
             $receipt['items'] = $nextItems;
             $receipt['received'] = collect($nextItems)->sum('received') ?: $received;
             $receipt['expected'] = collect($nextItems)->sum('expected') ?: ($receipt['expected'] ?? 0);
-            $receipt['status'] = $receipt['received'] >= $receipt['expected'] && $receipt['expected'] > 0 ? 'validated' : 'partial';
+            $nextStatus = $receipt['received'] >= $receipt['expected'] && $receipt['expected'] > 0 ? 'validated' : 'partial';
+            StatusTransition::assert('receipt', (string) ($receipt['status'] ?? 'pending'), $nextStatus, 'Bon de réception');
+            $receipt['status'] = $nextStatus;
             $receipt['userId'] = $userId;
             $receipt['checkedAt'] = now()->toIso8601String();
             $receipt['date'] = $receipt['checkedAt'];
             $this->receipts->put($receipt);
             if ($order) {
-                $order['status'] = $receipt['status'] === 'validated' ? 'received' : 'partial';
+                $orderStatus = $receipt['status'] === 'validated' ? 'received' : 'partial';
+                StatusTransition::assert(
+                    'purchase_order',
+                    (string) ($order['status'] ?? 'sent'),
+                    $orderStatus,
+                    'Ordre d’achat',
+                );
+                $order['status'] = $orderStatus;
                 $this->orders->put($order);
                 if ($receipt['status'] === 'validated') {
                     $requestIds = $order['procurementRequestIds'] ?? [];

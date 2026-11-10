@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Repositories\Eloquent\PurchaseOrderRepository;
 use App\Repositories\Eloquent\SupplierRepository;
+use App\Support\StatusTransition;
 use App\Support\Tenant;
 use App\Support\Uid;
 use Illuminate\Support\Collection;
@@ -67,7 +68,8 @@ class PurchaseService
 
     public function updateStatus(string $id, string $status): array
     {
-        $this->orders->findOrFail($id, 'Commande introuvable');
+        $order = $this->orders->findOrFail($id, 'Commande introuvable');
+        StatusTransition::assert('purchase_order', (string) ($order['status'] ?? 'draft'), $status, 'Ordre d’achat');
 
         return $this->orders->merge($id, ['status' => $status], 'Commande introuvable');
     }

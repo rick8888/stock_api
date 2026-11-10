@@ -16,6 +16,7 @@ use App\Repositories\Eloquent\VehicleRepository;
 use App\Repositories\Eloquent\WarehouseRepository;
 use App\Support\DemoDate;
 use App\Support\Geo;
+use App\Support\StatusTransition;
 use App\Support\Tenant;
 use App\Support\Uid;
 use Illuminate\Support\Collection;
@@ -338,6 +339,10 @@ class LogisticsService
                 $this->tenant->assertWarehouseAccess($input['warehouseId']);
             }
 
+            if (! empty($input['status'])) {
+                StatusTransition::assert('route', (string) ($route['status'] ?? 'planned'), (string) $input['status'], 'Tournée');
+            }
+
             $route = $this->routes->merge($id, array_filter([
                 'name' => $input['name'] ?? null,
                 'date' => $input['date'] ?? null,
@@ -366,9 +371,7 @@ class LogisticsService
             $note = $this->notes->findOrFail($id, 'Bon introuvable');
             $this->tenant->assertWarehouseAccess($note['warehouseId'] ?? '');
             $status = $note['status'] ?? 'ready';
-            if (! in_array($status, ['ready', 'picking'], true)) {
-                throw new DomainException('Seuls les bons disponibles peuvent entrer en préparation.');
-            }
+            StatusTransition::assert('shipping_note', $status, 'picking', 'Bon de livraison');
             $note['status'] = 'picking';
             $this->notes->put($note);
             $this->notifier->audit('Préparation démarrée', 'shipping_note', $note['id'], $this->tenant->actorId());
@@ -433,7 +436,10 @@ class LogisticsService
         return DB::transaction(function () use ($id, $input, $userId) {
             $shipment = $this->shipments->findOrFail($id, 'Expédition introuvable');
             $this->tenant->assertWarehouseAccess($shipment['originWarehouseId'] ?? '');
-            $previousStatus = $shipment['status'] ?? '';
+            $previousStatus = (string) ($shipment['status'] ?? 'preparing');
+            if (! empty($input['status'])) {
+                StatusTransition::assert('shipment', $previousStatus, (string) $input['status'], 'Expédition');
+            }
             $shipment = array_merge($shipment, array_filter($input, fn ($value) => $value !== null));
             if (! empty($input['shippingNoteIds'])) {
                 $shipment['lines'] = $this->aggregateNotes($input['shippingNoteIds']);
@@ -441,6 +447,9 @@ class LogisticsService
             $actorId = $userId ?: $this->tenant->actorId();
             if (($shipment['status'] ?? '') === 'done' && $previousStatus !== 'done') {
                 $shipment = $this->receiveTransferShipment($shipment, $actorId);
+            }
+            if (! empty($shipment['routeId'])) {
+                $shipment = $this->applyRouteTrackingToShipment($shipment);
             }
             $this->shipments->put($shipment);
             $this->bindShipmentNotes($shipment);
@@ -498,7 +507,8 @@ class LogisticsService
             $note['loadedByUserId'] = $userId;
             $note['stockReserved'] = false;
             // Cycle préparation : ready/picking → loaded ; déjà affecté → assigned.
-            if (in_array($status, ['ready', 'picking', 'loaded'], true) && empty($note['deliveryId']) && empty($note['shipmentId'])) {
+            if (in_array($status, ['ready', 'picking'], true) && empty($note['deliveryId']) && empty($note['shipmentId'])) {
+                StatusTransition::assert('shipping_note', $status, 'loaded', 'Bon de livraison');
                 $note['status'] = 'loaded';
             }
             if ($destinationWarehouseId) {
@@ -803,6 +813,15 @@ class LogisticsService
         }
     }
 
+    /** Recalcule géométrie / progress d'une tournée et propage vers les expéditions. */
+    public function refreshRouteTracking(string $routeId): array
+    {
+        $route = $this->routes->findOrFail($routeId, 'Tournée introuvable');
+        $this->tenant->assertWarehouseAccess($route['warehouseId'] ?? '');
+
+        return $this->refreshRouteGeometry($route);
+    }
+
     private function refreshRouteGeometry(array $route): array
     {
         $warehouse = $this->warehouses->find($route['warehouseId'] ?? '');
@@ -848,13 +867,66 @@ class LogisticsService
         $current = $active['currentPosition']
             ?? ($path ? Geo::pointAlong($path, min(1, max(0, $progress / 100))) : $origin);
 
-        return $this->routes->merge($route['id'], [
+        if ($status !== ($route['status'] ?? 'planned')) {
+            StatusTransition::assert('route', (string) ($route['status'] ?? 'planned'), $status, 'Tournée');
+        }
+
+        $route = $this->routes->merge($route['id'], [
             'status' => $status,
             'distanceKm' => max(1, (int) round(Geo::pathLengthKm($path))),
             'path' => $path,
             'currentPosition' => $current,
             'progress' => $progress,
         ], 'Tournée introuvable');
+
+        $this->syncShipmentsForRoute($route);
+
+        return $route;
+    }
+
+    /**
+     * Propage progress / position / ETA de la tournée vers les expéditions liées.
+     */
+    private function syncShipmentsForRoute(array $route): void
+    {
+        foreach ($this->shipments->all() as $shipment) {
+            if (($shipment['routeId'] ?? null) !== $route['id']) {
+                continue;
+            }
+            $patched = $this->applyRouteTrackingToShipment($shipment, $route);
+            $this->shipments->put($patched);
+        }
+    }
+
+    /** @param  array<string, mixed>  $shipment */
+    private function applyRouteTrackingToShipment(array $shipment, ?array $route = null): array
+    {
+        $route ??= $this->routes->find($shipment['routeId'] ?? '');
+        if (! $route) {
+            return $shipment;
+        }
+        $shipment['progress'] = (int) ($route['progress'] ?? $shipment['progress'] ?? 0);
+        if (! empty($route['currentPosition'])) {
+            $shipment['currentPosition'] = $route['currentPosition'];
+        }
+        if (! empty($route['path'])) {
+            $shipment['path'] = $route['path'];
+        }
+        if (! empty($route['eta']) || ! empty($route['etaAt'])) {
+            $shipment['eta'] = $route['eta'] ?? $route['etaAt'];
+        }
+        $routeStatus = $route['status'] ?? '';
+        $shipmentStatus = $shipment['status'] ?? 'preparing';
+        if ($routeStatus === 'done' && $shipmentStatus !== 'done') {
+            // Ne force pas done ici (stock inbound) — seulement aligner le transit.
+            if ($shipmentStatus === 'preparing') {
+                $shipment['status'] = 'in_transit';
+            }
+        } elseif ($routeStatus === 'in_progress' && $shipmentStatus === 'preparing') {
+            $shipment['status'] = 'in_transit';
+        }
+
+        return $shipment;
     }
 
     private function reserveNoteStock(array &$note): void

@@ -6,9 +6,11 @@ use App\Exceptions\DomainException;
 use App\Repositories\Eloquent\DeliveryRepository;
 use App\Repositories\Eloquent\DriverRepository;
 use App\Repositories\Eloquent\RouteRepository;
+use App\Repositories\Eloquent\ShipmentRepository;
 use App\Repositories\Eloquent\TrackingEventRepository;
 use App\Repositories\Eloquent\VehicleRepository;
 use App\Support\Geo;
+use App\Support\StatusTransition;
 use App\Support\Tenant;
 use App\Support\Uid;
 use Carbon\CarbonImmutable;
@@ -31,6 +33,7 @@ class TrackingService
         private readonly TrackingEventRepository $events,
         private readonly RouteRepository $routes,
         private readonly DeliveryRepository $deliveries,
+        private readonly ShipmentRepository $shipments,
         private readonly VehicleRepository $vehicles,
         private readonly DriverRepository $drivers,
         private readonly Tenant $tenant,
@@ -86,13 +89,15 @@ class TrackingService
                 'at' => $recordedAt->toIso8601String(),
             ];
 
-            $status = $route['status'] ?? 'planned';
+            $previousStatus = (string) ($route['status'] ?? 'planned');
+            $status = $previousStatus;
             if ($status === 'planned' && $progress > 0) {
                 $status = 'in_progress';
             }
             if ($progress >= 100) {
                 $status = 'done';
             }
+            StatusTransition::assert('route', $previousStatus, $status, 'Tournée');
 
             $route = $this->routes->merge($route['id'], [
                 'status' => $status,
@@ -115,6 +120,7 @@ class TrackingService
             }
 
             $this->syncStopProgress($route, $path, $projection, $position, $recordedAt);
+            $this->syncShipmentsForRoute($route);
 
             $event = $this->events->create([
                 'id' => Uid::make('trk'),
@@ -373,5 +379,32 @@ class TrackingService
         $ratio = $currentAlong / $targetAlong;
 
         return (int) min(100, max(0, round($ratio * 100)));
+    }
+
+    /** Aligne progress / position / ETA des expéditions liées à la tournée. */
+    private function syncShipmentsForRoute(array $route): void
+    {
+        foreach ($this->shipments->all() as $shipment) {
+            if (($shipment['routeId'] ?? null) !== $route['id']) {
+                continue;
+            }
+            $shipment['progress'] = (int) ($route['progress'] ?? $shipment['progress'] ?? 0);
+            if (! empty($route['currentPosition'])) {
+                $shipment['currentPosition'] = $route['currentPosition'];
+            }
+            if (! empty($route['path'])) {
+                $shipment['path'] = $route['path'];
+            }
+            if (! empty($route['eta']) || ! empty($route['etaAt'])) {
+                $shipment['eta'] = $route['eta'] ?? $route['etaAt'];
+            }
+            $routeStatus = $route['status'] ?? '';
+            $shipmentStatus = $shipment['status'] ?? 'preparing';
+            if (in_array($routeStatus, ['in_progress', 'done'], true) && $shipmentStatus === 'preparing') {
+                StatusTransition::assert('shipment', $shipmentStatus, 'in_transit', 'Expédition');
+                $shipment['status'] = 'in_transit';
+            }
+            $this->shipments->put($shipment);
+        }
     }
 }

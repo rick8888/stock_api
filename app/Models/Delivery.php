@@ -14,7 +14,8 @@ class Delivery extends RelationalDocumentModel
     protected $fillable = [
         'id', 'payload', 'code', 'client', 'address', 'city', 'scheduled_at', 'status', 'driver_id',
         'vehicle_id', 'route_id', 'sequence', 'warehouse_id', 'shipping_note_id', 'progress',
-        'signed_by', 'signed_at', 'notes', 'company_id', 'eta_at',
+        'signed_by', 'signed_at', 'signature_data_url', 'pod_lat', 'pod_lng', 'pod_at',
+        'notes', 'company_id', 'eta_at',
     ];
 
     protected function casts(): array
@@ -23,9 +24,12 @@ class Delivery extends RelationalDocumentModel
             'payload' => 'array',
             'scheduled_at' => 'datetime',
             'signed_at' => 'datetime',
+            'pod_at' => 'datetime',
             'eta_at' => 'datetime',
             'sequence' => 'integer',
             'progress' => 'integer',
+            'pod_lat' => 'float',
+            'pod_lng' => 'float',
         ];
     }
 
@@ -45,6 +49,7 @@ class Delivery extends RelationalDocumentModel
             'shippingNoteId' => 'shipping_note_id',
             'progress' => 'progress',
             'signedBy' => 'signed_by',
+            'signatureDataUrl' => 'signature_data_url',
             'notes' => 'notes',
             'companyId' => 'company_id',
         ];
@@ -80,6 +85,20 @@ class Delivery extends RelationalDocumentModel
                     : (string) $value;
             }
         }
+        if ($this->signature_data_url) {
+            $doc['signatureDataUrl'] = $this->signature_data_url;
+        }
+        if ($this->pod_lat !== null && $this->pod_lng !== null) {
+            $doc['podLocation'] = [
+                'lat' => (float) $this->pod_lat,
+                'lng' => (float) $this->pod_lng,
+                'at' => $this->pod_at
+                    ? \Carbon\Carbon::instance($this->pod_at)->toIso8601String()
+                    : ($doc['signedAt'] ?? null),
+            ];
+        } elseif (is_array($this->payload) && isset($this->payload['podLocation'])) {
+            $doc['podLocation'] = $this->payload['podLocation'];
+        }
         $lines = $this->documentLinesArray();
         if ($lines) {
             $doc['lines'] = $lines;
@@ -97,6 +116,21 @@ class Delivery extends RelationalDocumentModel
                 continue;
             }
             $this->setAttribute($column, $data[$camel] ? \Carbon\Carbon::parse((string) $data[$camel]) : null);
+        }
+        if (array_key_exists('signatureDataUrl', $data)) {
+            $this->signature_data_url = $data['signatureDataUrl'] ?: null;
+        }
+        if (array_key_exists('podLocation', $data)) {
+            $pod = $data['podLocation'];
+            if (is_array($pod) && isset($pod['lat'], $pod['lng'])) {
+                $this->pod_lat = (float) $pod['lat'];
+                $this->pod_lng = (float) $pod['lng'];
+                $this->pod_at = ! empty($pod['at']) ? \Carbon\Carbon::parse((string) $pod['at']) : now();
+            } elseif ($pod === null) {
+                $this->pod_lat = null;
+                $this->pod_lng = null;
+                $this->pod_at = null;
+            }
         }
         parent::fillDocument($data);
         if (array_key_exists('lines', $data) && is_array($data['lines'])) {
