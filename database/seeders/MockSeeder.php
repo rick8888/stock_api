@@ -9,6 +9,7 @@ use App\Models\Budget;
 use App\Models\Category;
 use App\Models\Company;
 use App\Models\Consultation;
+use App\Models\Customer;
 use App\Models\Delivery;
 use App\Models\Driver;
 use App\Models\Expense;
@@ -112,6 +113,7 @@ class MockSeeder extends Seeder
         $this->docs($mock['receipts'] ?? [], Receipt::class);
         $this->docs($mock['drivers'] ?? [], Driver::class);
         $this->docs($mock['vehicles'] ?? [], Vehicle::class);
+        $this->docs($mock['customers'] ?? [], Customer::class);
         $this->docs($mock['shippingNotes'] ?? [], ShippingNote::class);
         $this->docs($mock['routes'] ?? [], Route::class);
         $this->docs($mock['shipments'] ?? [], Shipment::class);
