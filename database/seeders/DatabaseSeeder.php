@@ -9,6 +9,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call(MockSeeder::class);
+        $this->call(SupplierCatalogSeeder::class);
         $this->call(DemandHistorySeeder::class);
     }
 }

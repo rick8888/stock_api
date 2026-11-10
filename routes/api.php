@@ -21,6 +21,7 @@ use App\Http\Controllers\Api\StockLotController;
 use App\Http\Controllers\Api\StockPlacementController;
 use App\Http\Controllers\Api\WarehouseLocationController;
 use App\Http\Controllers\Api\SupplierController;
+use App\Http\Controllers\Api\SupplierProductController;
 use App\Http\Controllers\Api\TaskController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\WarehouseController;
@@ -52,6 +53,8 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/suppliers', [SupplierController::class, 'store'])->middleware('permission:product.create');
     Route::get('/suppliers/{id}', [SupplierController::class, 'show'])->middleware('permission:product.view');
     Route::patch('/suppliers/{id}', [SupplierController::class, 'update'])->middleware('permission:product.update');
+
+    Route::get('/supplier-products', [SupplierProductController::class, 'index'])->middleware('permission:product.view');
 
     Route::get('/customers', [CustomerController::class, 'index'])->middleware('permission:delivery.view,product.view');
     Route::post('/customers', [CustomerController::class, 'store'])->middleware('permission:delivery.create,delivery.prepare,product.create');

@@ -230,6 +230,32 @@ class ReplenishmentEngineTest extends TestCase
             ->assertJsonPath('0.reorderPoint', 50);
     }
 
+    public function test_endpoint_exposes_the_supplier_purchase_terms(): void
+    {
+        $this->getJson('/api/supplier-products')
+            ->assertOk()
+            ->assertJsonPath('0.supplierId', 'sup-1')
+            ->assertJsonPath('0.productId', 'prd-1')
+            ->assertJsonPath('0.minOrderQty', 50)
+            ->assertJsonPath('0.orderMultiple', 30);
+    }
+
+    public function test_supplier_purchase_terms_of_another_company_are_hidden(): void
+    {
+        app(SupplierProductRepository::class)->upsert([
+            'supplier_id' => 'sup-other',
+            'product_id' => 'prd-other',
+            'min_order_qty' => 999,
+            'active' => true,
+            'company_id' => 'co-other',
+        ]);
+
+        $this->getJson('/api/supplier-products')
+            ->assertOk()
+            ->assertJsonCount(1)
+            ->assertJsonPath('0.supplierId', 'sup-1');
+    }
+
     public function test_warehouse_outside_the_user_scope_is_rejected(): void
     {
         $this->insertDocument('warehouses', 'wh-z', [

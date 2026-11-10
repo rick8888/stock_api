@@ -18,6 +18,29 @@ class SupplierProductRepository
     }
 
     /** @return Collection<int, array> */
+    public function all(): Collection
+    {
+        return SupplierProduct::query()
+            ->where('active', true)
+            ->get()
+            ->map(fn (SupplierProduct $row) => $row->document())
+            ->values();
+    }
+
+    /** @return Collection<int, array> */
+    public function forCompany(?string $companyId): Collection
+    {
+        return SupplierProduct::query()
+            ->where('active', true)
+            ->where(function ($query) use ($companyId) {
+                $query->whereNull('company_id')->orWhere('company_id', $companyId);
+            })
+            ->get()
+            ->map(fn (SupplierProduct $row) => $row->document())
+            ->values();
+    }
+
+    /** @return Collection<int, array> */
     public function forProduct(string $productId): Collection
     {
         return SupplierProduct::query()
