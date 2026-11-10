@@ -130,13 +130,25 @@ class MockSeeder extends Seeder
         $this->docs($mock['auditLogs'] ?? [], AuditLog::class);
     }
 
+    /**
+     * Écrit le document complet, colonnes SQL comprises.
+     *
+     * Une affectation directe de `payload` laisserait les colonnes relationnelles nulles,
+     * et les repositories qui interrogent ces colonnes ne verraient aucune ligne sur une
+     * installation neuve.
+     */
     private function docs(array $rows, string $model): void
     {
         foreach ($rows as $row) {
-            $model::query()->updateOrCreate(
-                ['id' => $row['id']],
-                ['payload' => $row],
-            );
+            $instance = $model::query()->find($row['id']) ?? new $model(['id' => $row['id']]);
+            $instance->fillDocument($row)->save();
+
+            if (method_exists($instance, 'flushPendingItems')) {
+                $instance->flushPendingItems();
+            }
+            if (method_exists($instance, 'flushPendingLines')) {
+                $instance->flushPendingLines();
+            }
         }
     }
 }

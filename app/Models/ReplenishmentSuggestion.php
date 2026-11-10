@@ -75,6 +75,10 @@ class ReplenishmentSuggestion extends Model
             'orderMultiple' => $this->order_multiple === null ? null : (int) $this->order_multiple,
             'unitPrice' => $this->unit_price === null ? null : (float) $this->unit_price,
             'estimatedCost' => $this->estimated_cost === null ? null : (float) $this->estimated_cost,
+            // Dérivée plutôt que stockée : elle ne peut pas diverger de ses deux termes.
+            'coverDays' => $this->avg_daily_demand > 0
+                ? round($this->available / $this->avg_daily_demand, 1)
+                : null,
             'risk' => $this->risk,
             'reasons' => $this->reasons ?? [],
             'computedAt' => $this->computed_at?->toIso8601String(),

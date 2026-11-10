@@ -149,6 +149,9 @@ class ReplenishmentEngineTest extends TestCase
         $this->assertSame(120, $row['suggestedQuantity']);
         $this->assertSame(1500.0, $row['estimatedCost']);
         $this->assertSame('sup-1', $row['supplierId']);
+        // 20 disponibles pour 10/j : la couverture ne tient pas le délai de 5 jours.
+        $this->assertSame(2.0, $row['coverDays']);
+        $this->assertSame('high', $row['risk']);
     }
 
     public function test_warehouse_specific_lead_time_overrides_the_supplier_default(): void
