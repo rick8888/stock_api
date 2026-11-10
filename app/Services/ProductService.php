@@ -7,6 +7,7 @@ use App\Repositories\Eloquent\CategoryRepository;
 use App\Repositories\Eloquent\ProductRepository;
 use App\Repositories\Eloquent\StockItemRepository;
 use App\Repositories\Eloquent\WarehouseRepository;
+use App\Support\Tenant;
 use App\Support\Uid;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -18,11 +19,14 @@ class ProductService
         private readonly WarehouseRepository $warehouses,
         private readonly StockItemRepository $stock,
         private readonly CategoryRepository $categories,
+        private readonly Tenant $tenant,
     ) {}
 
     public function list(): Collection
     {
-        return $this->products->all()->filter(fn (array $item) => empty($item['archived']))->values();
+        return $this->tenant->filterProducts(
+            $this->products->all()->filter(fn (array $item) => empty($item['archived']))->values()
+        );
     }
 
     public function categories(): Collection
@@ -36,19 +40,20 @@ class ProductService
         if (! $product || ! empty($product['archived'])) {
             return null;
         }
+        $allowed = $this->tenant->filterProducts(collect([$product]));
 
-        return $product;
+        return $allowed->first();
     }
 
     public function create(array $input): array
     {
         return DB::transaction(function () use ($input) {
-            $product = $this->products->put([
+            $product = $this->products->put($this->tenant->stamp([
                 'id' => Uid::make('prd'),
                 'archived' => false,
                 ...$input,
-            ]);
-            foreach ($this->warehouses->all() as $warehouse) {
+            ]));
+            foreach ($this->tenant->filterWarehouses($this->warehouses->all()) as $warehouse) {
                 $this->stock->put([
                     'id' => Uid::make('stk'),
                     'productId' => $product['id'],
@@ -65,13 +70,18 @@ class ProductService
 
     public function update(string $id, array $input): array
     {
-        $this->products->findOrFail($id, 'Produit introuvable');
+        if (! $this->get($id)) {
+            throw new DomainException('Produit introuvable', 404);
+        }
 
         return $this->products->merge($id, $input, 'Produit introuvable');
     }
 
     public function archive(string $id): void
     {
+        if (! $this->get($id)) {
+            throw new DomainException('Produit introuvable', 404);
+        }
         $this->products->merge($id, ['archived' => true], 'Produit introuvable');
     }
 }

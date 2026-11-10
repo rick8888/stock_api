@@ -7,35 +7,28 @@ use App\Models\Company;
 use App\Repositories\Eloquent\PlatformInvoiceRepository;
 use App\Repositories\Eloquent\SubscriptionPlanRepository;
 use App\Repositories\Eloquent\SubscriptionRepository;
+use App\Support\Tenant;
 use App\Support\Uid;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class PlatformService
 {
-    private const DEMO_TODAY = '2026-08-26';
-
     public function __construct(
         private readonly SubscriptionPlanRepository $plans,
         private readonly SubscriptionRepository $subscriptions,
         private readonly PlatformInvoiceRepository $invoices,
+        private readonly Tenant $tenant,
     ) {}
 
     public function companies(): Collection
     {
-        return Company::query()->orderBy('name')->get()->map(fn (Company $company) => [
-            'id' => $company->id,
-            'name' => $company->name,
-            'legalName' => $company->legal_name,
-            'ice' => $company->ice,
-            'city' => $company->city,
-            'email' => $company->email,
-            'phone' => $company->phone,
-            'status' => $company->status,
-            'createdAt' => optional($company->created_at)->toDateString() ?? self::DEMO_TODAY,
-            'usersCount' => $company->users_count,
-            'warehousesCount' => $company->warehouses_count,
-        ]);
+        $query = Company::query()->orderBy('name');
+        if (! $this->tenant->isPlatform()) {
+            $query->where('id', $this->tenant->companyId());
+        }
+
+        return $query->get()->map(fn (Company $company) => $this->companyArray($company));
     }
 
     public function plans(): Collection
@@ -45,12 +38,21 @@ class PlatformService
 
     public function subscriptions(): Collection
     {
-        return $this->subscriptions->all();
+        if ($this->tenant->isPlatform()) {
+            return $this->subscriptions->forCompanies();
+        }
+        $subscription = $this->subscriptions->forCompany($this->tenant->companyId());
+
+        return collect($subscription ? [$subscription] : []);
     }
 
     public function invoices(): Collection
     {
-        return $this->invoices->all();
+        if ($this->tenant->isPlatform()) {
+            return $this->invoices->all();
+        }
+
+        return $this->invoices->forCompany($this->tenant->companyId());
     }
 
     public function createCompany(array $input): array
@@ -84,7 +86,7 @@ class PlatformService
                 'planId' => $plan['id'],
                 'status' => 'trialing',
                 'interval' => $input['interval'] ?? 'monthly',
-                'startedAt' => self::DEMO_TODAY,
+                'startedAt' => now()->toDateString(),
                 'currentPeriodEnd' => $ends,
                 'trialEndsAt' => $ends,
                 'seats' => 1,
@@ -97,6 +99,7 @@ class PlatformService
     public function updateCompany(string $id, array $input): array
     {
         return DB::transaction(function () use ($id, $input) {
+            $this->tenant->assertCompanyAccess($id);
             $company = Company::query()->find($id);
             if (! $company) {
                 throw new DomainException('Entreprise introuvable.');
@@ -111,7 +114,7 @@ class PlatformService
             }
             if (! empty($input['status'])) {
                 $company->status = $input['status'];
-                $subscription = $this->subscriptions->all()->first(fn (array $row) => $row['companyId'] === $id);
+                $subscription = $this->subscriptions->forCompany($id);
                 if ($subscription) {
                     if ($input['status'] === 'suspended') {
                         $subscription['status'] = 'paused';
@@ -156,6 +159,8 @@ class PlatformService
             'maxWarehouses' => max(0, (int) round($input['maxWarehouses'] ?? 0)),
             'modules' => $input['modules'] ?? [],
             'active' => (bool) ($input['active'] ?? true),
+            'stripePriceMonthly' => trim((string) ($input['stripePriceMonthly'] ?? '')),
+            'stripePriceYearly' => trim((string) ($input['stripePriceYearly'] ?? '')),
         ]);
     }
 
@@ -173,6 +178,11 @@ class PlatformService
                 $plan[$key] = max(0, (int) round($input[$key]));
             }
         }
+        foreach (['stripePriceMonthly', 'stripePriceYearly'] as $key) {
+            if (array_key_exists($key, $input)) {
+                $plan[$key] = trim((string) $input[$key]);
+            }
+        }
         if (array_key_exists('modules', $input)) {
             $plan['modules'] = $input['modules'];
         }
@@ -186,7 +196,8 @@ class PlatformService
     public function changeSubscription(string $companyId, array $input): array
     {
         return DB::transaction(function () use ($companyId, $input) {
-            $subscription = $this->subscriptions->all()->first(fn (array $row) => $row['companyId'] === $companyId);
+            $this->tenant->assertCompanyAccess($companyId);
+            $subscription = $this->subscriptions->forCompany($companyId);
             if (! $subscription) {
                 throw new DomainException('Abonnement introuvable.');
             }
@@ -231,8 +242,8 @@ class PlatformService
                         'number' => $this->nextInvoiceNumber(),
                         'amount' => ($subscription['interval'] ?? '') === 'yearly' ? $plan['yearlyPrice'] : $plan['monthlyPrice'],
                         'status' => 'open',
-                        'issuedAt' => self::DEMO_TODAY,
-                        'dueDate' => $this->addDays(self::DEMO_TODAY, 14),
+                        'issuedAt' => now()->toDateString(),
+                        'dueDate' => $this->addDays(now()->toDateString(), 14),
                     ]);
                 }
             }
@@ -241,17 +252,50 @@ class PlatformService
         });
     }
 
-    public function payInvoice(string $id): void
+    /**
+     * Paiement facture plateforme : stub immédiat, ou redirection Checkout si BILLING_PROVIDER=stripe.
+     *
+     * @return array{
+     *   invoice?: array,
+     *   payment?: array{provider: string, paymentRef: string, status: string},
+     *   url?: string,
+     *   sessionId?: string,
+     *   provider?: string
+     * }
+     */
+    public function payInvoice(string $id, array $input = []): array
     {
-        DB::transaction(function () use ($id) {
-            $invoice = $this->invoices->findOrFail($id, 'Facture introuvable.');
-            $invoice['status'] = 'paid';
-            $invoice['paidAt'] = self::DEMO_TODAY;
-            $this->invoices->put($invoice);
-            $overdue = $this->invoices->all()->contains(
-                fn (array $item) => $item['companyId'] === $invoice['companyId'] && in_array($item['status'] ?? '', ['overdue', 'open'], true),
+        $provider = trim((string) ($input['provider'] ?? config('services.billing.provider', 'stub')));
+        if ($provider === '') {
+            $provider = 'stub';
+        }
+        if ($provider === 'stripe') {
+            return app(StripeBillingService::class)->createCheckoutSession(
+                null,
+                null,
+                null,
+                $id,
             );
-            $subscription = $this->subscriptions->all()->first(fn (array $row) => $row['companyId'] === $invoice['companyId']);
+        }
+
+        return DB::transaction(function () use ($id, $input, $provider) {
+            $invoice = $this->invoices->findOrFail($id, 'Facture introuvable.');
+            $this->tenant->assertCompanyAccess($invoice['companyId'] ?? null);
+            if (($invoice['status'] ?? '') === 'paid') {
+                throw new DomainException('Facture déjà payée.');
+            }
+            if (! in_array($invoice['status'] ?? '', ['open', 'overdue'], true)) {
+                throw new DomainException('Cette facture n’est pas payable.');
+            }
+            $paymentRef = trim((string) ($input['paymentRef'] ?? ''))
+                ?: strtoupper($provider).'-'.strtoupper(substr(Uid::make('pay'), -10));
+            $invoice['status'] = 'paid';
+            $invoice['paidAt'] = now()->toDateString();
+            $invoice['paymentProvider'] = $provider;
+            $invoice['paymentRef'] = $paymentRef;
+            $this->invoices->put($invoice);
+            $overdue = $this->invoices->hasOpenForCompany((string) $invoice['companyId']);
+            $subscription = $this->subscriptions->forCompany((string) $invoice['companyId']);
             $company = Company::query()->find($invoice['companyId']);
             if (! $overdue && ($subscription['status'] ?? '') === 'past_due') {
                 $subscription['status'] = 'active';
@@ -261,6 +305,15 @@ class PlatformService
                     $company->save();
                 }
             }
+
+            return [
+                'invoice' => $invoice,
+                'payment' => [
+                    'provider' => $provider,
+                    'paymentRef' => $paymentRef,
+                    'status' => 'succeeded',
+                ],
+            ];
         });
     }
 
@@ -275,23 +328,24 @@ class PlatformService
             'email' => $company->email,
             'phone' => $company->phone,
             'status' => $company->status,
-            'createdAt' => optional($company->created_at)->toDateString() ?? self::DEMO_TODAY,
+            'createdAt' => optional($company->created_at)->toDateString() ?? now()->toDateString(),
             'usersCount' => $company->users_count,
             'warehousesCount' => $company->warehouses_count,
         ];
     }
 
-    private function periodEnd(string $interval, string $from = self::DEMO_TODAY): string
+    private function periodEnd(string $interval, ?string $from = null): string
     {
+        $from ??= now()->toDateString();
         $date = new \DateTimeImmutable($from.'T12:00:00');
         $date = $interval === 'yearly' ? $date->modify('+1 year') : $date->modify('+1 month');
 
         return $date->format('Y-m-d');
     }
 
-    private function trialEnd(string $from = self::DEMO_TODAY): string
+    private function trialEnd(?string $from = null): string
     {
-        return $this->addDays($from, 14);
+        return $this->addDays($from ?? now()->toDateString(), 14);
     }
 
     private function addDays(string $from, int $days): string

@@ -9,6 +9,7 @@ use App\Repositories\Eloquent\ReceiptRepository;
 use App\Repositories\Eloquent\RouteRepository;
 use App\Repositories\Eloquent\TaskItemRepository;
 use App\Repositories\Eloquent\WarehouseRepository;
+use App\Support\Tenant;
 use Illuminate\Support\Collection;
 
 class PlanningService
@@ -27,6 +28,7 @@ class PlanningService
         private readonly InventorySessionRepository $inventories,
         private readonly TaskItemRepository $tasks,
         private readonly WarehouseRepository $warehouses,
+        private readonly Tenant $tenant,
     ) {}
 
     public function list(?string $from = null, ?string $to = null): Collection
@@ -54,7 +56,11 @@ class PlanningService
 
     private function stored(): Collection
     {
-        return $this->planning->all()->map(function (array $event) {
+        $rows = $this->tenant->bypassTenantFilter()
+            ? $this->planning->all()
+            : $this->planning->forCompany($this->tenant->companyId());
+
+        return $rows->map(function (array $event) {
             $event['date'] = $this->rebaseDemoDate((string) ($event['date'] ?? ''));
 
             return $event;

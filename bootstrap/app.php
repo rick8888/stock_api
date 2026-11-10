@@ -14,11 +14,18 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'jwt' => \PHPOpenSourceSaver\JWTAuth\Http\Middleware\Authenticate::class,
+            'permission' => \App\Http\Middleware\EnsurePermission::class,
+            'module' => \App\Http\Middleware\EnsureModule::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->render(function (\App\Exceptions\DomainException $e) {
-            return response()->json(['message' => $e->getMessage()], $e->getCode() ?: 422);
+            $code = (int) $e->getCode();
+            if ($code < 400 || $code > 599) {
+                $code = 422;
+            }
+
+            return response()->json(['message' => $e->getMessage()], $code);
         });
 
         $exceptions->render(function (\App\Exceptions\InvalidCredentialsException $e) {

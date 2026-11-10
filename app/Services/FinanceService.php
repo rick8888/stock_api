@@ -6,6 +6,7 @@ use App\Repositories\Eloquent\BudgetRepository;
 use App\Repositories\Eloquent\ExpenseRepository;
 use App\Repositories\Eloquent\InvoiceRepository;
 use App\Repositories\Eloquent\PaymentRepository;
+use App\Support\Tenant;
 use App\Support\Uid;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -17,26 +18,43 @@ class FinanceService
         private readonly PaymentRepository $payments,
         private readonly BudgetRepository $budgets,
         private readonly ExpenseRepository $expenses,
+        private readonly Tenant $tenant,
     ) {}
 
     public function invoices(): Collection
     {
-        return $this->invoices->all();
+        if ($this->tenant->bypassTenantFilter()) {
+            return $this->invoices->all();
+        }
+
+        return $this->invoices->forCompany($this->tenant->companyId());
     }
 
     public function payments(): Collection
     {
-        return $this->payments->all();
+        if ($this->tenant->bypassTenantFilter()) {
+            return $this->payments->all();
+        }
+
+        return $this->payments->forCompany($this->tenant->companyId());
     }
 
     public function budgets(): Collection
     {
-        return $this->budgets->all();
+        if ($this->tenant->bypassTenantFilter()) {
+            return $this->budgets->all();
+        }
+
+        return $this->budgets->forCompany($this->tenant->companyId());
     }
 
     public function expenses(): Collection
     {
-        return $this->expenses->all();
+        if ($this->tenant->bypassTenantFilter()) {
+            return $this->expenses->all();
+        }
+
+        return $this->expenses->forCompany($this->tenant->companyId());
     }
 
     public function payInvoice(string $id): void

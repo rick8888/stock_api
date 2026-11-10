@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Exceptions\DomainException;
+use App\Repositories\Eloquent\CustomerRepository;
 use App\Repositories\Eloquent\DeliveryRepository;
 use App\Repositories\Eloquent\DriverRepository;
 use App\Repositories\Eloquent\ProductRepository;
@@ -13,6 +14,8 @@ use App\Repositories\Eloquent\StockItemRepository;
 use App\Repositories\Eloquent\TaskItemRepository;
 use App\Repositories\Eloquent\VehicleRepository;
 use App\Repositories\Eloquent\WarehouseRepository;
+use App\Support\DemoDate;
+use App\Support\Tenant;
 use App\Support\Uid;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -33,42 +36,85 @@ class LogisticsService
         private readonly StockService $stock,
         private readonly UserService $users,
         private readonly OpsNotifier $notifier,
+        private readonly Tenant $tenant,
+        private readonly CustomerRepository $customers,
     ) {}
 
     public function shipments(): Collection
     {
-        return $this->shipments->all();
+        $items = $this->tenant->bypassTenantFilter()
+            ? $this->shipments->all()
+            : $this->shipments->forWarehouses($this->tenant->companyWarehouseIds());
+
+        return $items
+            ->map(function (array $shipment) {
+                if (! empty($shipment['date'])) {
+                    $shipment['date'] = DemoDate::rebase($shipment['date']);
+                }
+                if (! empty($shipment['eta'])) {
+                    $shipment['eta'] = DemoDate::rebase($shipment['eta']);
+                }
+
+                return $shipment;
+            })
+            ->values();
     }
 
     public function routes(): Collection
     {
-        return $this->routes->all();
+        $items = $this->tenant->bypassTenantFilter()
+            ? $this->routes->all()
+            : $this->routes->forWarehouses($this->tenant->companyWarehouseIds());
+
+        return $items
+            ->map(function (array $route) {
+                if (! empty($route['date'])) {
+                    $route['date'] = DemoDate::rebase($route['date']);
+                }
+
+                return $route;
+            })
+            ->values();
     }
 
     public function vehicles(): Collection
     {
+        if (! $this->tenant->bypassTenantFilter()) {
+            return $this->vehicles->forWarehouses($this->tenant->companyWarehouseIds());
+        }
+
         return $this->vehicles->all();
     }
 
     public function drivers(): Collection
     {
+        if (! $this->tenant->bypassTenantFilter()) {
+            return $this->drivers->forWarehouses($this->tenant->companyWarehouseIds());
+        }
+
         return $this->drivers->all();
     }
 
     public function shippingNotes(): Collection
     {
+        if (! $this->tenant->bypassTenantFilter()) {
+            return $this->notes->forWarehouses($this->tenant->companyWarehouseIds());
+        }
+
         return $this->notes->all();
     }
 
     public function createShippingNote(array $input): array
     {
         return DB::transaction(function () use ($input) {
-            $note = $this->notes->put([
+            $this->tenant->assertWarehouseAccess($input['warehouseId'] ?? '');
+            $actorId = $input['createdByUserId'] ?? $this->tenant->actorId();
+            $note = $this->notes->put($this->tenant->stamp([
                 'id' => Uid::make('bl'),
-                ...$this->assembleNote($input),
-            ]);
+                ...$this->assembleNote([...$input, 'createdByUserId' => $actorId]),
+            ]));
             $this->notifyNote($note);
-            $this->notifier->audit('Bon de livraison préparé', 'shipping_note', $note['id'], $input['createdByUserId'] ?? '');
+            $this->notifier->audit('Bon de livraison préparé', 'shipping_note', $note['id'], $actorId);
 
             return $note;
         });
@@ -87,6 +133,8 @@ class LogisticsService
                 'address' => $input['address'] ?? $note['address'],
                 'city' => $input['city'] ?? $note['city'],
                 'notes' => $input['notes'] ?? $note['notes'] ?? null,
+                'carrierId' => array_key_exists('carrierId', $input) ? $input['carrierId'] : ($note['carrierId'] ?? null),
+                'trackingNumber' => array_key_exists('trackingNumber', $input) ? $input['trackingNumber'] : ($note['trackingNumber'] ?? null),
                 'createdByUserId' => $note['createdByUserId'] ?? null,
                 'lines' => $input['lines'] ?? collect($note['lines'] ?? [])->map(fn (array $line) => [
                     'productId' => $line['productId'],
@@ -96,6 +144,44 @@ class LogisticsService
 
             return $this->notes->put(['id' => $id, ...$this->assembleNote($merged, $note)]);
         });
+    }
+
+    public function assignCarrier(string $id, array $input): array
+    {
+        return DB::transaction(function () use ($id, $input) {
+            $note = $this->notes->findOrFail($id, 'Bon de livraison introuvable');
+            $carrier = \App\Support\Carriers::find((string) ($input['carrierId'] ?? ''));
+            if (! $carrier) {
+                throw new DomainException('Transporteur introuvable');
+            }
+            $note['carrierId'] = $carrier['id'];
+            $note['carrierName'] = $carrier['name'];
+            $tracking = trim((string) ($input['trackingNumber'] ?? ''));
+            $book = array_key_exists('book', $input) ? (bool) $input['book'] : true;
+            if ($tracking !== '') {
+                $note['trackingNumber'] = $tracking;
+            } elseif ($book) {
+                $note['trackingNumber'] = \App\Support\Carriers::bookTracking($carrier, (string) ($note['code'] ?? 'BL'));
+                $note['bookedAt'] = now()->toIso8601String();
+            }
+            $this->notes->put($note);
+            $this->notifier->audit('Transporteur affecté', 'shipping_note', $note['id'], $this->tenant->actorId());
+
+            return $note;
+        });
+    }
+
+    public function markShippingNoteLabelPrinted(string $id): array
+    {
+        $note = $this->notes->findOrFail($id, 'Bon de livraison introuvable');
+        $note['labelPrintedAt'] = now()->toIso8601String();
+
+        return $this->notes->put($note);
+    }
+
+    public function carriers(): array
+    {
+        return \App\Support\Carriers::catalog();
     }
 
     public function createVehicle(array $input): array
@@ -248,7 +334,12 @@ class LogisticsService
     public function createShipment(array $input): array
     {
         return DB::transaction(function () use ($input) {
-            $seq = $this->shipments->all()->count() + 80;
+            $this->tenant->assertWarehouseAccess($input['originWarehouseId'] ?? '');
+            if (! empty($input['destinationWarehouseId'])) {
+                $this->tenant->assertWarehouseAccess($input['destinationWarehouseId']);
+            }
+            $seq = $this->shipments->countAll() + 80;
+            $year = now()->format('Y');
             $origin = $this->warehouses->find($input['originWarehouseId'] ?? '');
             $dest = $this->warehouses->find($input['destinationWarehouseId'] ?? '');
             $originPoint = [
@@ -263,7 +354,7 @@ class LogisticsService
             ];
             $noteIds = $input['shippingNoteIds'] ?? [];
             $lines = $this->aggregateNotes($noteIds);
-            $shipment = $this->shipments->put([
+            $shipment = $this->shipments->put($this->tenant->stamp([
                 'id' => Uid::make('shp'),
                 'originWarehouseId' => $input['originWarehouseId'],
                 'destination' => $input['destination'] ?? ($dest['name'] ?? ''),
@@ -273,7 +364,7 @@ class LogisticsService
                 'routeId' => $input['routeId'] ?? null,
                 'date' => $input['date'],
                 'status' => $input['status'] ?? 'preparing',
-                'code' => 'EX-2026-'.str_pad((string) $seq, 5, '0', STR_PAD_LEFT),
+                'code' => 'EX-'.$year.'-'.str_pad((string) $seq, 5, '0', STR_PAD_LEFT),
                 'origin' => $originPoint,
                 'destinationLocation' => $destPoint,
                 'path' => [$originPoint, $destPoint],
@@ -283,20 +374,27 @@ class LogisticsService
                 'eta' => $input['eta'] ?? null,
                 'notes' => $input['notes'] ?? null,
                 'shippingNoteIds' => $noteIds,
-            ]);
+                'stockReceivedAt' => null,
+            ]));
             $this->bindShipmentNotes($shipment);
 
             return $shipment;
         });
     }
 
-    public function updateShipment(string $id, array $input): array
+    public function updateShipment(string $id, array $input, ?string $userId = null): array
     {
-        return DB::transaction(function () use ($id, $input) {
+        return DB::transaction(function () use ($id, $input, $userId) {
             $shipment = $this->shipments->findOrFail($id, 'Expédition introuvable');
+            $this->tenant->assertWarehouseAccess($shipment['originWarehouseId'] ?? '');
+            $previousStatus = $shipment['status'] ?? '';
             $shipment = array_merge($shipment, array_filter($input, fn ($value) => $value !== null));
             if (! empty($input['shippingNoteIds'])) {
                 $shipment['lines'] = $this->aggregateNotes($input['shippingNoteIds']);
+            }
+            $actorId = $userId ?: $this->tenant->actorId();
+            if (($shipment['status'] ?? '') === 'done' && $previousStatus !== 'done') {
+                $shipment = $this->receiveTransferShipment($shipment, $actorId);
             }
             $this->shipments->put($shipment);
             $this->bindShipmentNotes($shipment);
@@ -309,35 +407,96 @@ class LogisticsService
     {
         return DB::transaction(function () use ($id, $userId) {
             $note = $this->notes->findOrFail($id, 'Bon introuvable');
+            $this->tenant->assertWarehouseAccess($note['warehouseId'] ?? '');
             if (! empty($note['loadedAt'])) {
                 throw new DomainException('Ce bon est déjà chargé.');
             }
             $now = now()->toIso8601String();
-            foreach ($note['lines'] ?? [] as $line) {
-                $item = $this->stock->tryLine($line['productId'], $note['warehouseId']);
-                if (! $item || (int) $item['quantity'] < (int) $line['quantity']) {
-                    throw new DomainException('Stock insuffisant pour '.($line['productName'] ?? $line['productId']));
+            $shipment = $this->shipments->find($note['shipmentId'] ?? '');
+            $destinationWarehouseId = $shipment['destinationWarehouseId'] ?? null;
+            if (empty($note['stockReserved'])) {
+                foreach ($note['lines'] ?? [] as $line) {
+                    $this->stock->reserve($line['productId'], $note['warehouseId'], (int) $line['quantity']);
                 }
-                $item['quantity'] = (int) $item['quantity'] - (int) $line['quantity'];
-                $this->stockItems->put($item);
-                $this->stock->move(
-                    'issue',
-                    $line['productId'],
-                    (int) $line['quantity'],
-                    $userId,
-                    'Chargement '.$note['code'],
-                    $note['warehouseId'],
-                    null,
-                    $note['code'],
-                );
+                $note['stockReserved'] = true;
+            }
+            foreach ($note['lines'] ?? [] as $line) {
+                $qty = (int) $line['quantity'];
+                if ($destinationWarehouseId) {
+                    $this->stock->debitTransferOutbound(
+                        $line['productId'],
+                        $note['warehouseId'],
+                        $destinationWarehouseId,
+                        $qty,
+                        $userId,
+                        'Chargement transfert '.$note['code'],
+                        $note['code'],
+                        true,
+                    );
+                } else {
+                    $this->stock->consumeReservation(
+                        $line['productId'],
+                        $note['warehouseId'],
+                        $qty,
+                        $userId,
+                        'Chargement '.$note['code'],
+                        $note['code'],
+                    );
+                }
             }
             $note['loadedAt'] = $now;
             $note['loadedByUserId'] = $userId;
+            $note['stockReserved'] = false;
+            if ($destinationWarehouseId) {
+                $note['inTransitToWarehouseId'] = $destinationWarehouseId;
+            }
             $this->notes->put($note);
             $this->notifier->audit('Bon chargé', 'shipping_note', $note['id'], $userId);
 
             return $note;
         });
+    }
+
+    /**
+     * Crédite le stock destination lorsqu’une expédition inter-sites est terminée.
+     */
+    private function receiveTransferShipment(array $shipment, string $userId): array
+    {
+        $destinationWarehouseId = $shipment['destinationWarehouseId'] ?? null;
+        if (! $destinationWarehouseId || ! empty($shipment['stockReceivedAt'])) {
+            return $shipment;
+        }
+
+        $this->tenant->assertWarehouseAccess($destinationWarehouseId);
+        foreach ($shipment['shippingNoteIds'] ?? [] as $noteId) {
+            $note = $this->notes->find($noteId);
+            if (! $note || empty($note['loadedAt'])) {
+                continue;
+            }
+            if (! empty($note['stockReceivedAt'])) {
+                continue;
+            }
+            foreach ($note['lines'] ?? [] as $line) {
+                $this->stock->creditTransferInbound(
+                    $line['productId'],
+                    $destinationWarehouseId,
+                    (int) $line['quantity'],
+                    $userId,
+                    'Réception transfert '.($note['code'] ?? $shipment['code'] ?? ''),
+                    $note['warehouseId'] ?? ($shipment['originWarehouseId'] ?? null),
+                    $note['code'] ?? ($shipment['code'] ?? null),
+                );
+            }
+            $note['stockReceivedAt'] = now()->toIso8601String();
+            $note['status'] = 'delivered';
+            $this->notes->put($note);
+        }
+
+        $shipment['stockReceivedAt'] = now()->toIso8601String();
+        $shipment['progress'] = 100;
+        $this->notifier->audit('Transfert reçu', 'shipment', $shipment['id'], $userId);
+
+        return $shipment;
     }
 
     private function assembleNote(array $input, ?array $existing = null): array
@@ -346,9 +505,18 @@ class LogisticsService
         if (! $warehouse) {
             throw new DomainException('Entrepôt introuvable');
         }
-        $client = trim($input['client'] ?? '');
-        $address = trim($input['address'] ?? '');
-        $city = trim(($input['city'] ?? '') ?: ($warehouse['city'] ?? ''));
+        $customerId = $input['customerId'] ?? ($existing['customerId'] ?? null);
+        $addressId = $input['addressId'] ?? ($existing['addressId'] ?? null);
+        $customer = $customerId ? $this->customers->find($customerId) : null;
+        $pickedAddress = null;
+        if ($customer && ! empty($customer['addresses'])) {
+            $pickedAddress = collect($customer['addresses'])->firstWhere('id', $addressId)
+                ?? collect($customer['addresses'])->firstWhere('isDefault', true)
+                ?? ($customer['addresses'][0] ?? null);
+        }
+        $client = trim($input['client'] ?? ($customer['name'] ?? ''));
+        $address = trim($input['address'] ?? ($pickedAddress['address'] ?? ''));
+        $city = trim(($input['city'] ?? '') ?: ($pickedAddress['city'] ?? ($warehouse['city'] ?? '')));
         if (strlen($client) < 2 || strlen($address) < 2 || $city === '') {
             throw new DomainException('Client et adresse sont requis');
         }
@@ -369,12 +537,21 @@ class LogisticsService
         if (! $lines) {
             throw new DomainException('Ajoutez au moins un article');
         }
-        $numbers = $this->notes->all()->map(fn (array $note) => (int) substr($note['code'] ?? '0', -5))->filter()->all();
-        $next = max(900, $numbers ? max($numbers) : 0) + 1;
+        $next = max(900, $this->notes->nextCodeSequence()) + 1;
+
+        $carrierId = array_key_exists('carrierId', $input)
+            ? ($input['carrierId'] ?: null)
+            : ($existing['carrierId'] ?? null);
+        $carrier = $carrierId ? \App\Support\Carriers::find((string) $carrierId) : null;
+        $trackingNumber = array_key_exists('trackingNumber', $input)
+            ? (trim((string) $input['trackingNumber']) ?: null)
+            : ($existing['trackingNumber'] ?? null);
 
         return [
             'code' => $existing['code'] ?? 'BL-2026-'.str_pad((string) $next, 5, '0', STR_PAD_LEFT),
             'warehouseId' => $warehouse['id'],
+            'customerId' => $customer['id'] ?? $customerId,
+            'addressId' => $pickedAddress['id'] ?? $addressId,
             'client' => $client,
             'address' => $address,
             'city' => $city,
@@ -383,6 +560,11 @@ class LogisticsService
             'deliveryId' => $existing['deliveryId'] ?? null,
             'shipmentId' => $existing['shipmentId'] ?? null,
             'notes' => trim((string) ($input['notes'] ?? $existing['notes'] ?? '')) ?: null,
+            'carrierId' => $carrier['id'] ?? $carrierId,
+            'carrierName' => $carrier['name'] ?? ($existing['carrierName'] ?? null),
+            'trackingNumber' => $trackingNumber,
+            'labelPrintedAt' => $existing['labelPrintedAt'] ?? null,
+            'bookedAt' => $existing['bookedAt'] ?? null,
             'createdAt' => $existing['createdAt'] ?? now()->toIso8601String(),
             'createdByUserId' => $existing['createdByUserId'] ?? ($input['createdByUserId'] ?? null),
         ];
@@ -418,7 +600,7 @@ class LogisticsService
                 'title' => 'Affecter '.$note['code'],
                 'description' => ($note['client'] ?? '').' — '.($note['city'] ?? '').'. Bon prêt à '.$warehouseName.', à placer sur une tournée ou une expédition.',
                 'assigneeId' => $user['id'],
-                'dueAt' => '2026-08-26T17:00:00.000Z',
+                'dueAt' => now()->setTime(17, 0)->toIso8601String(),
                 'status' => 'todo',
                 'priority' => 'medium',
                 'relatedType' => 'shipping_note',
@@ -473,6 +655,7 @@ class LogisticsService
         $ids = $shipment['shippingNoteIds'] ?? [];
         foreach ($this->notes->all() as $note) {
             if (($note['shipmentId'] ?? null) === $shipment['id'] && ! in_array($note['id'], $ids, true)) {
+                $this->releaseNoteReservation($note);
                 $note['shipmentId'] = null;
                 if (($note['status'] ?? '') === 'assigned' && empty($note['deliveryId'])) {
                     $note['status'] = 'ready';
@@ -481,8 +664,11 @@ class LogisticsService
             }
             if (in_array($note['id'], $ids, true)) {
                 $note['shipmentId'] = $shipment['id'];
-                if (($note['status'] ?? '') === 'ready') {
-                    $note['status'] = 'assigned';
+                if (($note['status'] ?? '') === 'ready' || ($note['status'] ?? '') === 'assigned') {
+                    $note['status'] = ($shipment['status'] ?? '') === 'done' ? 'delivered' : 'assigned';
+                    if (($shipment['status'] ?? '') !== 'done') {
+                        $this->reserveNoteStock($note);
+                    }
                 }
                 $this->notes->put($note);
             }
@@ -493,5 +679,27 @@ class LogisticsService
                 $this->tasks->put($task);
             }
         }
+    }
+
+    private function reserveNoteStock(array &$note): void
+    {
+        if (! empty($note['stockReserved']) || ! empty($note['loadedAt'])) {
+            return;
+        }
+        foreach ($note['lines'] ?? [] as $line) {
+            $this->stock->reserve($line['productId'], $note['warehouseId'], (int) $line['quantity']);
+        }
+        $note['stockReserved'] = true;
+    }
+
+    private function releaseNoteReservation(array &$note): void
+    {
+        if (empty($note['stockReserved']) || ! empty($note['loadedAt'])) {
+            return;
+        }
+        foreach ($note['lines'] ?? [] as $line) {
+            $this->stock->release($line['productId'], $note['warehouseId'], (int) $line['quantity']);
+        }
+        $note['stockReserved'] = false;
     }
 }

@@ -7,6 +7,7 @@ use App\Models\Company;
 use App\Models\User;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Repositories\Eloquent\DriverRepository;
+use App\Support\Tenant;
 use App\Support\Uid;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -31,11 +32,13 @@ class UserService
         private readonly DriverRepository $drivers,
         private readonly UserDirectory $directory,
         private readonly OpsNotifier $notifier,
+        private readonly Tenant $tenant,
+        private readonly EntitlementService $entitlements,
     ) {}
 
     public function list(): Collection
     {
-        return $this->directory->all();
+        return $this->tenant->filterUsers($this->directory->all());
     }
 
     public function get(string $id): ?array
@@ -77,6 +80,9 @@ class UserService
             $user->product_ids = $input['productIds'] ?? [];
             $user->region_ids = $input['regionIds'] ?? [];
             $user->company_id = $input['companyId'] ?? $creator?->company_id;
+            if ($user->company_id && ! in_array($user->role, ['SUPER_ADMIN', 'TENANT_OWNER'], true)) {
+                $this->entitlements->assertCanAddUser($user->company_id);
+            }
             $user->save();
             if ($user->company_id) {
                 Company::query()->where('id', $user->company_id)->increment('users_count');

@@ -40,9 +40,7 @@ class UserDirectory
 
     public function auditHas(string $action, string $entityId): bool
     {
-        return $this->audit->all()->contains(
-            fn (array $item) => ($item['action'] ?? '') === $action && ($item['entityId'] ?? '') === $entityId,
-        );
+        return $this->audit->has($action, $entityId);
     }
 
     public function toArray(User $user): array

@@ -24,7 +24,7 @@ class ReceiptController extends ApiController
         return $this->one($this->receipts->validate(
             $id,
             $request->integer('received'),
-            $request->string('userId')->toString(),
+            $this->actorId(),
             $request->input('lines'),
         ));
     }

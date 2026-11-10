@@ -30,7 +30,7 @@ class StockController extends ApiController
             $request->string('productId')->toString(),
             $request->string('warehouseId')->toString(),
             $request->integer('quantity'),
-            $request->string('userId')->toString(),
+            $this->actorId(),
             $request->string('note')->toString(),
             $request->input('reference'),
         );
@@ -44,7 +44,7 @@ class StockController extends ApiController
             $request->string('productId')->toString(),
             $request->string('warehouseId')->toString(),
             $request->integer('quantity'),
-            $request->string('userId')->toString(),
+            $this->actorId(),
             $request->string('note')->toString(),
             $request->input('reference'),
         );
@@ -59,7 +59,7 @@ class StockController extends ApiController
             $request->string('fromWarehouseId')->toString(),
             $request->string('toWarehouseId')->toString(),
             $request->integer('quantity'),
-            $request->string('userId')->toString(),
+            $this->actorId(),
             $request->input('note', 'Transfert'),
         );
 
@@ -72,7 +72,7 @@ class StockController extends ApiController
             $request->string('productId')->toString(),
             $request->string('warehouseId')->toString(),
             $request->integer('quantity'),
-            $request->string('userId')->toString(),
+            $this->actorId(),
             $request->string('note')->toString(),
             $request->input('reference'),
         );
@@ -93,9 +93,12 @@ class StockController extends ApiController
 
     public function startInventory(Request $request)
     {
+        $scope = $request->input('scope');
+
         return $this->one($this->stock->startInventory(
             $request->string('warehouseId')->toString(),
-            $request->string('userId')->toString(),
+            $this->actorId(),
+            is_array($scope) ? $scope : null,
         ));
     }
 
@@ -106,19 +109,19 @@ class StockController extends ApiController
 
     public function submitInventory(Request $request, string $id)
     {
-        return $this->one($this->stock->submitInventory($id, $request->string('userId')->toString()));
+        return $this->one($this->stock->submitInventory($id, $this->actorId()));
     }
 
     public function completeInventory(Request $request, string $id)
     {
-        return $this->one($this->stock->completeInventory($id, $request->string('userId')->toString()));
+        return $this->one($this->stock->completeInventory($id, $this->actorId()));
     }
 
     public function closeDay(Request $request)
     {
         $this->stock->closeDay(
             $request->string('warehouseId')->toString(),
-            $request->string('userId')->toString(),
+            $this->actorId(),
         );
 
         return $this->empty();
@@ -130,7 +133,7 @@ class StockController extends ApiController
             $request->string('productId')->toString(),
             $request->string('warehouseId')->toString(),
             $request->integer('quantity'),
-            $request->string('userId')->toString(),
+            $this->actorId(),
             $request->string('note')->toString(),
             $request->input('reference'),
         );

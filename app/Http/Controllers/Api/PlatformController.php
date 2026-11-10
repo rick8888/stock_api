@@ -54,10 +54,8 @@ class PlatformController extends ApiController
         return $this->one($this->platform->changeSubscription($companyId, $request->all()));
     }
 
-    public function payInvoice(string $id)
+    public function payInvoice(Request $request, string $id)
     {
-        $this->platform->payInvoice($id);
-
-        return $this->empty();
+        return response()->json($this->platform->payInvoice($id, $request->all()));
     }
 }

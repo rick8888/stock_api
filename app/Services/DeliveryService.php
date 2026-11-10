@@ -10,6 +10,8 @@ use App\Repositories\Eloquent\ShipmentRepository;
 use App\Repositories\Eloquent\ShippingNoteRepository;
 use App\Repositories\Eloquent\StockItemRepository;
 use App\Repositories\Eloquent\WarehouseRepository;
+use App\Support\DemoDate;
+use App\Support\Tenant;
 use App\Support\Uid;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -26,11 +28,27 @@ class DeliveryService
         private readonly StockItemRepository $stockItems,
         private readonly StockService $stock,
         private readonly OpsNotifier $notifier,
+        private readonly Tenant $tenant,
     ) {}
 
     public function list(): Collection
     {
-        return $this->deliveries->all();
+        $items = $this->tenant->bypassTenantFilter()
+            ? $this->deliveries->all()
+            : $this->deliveries->forWarehouses($this->tenant->companyWarehouseIds());
+
+        return $items
+            ->map(function (array $delivery) {
+                if (! empty($delivery['scheduledAt'])) {
+                    $delivery['scheduledAt'] = DemoDate::rebase($delivery['scheduledAt']);
+                }
+                if (! empty($delivery['eta'])) {
+                    $delivery['eta'] = DemoDate::rebase($delivery['eta']);
+                }
+
+                return $delivery;
+            })
+            ->values();
     }
 
     public function create(array $input): array
@@ -72,9 +90,14 @@ class DeliveryService
         });
     }
 
-    public function updateStatus(string $id, string $status, ?string $note = null, ?string $signedBy = null): array
-    {
-        return DB::transaction(function () use ($id, $status, $note, $signedBy) {
+    public function updateStatus(
+        string $id,
+        string $status,
+        ?string $note = null,
+        ?string $signedBy = null,
+        ?array $proof = null,
+    ): array {
+        return DB::transaction(function () use ($id, $status, $note, $signedBy, $proof) {
             $delivery = $this->deliveries->findOrFail($id, 'Livraison introuvable');
             $delivery['status'] = $status;
             if ($note) {
@@ -83,8 +106,18 @@ class DeliveryService
             if ($status === 'delivered') {
                 $now = now()->toIso8601String();
                 $delivery['progress'] = 100;
-                $delivery['signedAt'] = $now;
+                $delivery['signedAt'] = $proof['signedAt'] ?? $now;
                 $delivery['signedBy'] = $signedBy ?: ($delivery['signedBy'] ?? 'Destinataire');
+                if (! empty($proof['signatureDataUrl'])) {
+                    $delivery['signatureDataUrl'] = $proof['signatureDataUrl'];
+                }
+                if (isset($proof['lat'], $proof['lng'])) {
+                    $delivery['podLocation'] = [
+                        'lat' => (float) $proof['lat'],
+                        'lng' => (float) $proof['lng'],
+                        'at' => $delivery['signedAt'],
+                    ];
+                }
                 $linked = $this->notes->all()->first(
                     fn (array $item) => $item['id'] === ($delivery['shippingNoteId'] ?? null) || ($item['deliveryId'] ?? null) === $delivery['id'],
                 );
@@ -98,29 +131,31 @@ class DeliveryService
                 $this->notifier->notify('Livraison effectuée', ($delivery['client'] ?? '').' — '.($delivery['city'] ?? ''));
             }
             if ($status === 'failed') {
-                $now = now()->toIso8601String();
                 $linked = $this->notes->all()->first(
                     fn (array $item) => $item['id'] === ($delivery['shippingNoteId'] ?? null) || ($item['deliveryId'] ?? null) === $delivery['id'],
                 );
-                if ($linked && ! empty($linked['loadedAt']) && ($linked['status'] ?? '') !== 'delivered') {
-                    foreach ($linked['lines'] ?? [] as $line) {
-                        $item = $this->stock->tryLine($line['productId'], $linked['warehouseId']);
-                        if ($item) {
+                if ($linked && ($linked['status'] ?? '') !== 'delivered') {
+                    if (! empty($linked['loadedAt'])) {
+                        foreach ($linked['lines'] ?? [] as $line) {
+                            $item = $this->stock->ensureLine($line['productId'], $linked['warehouseId']);
                             $item['quantity'] = (int) $item['quantity'] + (int) $line['quantity'];
-                            $this->stockItems->put($item);
+                            $this->stock->putLine($item);
+                            $this->stock->move(
+                                'return',
+                                $line['productId'],
+                                (int) $line['quantity'],
+                                $this->tenant->actorId(),
+                                'Retour échec '.($linked['code'] ?? ''),
+                                null,
+                                $linked['warehouseId'],
+                                $delivery['id'],
+                            );
                         }
-                        $this->stock->move(
-                            'return',
-                            $line['productId'],
-                            (int) $line['quantity'],
-                            $delivery['driverId'] ?? '',
-                            'Retour échec '.($linked['code'] ?? ''),
-                            null,
-                            $linked['warehouseId'],
-                            $delivery['id'],
-                        );
+                        $linked['loadedAt'] = null;
+                        $linked['stockReserved'] = false;
+                    } else {
+                        $this->releaseNoteReservation($linked);
                     }
-                    $linked['loadedAt'] = null;
                     $this->notes->put($linked);
                 }
             }
@@ -160,7 +195,7 @@ class DeliveryService
             'lng' => $warehouse['lng'] ?? -7.5898,
             'label' => $input['city'] ?? ($warehouse['city'] ?? 'Stop'),
         ];
-        $seq = $this->deliveries->all()->count() + 1;
+        $seq = $this->deliveries->countAll() + 1;
 
         return [
             'client' => $input['client'] ?? ($note['client'] ?? ''),
@@ -188,6 +223,7 @@ class DeliveryService
     {
         foreach ($this->notes->all() as $note) {
             if (($note['deliveryId'] ?? null) === $delivery['id'] && $note['id'] !== ($delivery['shippingNoteId'] ?? null)) {
+                $this->releaseNoteReservation($note);
                 $note['deliveryId'] = null;
                 if (($note['status'] ?? '') === 'assigned' && empty($note['shipmentId'])) {
                     $note['status'] = 'ready';
@@ -201,6 +237,31 @@ class DeliveryService
         }
         $note['deliveryId'] = $delivery['id'];
         $note['status'] = ($delivery['status'] ?? '') === 'delivered' ? 'delivered' : 'assigned';
+        if (($delivery['status'] ?? '') !== 'delivered') {
+            $this->reserveNoteStock($note);
+        }
         $this->notes->put($note);
+    }
+
+    private function reserveNoteStock(array &$note): void
+    {
+        if (! empty($note['stockReserved']) || ! empty($note['loadedAt'])) {
+            return;
+        }
+        foreach ($note['lines'] ?? [] as $line) {
+            $this->stock->reserve($line['productId'], $note['warehouseId'], (int) $line['quantity']);
+        }
+        $note['stockReserved'] = true;
+    }
+
+    private function releaseNoteReservation(array &$note): void
+    {
+        if (empty($note['stockReserved']) || ! empty($note['loadedAt'])) {
+            return;
+        }
+        foreach ($note['lines'] ?? [] as $line) {
+            $this->stock->release($line['productId'], $note['warehouseId'], (int) $line['quantity']);
+        }
+        $note['stockReserved'] = false;
     }
 }

@@ -4,12 +4,18 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\EntityResource;
+use App\Support\Tenant;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 
 abstract class ApiController extends Controller
 {
+    protected function actorId(): string
+    {
+        return app(Tenant::class)->actorId();
+    }
+
     protected function items($collection): AnonymousResourceCollection
     {
         return EntityResource::collection($collection);

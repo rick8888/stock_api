@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\Eloquent\ProcurementRequestRepository;
+use App\Support\Tenant;
 use App\Support\Uid;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -13,10 +14,15 @@ class ProcurementService
         private readonly ProcurementRequestRepository $requests,
         private readonly UserDirectory $users,
         private readonly OpsNotifier $notifier,
+        private readonly Tenant $tenant,
     ) {}
 
     public function list(): Collection
     {
+        if (! $this->tenant->bypassTenantFilter()) {
+            return $this->requests->forWarehouses($this->tenant->companyWarehouseIds());
+        }
+
         return $this->requests->all();
     }
 
@@ -27,19 +33,21 @@ class ProcurementService
             $now = now()->toIso8601String();
             $status = $input['status'] ?? 'submitted';
             $digits = substr(preg_replace('/\D/', '', (string) $seq) ?: '0', -5);
-            $request = $this->requests->put([
+            $this->tenant->assertWarehouseAccess($input['warehouseId'] ?? '');
+            $year = now()->format('Y');
+            $request = $this->requests->put($this->tenant->stamp([
                 'id' => Uid::make('pr'),
-                'code' => $input['code'] ?? 'DA-2026-'.str_pad($digits, 5, '0', STR_PAD_LEFT),
+                'code' => $input['code'] ?? 'DA-'.$year.'-'.str_pad($digits, 5, '0', STR_PAD_LEFT),
                 'createdAt' => $now,
                 'submittedAt' => $status === 'draft' ? null : $now,
                 'status' => $status,
-                'requesterId' => $input['requesterId'],
+                'requesterId' => $input['requesterId'] ?? $this->tenant->actorId(),
                 'warehouseId' => $input['warehouseId'],
                 'items' => $input['items'] ?? [],
                 'note' => $input['note'] ?? '',
                 'priority' => $input['priority'] ?? 'medium',
                 'service' => $input['service'] ?? null,
-            ]);
+            ]));
             if ($status !== 'draft') {
                 $this->notifier->alert([
                     'title' => $request['code'] ?? 'Nouvelle demande',

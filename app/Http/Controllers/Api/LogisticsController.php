@@ -21,7 +21,7 @@ class LogisticsController extends ApiController
 
     public function updateShipment(Request $request, string $id)
     {
-        return $this->one($this->logistics->updateShipment($id, $request->all()));
+        return $this->one($this->logistics->updateShipment($id, $request->all(), $this->actorId()));
     }
 
     public function routes()
@@ -84,8 +84,23 @@ class LogisticsController extends ApiController
         return $this->one($this->logistics->updateShippingNote($id, $request->all()));
     }
 
+    public function assignCarrier(Request $request, string $id)
+    {
+        return $this->one($this->logistics->assignCarrier($id, $request->all()));
+    }
+
+    public function markLabelPrinted(string $id)
+    {
+        return $this->one($this->logistics->markShippingNoteLabelPrinted($id));
+    }
+
+    public function carriers()
+    {
+        return $this->items(collect($this->logistics->carriers()));
+    }
+
     public function loadShippingNote(Request $request, string $id)
     {
-        return $this->one($this->logistics->loadShippingNote($id, $request->string('userId')->toString()));
+        return $this->one($this->logistics->loadShippingNote($id, $this->actorId()));
     }
 }

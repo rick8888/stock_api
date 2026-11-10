@@ -26,11 +26,22 @@ class DeliveryController extends ApiController
 
     public function updateStatus(Request $request, string $id)
     {
+        $proof = null;
+        if ($request->filled('signatureDataUrl') || $request->filled('lat') || $request->filled('signedAt')) {
+            $proof = [
+                'signatureDataUrl' => $request->input('signatureDataUrl'),
+                'lat' => $request->input('lat'),
+                'lng' => $request->input('lng'),
+                'signedAt' => $request->input('signedAt'),
+            ];
+        }
+
         return $this->one($this->deliveries->updateStatus(
             $id,
             $request->string('status')->toString(),
             $request->input('note'),
             $request->input('signedBy'),
+            $proof,
         ));
     }
 }

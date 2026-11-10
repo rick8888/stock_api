@@ -29,9 +29,26 @@ abstract class DocumentRepository
         return $model?->document();
     }
 
+    public function findForUpdate(string $id): ?array
+    {
+        $model = ($this->modelClass)::query()->whereKey($id)->lockForUpdate()->first();
+
+        return $model?->document();
+    }
+
     public function findOrFail(string $id, string $message = 'Introuvable'): array
     {
         $doc = $this->find($id);
+        if (! $doc) {
+            throw new DomainException($message);
+        }
+
+        return $doc;
+    }
+
+    public function findOrFailForUpdate(string $id, string $message = 'Introuvable'): array
+    {
+        $doc = $this->findForUpdate($id);
         if (! $doc) {
             throw new DomainException($message);
         }

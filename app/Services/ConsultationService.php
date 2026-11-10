@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\Eloquent\ConsultationRepository;
+use App\Support\Tenant;
 use App\Support\Uid;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -12,17 +13,22 @@ class ConsultationService
     public function __construct(
         private readonly ConsultationRepository $consultations,
         private readonly OpsNotifier $notifier,
+        private readonly Tenant $tenant,
     ) {}
 
     public function list(): Collection
     {
+        if (! $this->tenant->bypassTenantFilter()) {
+            return $this->consultations->forWarehouses($this->tenant->companyWarehouseIds());
+        }
+
         return $this->consultations->all();
     }
 
     public function create(array $input): array
     {
         return DB::transaction(function () use ($input) {
-            $seq = $this->consultations->all()->count() + 12;
+            $seq = $this->consultations->countAll() + 12;
             $createdAt = now()->toIso8601String();
             $consultation = $this->consultations->put([
                 'id' => Uid::make('cs'),

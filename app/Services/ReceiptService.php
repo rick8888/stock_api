@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Repositories\Eloquent\ProcurementRequestRepository;
 use App\Repositories\Eloquent\PurchaseOrderRepository;
 use App\Repositories\Eloquent\ReceiptRepository;
-use App\Repositories\Eloquent\StockItemRepository;
+use App\Support\Tenant;
 use App\Support\Uid;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -16,27 +16,35 @@ class ReceiptService
         private readonly ReceiptRepository $receipts,
         private readonly PurchaseOrderRepository $orders,
         private readonly ProcurementRequestRepository $requests,
-        private readonly StockItemRepository $stockItems,
         private readonly StockService $stock,
         private readonly OpsNotifier $notifier,
+        private readonly Tenant $tenant,
     ) {}
 
     public function list(): Collection
     {
+        if (! $this->tenant->bypassTenantFilter()) {
+            return $this->receipts->forWarehouses($this->tenant->companyWarehouseIds());
+        }
+
         return $this->receipts->all();
     }
 
     public function create(array $input): array
     {
         return DB::transaction(function () use ($input) {
+            if (! empty($input['warehouseId'])) {
+                $this->tenant->assertWarehouseAccess($input['warehouseId']);
+            }
             $seq = 10 + $this->receipts->all()->count() + 1;
+            $year = now()->format('Y');
             $now = now()->toIso8601String();
-            $receipt = $this->receipts->put([
+            $receipt = $this->receipts->put($this->tenant->stamp([
                 ...$input,
                 'id' => Uid::make('rcp'),
-                'code' => $input['code'] ?? 'BR-2026-'.str_pad((string) $seq, 5, '0', STR_PAD_LEFT),
+                'code' => $input['code'] ?? 'BR-'.$year.'-'.str_pad((string) $seq, 5, '0', STR_PAD_LEFT),
                 'date' => $input['date'] ?? $now,
-            ]);
+            ]));
             $order = $this->orders->find($receipt['purchaseOrderId'] ?? '');
             $this->notifier->alert([
                 'title' => ($receipt['code'] ?? 'BR').' à réceptionner',
@@ -57,6 +65,7 @@ class ReceiptService
     {
         return DB::transaction(function () use ($id, $received, $userId, $lines) {
             $receipt = $this->receipts->findOrFail($id, 'Réception introuvable');
+            $this->tenant->assertWarehouseAccess($receipt['warehouseId'] ?? '');
             $order = $this->orders->find($receipt['purchaseOrderId'] ?? '');
             $previous = collect($receipt['items'] ?? [])->mapWithKeys(fn (array $line) => [$line['productId'] => $line['received']]);
             $source = $order['items'] ?? $receipt['items'] ?? [];
@@ -66,7 +75,14 @@ class ReceiptService
                 $expected = $item['expected'] ?? $item['quantity'] ?? 0;
                 $incoming = collect($lines ?? [])->firstWhere('productId', $productId);
                 $receivedQty = $incoming['received'] ?? $expected;
-                $nextItems[] = ['productId' => $productId, 'expected' => $expected, 'received' => $receivedQty];
+                $nextItems[] = [
+                    'productId' => $productId,
+                    'expected' => $expected,
+                    'received' => $receivedQty,
+                    'lotCode' => $incoming['lotCode'] ?? null,
+                    'expiryDate' => $incoming['expiryDate'] ?? null,
+                    'locationId' => $incoming['locationId'] ?? null,
+                ];
             }
             if ($lines && ! $nextItems) {
                 foreach ($lines as $line) {
@@ -74,6 +90,9 @@ class ReceiptService
                         'productId' => $line['productId'],
                         'expected' => $line['received'],
                         'received' => $line['received'],
+                        'lotCode' => $line['lotCode'] ?? null,
+                        'expiryDate' => $line['expiryDate'] ?? null,
+                        'locationId' => $line['locationId'] ?? null,
                     ];
                 }
             }
@@ -106,11 +125,9 @@ class ReceiptService
                 if ($delta <= 0) {
                     continue;
                 }
-                $item = $this->stock->tryLine($line['productId'], $receipt['warehouseId']);
-                if ($item) {
-                    $item['quantity'] = (int) $item['quantity'] + $delta;
-                    $this->stockItems->put($item);
-                }
+                $item = $this->stock->ensureLine($line['productId'], $receipt['warehouseId']);
+                $item['quantity'] = (int) $item['quantity'] + $delta;
+                $this->stock->putLine($item);
                 $this->stock->move(
                     'receive',
                     $line['productId'],
@@ -120,6 +137,28 @@ class ReceiptService
                     null,
                     $receipt['warehouseId'],
                     $receipt['code'] ?? $receipt['id'],
+                );
+                $lotCode = $line['lotCode'] ?? null;
+                $expiryDate = $line['expiryDate'] ?? null;
+                $locationId = $line['locationId'] ?? null;
+                $lotId = null;
+                if ($lotCode || $expiryDate) {
+                    $lot = app(StockLotService::class)->receive(
+                        $line['productId'],
+                        $receipt['warehouseId'],
+                        $delta,
+                        (string) ($lotCode ?: ''),
+                        $expiryDate,
+                        $locationId,
+                    );
+                    $lotId = $lot['id'] ?? null;
+                }
+                app(StockPlacementService::class)->putaway(
+                    $line['productId'],
+                    $receipt['warehouseId'],
+                    $delta,
+                    $locationId,
+                    $lotId,
                 );
             }
             $this->notifier->alert([
