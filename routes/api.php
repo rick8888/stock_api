@@ -89,6 +89,7 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/stock/return', [StockController::class, 'returnStock'])->middleware('permission:stock.receive');
         Route::get('/receipts', [ReceiptController::class, 'index'])->middleware('permission:stock.view');
         Route::post('/receipts', [ReceiptController::class, 'store'])->middleware('permission:stock.receive');
+        Route::post('/receipts/from-order/{purchaseOrderId}', [ReceiptController::class, 'fromOrder'])->middleware('permission:stock.receive,purchase.create');
         Route::post('/receipts/{id}/validate', [ReceiptController::class, 'validateReceipt'])->middleware('permission:stock.receive');
     });
 

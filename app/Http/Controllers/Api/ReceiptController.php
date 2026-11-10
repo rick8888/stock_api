@@ -19,6 +19,11 @@ class ReceiptController extends ApiController
         return $this->one($this->receipts->create($request->all()));
     }
 
+    public function fromOrder(string $purchaseOrderId)
+    {
+        return $this->one($this->receipts->createFromOrder($purchaseOrderId));
+    }
+
     public function validateReceipt(Request $request, string $id)
     {
         return $this->one($this->receipts->validate(

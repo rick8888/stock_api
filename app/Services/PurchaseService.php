@@ -14,6 +14,7 @@ class PurchaseService
     public function __construct(
         private readonly PurchaseOrderRepository $orders,
         private readonly SupplierRepository $suppliers,
+        private readonly ReceiptService $receipts,
         private readonly OpsNotifier $notifier,
         private readonly Tenant $tenant,
     ) {}
@@ -56,6 +57,9 @@ class PurchaseService
                 'roles' => ['PROCUREMENT', 'WAREHOUSE_MANAGER', 'MANAGER'],
             ]);
             $this->notifier->notify('Ordre d’achat créé', ($order['code'] ?? 'OA').' — '.($supplier['name'] ?? 'fournisseur').'.');
+
+            // Orchestration inbound : OA → BR (+ tâche) dans la même transaction.
+            $this->receipts->createFromOrder($order);
 
             return $order;
         });
