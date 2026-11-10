@@ -9,6 +9,7 @@ class Supplier extends RelationalDocumentModel
     protected $fillable = [
         'id', 'payload', 'name', 'contact', 'email', 'phone', 'city', 'address', 'ice',
         'category', 'payment_terms', 'note', 'lead_time_days', 'reliability', 'status', 'company_id',
+        'lead_time_std_dev',
     ];
 
     protected function casts(): array
@@ -17,6 +18,7 @@ class Supplier extends RelationalDocumentModel
             'payload' => 'array',
             'lead_time_days' => 'integer',
             'reliability' => 'integer',
+            'lead_time_std_dev' => 'float',
         ];
     }
 
@@ -34,6 +36,7 @@ class Supplier extends RelationalDocumentModel
             'paymentTerms' => 'payment_terms',
             'note' => 'note',
             'leadTimeDays' => 'lead_time_days',
+            'leadTimeStdDev' => 'lead_time_std_dev',
             'reliability' => 'reliability',
             'status' => 'status',
             'companyId' => 'company_id',

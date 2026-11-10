@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\ProcurementController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\PurchaseController;
 use App\Http\Controllers\Api\ReceiptController;
+use App\Http\Controllers\Api\ReplenishmentController;
 use App\Http\Controllers\Api\StockController;
 use App\Http\Controllers\Api\StockLotController;
 use App\Http\Controllers\Api\StockPlacementController;
@@ -94,6 +95,12 @@ Route::middleware('auth:api')->group(function () {
         Route::get('/consultations', [ConsultationController::class, 'index'])->middleware('permission:procurement.view');
         Route::post('/consultations', [ConsultationController::class, 'store'])->middleware('permission:procurement.create');
         Route::patch('/consultations/{id}', [ConsultationController::class, 'update'])->middleware('permission:procurement.create');
+    });
+
+    Route::middleware('module:stock,procurement')->group(function () {
+        Route::get('/replenishment/suggestions', [ReplenishmentController::class, 'index'])->middleware('permission:procurement.view,stock.view');
+        Route::post('/replenishment/simulate', [ReplenishmentController::class, 'simulate'])->middleware('permission:procurement.view,stock.view');
+        Route::post('/replenishment/compute', [ReplenishmentController::class, 'compute'])->middleware('permission:procurement.create,purchase.create,stock.inventory');
     });
 
     Route::middleware('module:purchasing')->group(function () {
