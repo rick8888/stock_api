@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Services\AlertService;
 use App\Services\PlanningService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class AlertController extends ApiController
@@ -30,6 +31,15 @@ class AlertController extends ApiController
         return $this->items($this->planning->list(
             $request->query('from'),
             $request->query('to'),
+        ));
+    }
+
+    public function planningBoard(Request $request): JsonResponse
+    {
+        return response()->json($this->planning->board(
+            (int) $request->query('weekOffset', 0),
+            $request->query('day'),
+            $request->query('type'),
         ));
     }
 }

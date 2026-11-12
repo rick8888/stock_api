@@ -2,12 +2,35 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Services\LogisticsBoardService;
 use App\Services\LogisticsService;
+use App\Services\RouteAssistService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class LogisticsController extends ApiController
 {
-    public function __construct(private readonly LogisticsService $logistics) {}
+    public function __construct(
+        private readonly LogisticsService $logistics,
+        private readonly LogisticsBoardService $board,
+        private readonly RouteAssistService $routeAssist,
+    ) {}
+
+    public function assistRoute(Request $request): JsonResponse
+    {
+        return response()->json($this->routeAssist->suggest($request->all()));
+    }
+
+    public function board(Request $request): JsonResponse
+    {
+        return response()->json($this->board->board(
+            (string) $request->query('section', 'deliveries'),
+            $request->query('filter'),
+            (int) $request->query('page', 1),
+            (int) $request->query('pageSize', 8),
+            $request->query('focusId'),
+        ));
+    }
 
     public function shipments()
     {

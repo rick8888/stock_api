@@ -181,10 +181,10 @@ class UserService
     private function assertCreatableRole(?User $creator, string $role): void
     {
         if ($role === 'SUPER_ADMIN' && $creator?->role !== 'SUPER_ADMIN') {
-            throw new DomainException('Seul Bravo.Stock peut créer ce rôle.');
+            throw new DomainException('Seul BravoStock peut créer ce rôle.');
         }
         if ($role === 'TENANT_OWNER' && $creator?->role !== 'SUPER_ADMIN') {
-            throw new DomainException('Seul Bravo.Stock peut créer un propriétaire d’entreprise.');
+            throw new DomainException('Seul BravoStock peut créer un propriétaire d’entreprise.');
         }
         if ($creator?->role === 'TENANT_OWNER' && $role !== 'ADMIN') {
             throw new DomainException('Le propriétaire ne crée que des administrateurs.');

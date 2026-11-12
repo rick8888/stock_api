@@ -9,7 +9,7 @@ class RunOpsAlerts extends Command
 {
     protected $signature = 'ops:alerts';
 
-    protected $description = 'Génère les alertes stock bas, commandes en retard et livraisons non démarrées';
+    protected $description = 'Génère les alertes stock bas, OA en retard, DLC / lots et livraisons bloquées';
 
     public function handle(AlertEngine $engine): int
     {

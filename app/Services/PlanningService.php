@@ -9,17 +9,13 @@ use App\Repositories\Eloquent\ReceiptRepository;
 use App\Repositories\Eloquent\RouteRepository;
 use App\Repositories\Eloquent\TaskItemRepository;
 use App\Repositories\Eloquent\WarehouseRepository;
+use App\Support\DemoDate;
 use App\Support\Tenant;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
 class PlanningService
 {
-    private const DEMO_FROM = '2026-08-20';
-
-    private const DEMO_TO = '2026-08-31';
-
-    private const DEMO_TODAY = '2026-08-26';
-
     public function __construct(
         private readonly PlanningEventRepository $planning,
         private readonly RouteRepository $routes,
@@ -33,16 +29,7 @@ class PlanningService
 
     public function list(?string $from = null, ?string $to = null): Collection
     {
-        $events = collect()
-            ->concat($this->stored())
-            ->concat($this->fromRoutes())
-            ->concat($this->fromDeliveries())
-            ->concat($this->fromReceipts())
-            ->concat($this->fromInventories())
-            ->concat($this->fromTasks())
-            ->unique(fn (array $event) => ($event['type'] ?? '').'|'.($event['relatedId'] ?? $event['id']))
-            ->sortBy('date')
-            ->values();
+        $events = $this->visibleEvents();
 
         if ($from) {
             $events = $events->filter(fn (array $event) => substr((string) $event['date'], 0, 10) >= $from);
@@ -54,6 +41,143 @@ class PlanningService
         return $events->values();
     }
 
+    /**
+     * Board ops pour /planning : compteurs + semaine + journée calculés serveur.
+     *
+     * @return array{
+     *   today: string,
+     *   selectedDay: string,
+     *   weekOffset: int,
+     *   type: string,
+     *   counts: array{today: int, week: int, next: int},
+     *   weekDays: list<array{key: string, count: int, isToday: bool}>,
+     *   types: list<array{id: string, count: int}>,
+     *   dayEvents: list<array<string, mixed>>,
+     *   upcoming: list<array<string, mixed>>,
+     *   events: list<array<string, mixed>>
+     * }
+     */
+    public function board(int $weekOffset = 0, ?string $day = null, ?string $type = null): array
+    {
+        $today = now()->toDateString();
+        $type = $type && $type !== '' ? $type : 'all';
+        $events = $this->visibleEvents()->all();
+
+        $monday = Carbon::now()->startOfWeek(Carbon::MONDAY)->addWeeks($weekOffset)->startOfDay();
+        $weekKeys = [];
+        for ($i = 0; $i < 7; $i++) {
+            $weekKeys[] = $monday->copy()->addDays($i)->toDateString();
+        }
+
+        $selectedDay = $day && in_array($day, $weekKeys, true)
+            ? $day
+            : (in_array($today, $weekKeys, true) ? $today : ($weekKeys[0] ?? $today));
+
+        $byDay = [];
+        foreach ($weekKeys as $key) {
+            $byDay[$key] = 0;
+        }
+        $todayCount = 0;
+        $nextCount = 0;
+        $typeCounts = [];
+
+        foreach ($events as $event) {
+            $key = substr((string) ($event['date'] ?? ''), 0, 10);
+            $eventType = (string) ($event['type'] ?? 'task');
+            $typeCounts[$eventType] = ($typeCounts[$eventType] ?? 0) + 1;
+            if ($key === $today) {
+                $todayCount++;
+            }
+            if ($key > $today) {
+                $nextCount++;
+            }
+            if (isset($byDay[$key])) {
+                $byDay[$key]++;
+            }
+        }
+
+        $weekDays = [];
+        foreach ($weekKeys as $key) {
+            $weekDays[] = [
+                'key' => $key,
+                'count' => $byDay[$key] ?? 0,
+                'isToday' => $key === $today,
+            ];
+        }
+
+        $weekCount = array_sum($byDay);
+
+        $types = [['id' => 'all', 'count' => count($events)]];
+        foreach (['delivery', 'receipt', 'inventory', 'meeting', 'task'] as $id) {
+            if (($typeCounts[$id] ?? 0) > 0) {
+                $types[] = ['id' => $id, 'count' => $typeCounts[$id]];
+            }
+        }
+
+        $filtered = array_values(array_filter(
+            $events,
+            fn (array $event) => $type === 'all' || ($event['type'] ?? '') === $type,
+        ));
+
+        $dayEvents = array_values(array_filter(
+            $filtered,
+            fn (array $event) => substr((string) ($event['date'] ?? ''), 0, 10) === $selectedDay,
+        ));
+
+        $upcoming = array_values(array_filter(
+            $filtered,
+            fn (array $event) => substr((string) ($event['date'] ?? ''), 0, 10) >= $today,
+        ));
+        $upcoming = array_slice($upcoming, 0, 6);
+
+        return [
+            'today' => $today,
+            'selectedDay' => $selectedDay,
+            'weekOffset' => $weekOffset,
+            'type' => $type,
+            'counts' => [
+                'today' => $todayCount,
+                'week' => $weekCount,
+                'next' => $nextCount,
+            ],
+            'weekDays' => $weekDays,
+            'types' => $types,
+            'dayEvents' => $dayEvents,
+            'upcoming' => $upcoming,
+            'events' => $events,
+        ];
+    }
+
+    private function visibleEvents(): Collection
+    {
+        return collect()
+            ->concat($this->stored())
+            ->concat($this->fromRoutes())
+            ->concat($this->fromDeliveries())
+            ->concat($this->fromReceipts())
+            ->concat($this->fromInventories())
+            ->concat($this->fromTasks())
+            ->unique(fn (array $event) => ($event['type'] ?? '').'|'.($event['relatedId'] ?? $event['id']))
+            ->filter(fn (array $event) => $this->visibleToRole($event))
+            ->sortBy('date')
+            ->values();
+    }
+
+    /** @param  array<string, mixed>  $event */
+    private function visibleToRole(array $event): bool
+    {
+        $role = $this->tenant->role();
+        $type = $event['type'] ?? '';
+
+        return match ($role) {
+            'DRIVER' => $type === 'delivery',
+            'FINANCE' => in_array($type, ['meeting', 'receipt'], true),
+            'DISPATCHER' => in_array($type, ['delivery', 'task'], true),
+            'PROCUREMENT' => $type !== 'inventory',
+            default => true,
+        };
+    }
+
     private function stored(): Collection
     {
         $rows = $this->tenant->bypassTenantFilter()
@@ -61,7 +185,7 @@ class PlanningService
             : $this->planning->forCompany($this->tenant->companyId());
 
         return $rows->map(function (array $event) {
-            $event['date'] = $this->rebaseDemoDate((string) ($event['date'] ?? ''));
+            $event['date'] = DemoDate::rebase((string) ($event['date'] ?? '')) ?? ($event['date'] ?? '');
 
             return $event;
         });
@@ -70,7 +194,7 @@ class PlanningService
     private function fromRoutes(): Collection
     {
         return $this->routes->all()->map(function (array $route) {
-            $date = (string) ($route['date'] ?? '');
+            $date = DemoDate::rebase((string) ($route['date'] ?? '')) ?? (string) ($route['date'] ?? '');
 
             return [
                 'id' => 'pl-route-'.($route['id'] ?? ''),
@@ -85,10 +209,12 @@ class PlanningService
     private function fromDeliveries(): Collection
     {
         return $this->deliveries->all()->map(function (array $delivery) {
+            $raw = (string) ($delivery['scheduledAt'] ?? $delivery['eta'] ?? now()->toIso8601String());
+
             return [
                 'id' => 'pl-dlv-'.($delivery['id'] ?? ''),
                 'title' => $delivery['client'] ?? 'Livraison',
-                'date' => $delivery['scheduledAt'] ?? $delivery['eta'] ?? now()->toIso8601String(),
+                'date' => DemoDate::rebase($raw) ?? $raw,
                 'type' => 'delivery',
                 'relatedId' => $delivery['id'] ?? null,
             ];
@@ -100,10 +226,12 @@ class PlanningService
         return $this->receipts->all()
             ->filter(fn (array $receipt) => ($receipt['status'] ?? '') !== 'validated')
             ->map(function (array $receipt) {
+                $raw = (string) ($receipt['date'] ?? now()->toIso8601String());
+
                 return [
                     'id' => 'pl-rcp-'.($receipt['id'] ?? ''),
                     'title' => $receipt['code'] ?? 'Réception',
-                    'date' => $receipt['date'] ?? now()->toIso8601String(),
+                    'date' => DemoDate::rebase($raw) ?? $raw,
                     'type' => 'receipt',
                     'relatedId' => $receipt['id'] ?? null,
                 ];
@@ -119,11 +247,12 @@ class PlanningService
             ->map(function (array $session) use ($names) {
                 $row = $names->get($session['warehouseId'] ?? '');
                 $warehouse = is_array($row) ? ($row['name'] ?? 'entrepôt') : 'entrepôt';
+                $raw = (string) ($session['startedAt'] ?? now()->toIso8601String());
 
                 return [
                     'id' => 'pl-inv-'.($session['id'] ?? ''),
                     'title' => 'Inventaire '.$warehouse,
-                    'date' => $session['startedAt'] ?? now()->toIso8601String(),
+                    'date' => DemoDate::rebase($raw) ?? $raw,
                     'type' => 'inventory',
                     'relatedId' => $session['id'] ?? null,
                 ];
@@ -135,36 +264,16 @@ class PlanningService
         return $this->tasks->all()
             ->filter(fn (array $task) => ($task['status'] ?? '') !== 'done')
             ->map(function (array $task) {
+                $raw = (string) ($task['dueAt'] ?? now()->toIso8601String());
+
                 return [
                     'id' => 'pl-tsk-'.($task['id'] ?? ''),
                     'title' => $task['title'] ?? 'Tâche',
-                    'date' => $task['dueAt'] ?? now()->toIso8601String(),
+                    'date' => DemoDate::rebase($raw) ?? $raw,
                     'type' => 'task',
                     'relatedId' => $task['id'] ?? null,
                 ];
             });
-    }
-
-    private function rebaseDemoDate(string $iso): string
-    {
-        $key = substr($iso, 0, 10);
-        if ($key < self::DEMO_FROM || $key > self::DEMO_TO) {
-            return $iso;
-        }
-
-        try {
-            $event = new \DateTimeImmutable($iso);
-            $demo = new \DateTimeImmutable(self::DEMO_TODAY);
-            $today = new \DateTimeImmutable('today');
-            $days = (int) $demo->diff($today)->format('%r%a');
-            $shifted = $event->modify($days.' days');
-        } catch (\Exception) {
-            return $iso;
-        }
-
-        return strlen($iso) > 10
-            ? $shifted->format('Y-m-d\TH:i:s')
-            : $shifted->format('Y-m-d');
     }
 
     private function withTime(string $date, string $time): string

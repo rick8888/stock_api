@@ -78,8 +78,11 @@ class ReplenishmentService
      *
      * @return Collection<int, array>
      */
-    public function evaluateWarehouse(string $warehouseId): Collection
-    {
+    public function evaluateWarehouse(
+        string $warehouseId,
+        ?float $serviceLevelOverride = null,
+        ?float $leadTimeOverride = null,
+    ): Collection {
         $this->tenant->assertWarehouseAccess($warehouseId);
 
         $products = $this->products->all()->keyBy('id');
@@ -109,6 +112,8 @@ class ReplenishmentService
                 $incoming,
                 $pending,
                 $warehouseId,
+                $serviceLevelOverride,
+                $leadTimeOverride,
             ))
             ->values();
     }
@@ -124,6 +129,8 @@ class ReplenishmentService
         Collection $incoming,
         Collection $pending,
         string $warehouseId,
+        ?float $serviceLevelOverride = null,
+        ?float $leadTimeOverride = null,
     ): array {
         $productId = (string) $item['productId'];
         $available = max(0, (int) ($item['quantity'] ?? 0) - (int) ($item['reserved'] ?? 0));
@@ -134,8 +141,8 @@ class ReplenishmentService
         $term = $supplierId ? $terms->get($supplierId.'|'.$warehouseId) : null;
 
         // Le délai le plus spécifique gagne : conditions par entrepôt, puis par article,
-        // puis délai général du fournisseur.
-        $leadTime = (float) (
+        // puis délai général du fournisseur. Override what-if si fourni.
+        $leadTime = $leadTimeOverride ?? (float) (
             $term['leadTimeDays']
             ?? $catalogLine['leadTimeDays']
             ?? $supplier['leadTimeDays']
@@ -162,6 +169,11 @@ class ReplenishmentService
             }
         }
 
+        $serviceLevel = $serviceLevelOverride ?? ServiceLevel::resolve(
+            isset($product['serviceLevel']) ? (float) $product['serviceLevel'] : null,
+            $product['abcClass'] ?? null,
+        );
+
         $result = ReplenishmentCalculator::evaluate([
             'policy' => $product['replenishmentPolicy'] ?? ReplenishmentCalculator::POLICY_ROP,
             'avgDailyDemand' => (float) ($stats['avgDailyDemand'] ?? 0),
@@ -169,10 +181,7 @@ class ReplenishmentService
             'sampleDays' => (int) ($stats['sampleDays'] ?? 0),
             'leadTimeDays' => $leadTime,
             'leadTimeStdDev' => $leadTimeStdDev,
-            'serviceLevel' => ServiceLevel::resolve(
-                isset($product['serviceLevel']) ? (float) $product['serviceLevel'] : null,
-                $product['abcClass'] ?? null,
-            ),
+            'serviceLevel' => $serviceLevel,
             'safetyStockOverride' => $product['safetyStock'] ?? null,
             'minStock' => (int) ($product['minStock'] ?? 0),
             'maxStock' => $product['maxStock'] ?? null,
@@ -210,10 +219,7 @@ class ReplenishmentService
             'sampleDays' => (int) ($stats['sampleDays'] ?? 0),
             'leadTimeDays' => $leadTime,
             'leadTimeStdDev' => $leadTimeStdDev,
-            'serviceLevel' => ServiceLevel::resolve(
-                isset($product['serviceLevel']) ? (float) $product['serviceLevel'] : null,
-                $product['abcClass'] ?? null,
-            ),
+            'serviceLevel' => $serviceLevel,
             'available' => $available,
             'inTransit' => $withinHorizon,
             'pendingNeed' => (int) $pending->get($productId, 0),

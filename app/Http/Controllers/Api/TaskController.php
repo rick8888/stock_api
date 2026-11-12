@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Services\TaskService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class TaskController extends ApiController
@@ -12,6 +13,11 @@ class TaskController extends ApiController
     public function index()
     {
         return $this->items($this->tasks->list());
+    }
+
+    public function board(): JsonResponse
+    {
+        return response()->json($this->tasks->board());
     }
 
     public function store(Request $request)

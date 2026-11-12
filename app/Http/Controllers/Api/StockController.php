@@ -2,16 +2,26 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Services\StockOverviewService;
 use App\Services\StockService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class StockController extends ApiController
 {
-    public function __construct(private readonly StockService $stock) {}
+    public function __construct(
+        private readonly StockService $stock,
+        private readonly StockOverviewService $overview,
+    ) {}
 
     public function index()
     {
         return $this->items($this->stock->list());
+    }
+
+    public function overview(): JsonResponse
+    {
+        return response()->json($this->overview->board());
     }
 
     public function movements()

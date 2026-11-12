@@ -7,6 +7,7 @@ use App\Repositories\Eloquent\DeliveryRepository;
 use App\Repositories\Eloquent\ProductRepository;
 use App\Repositories\Eloquent\PurchaseOrderRepository;
 use App\Repositories\Eloquent\StockItemRepository;
+use App\Repositories\Eloquent\StockLotRepository;
 use App\Repositories\Eloquent\WarehouseRepository;
 use App\Support\DemoDate;
 
@@ -18,6 +19,7 @@ class AlertEngine
         private readonly WarehouseRepository $warehouses,
         private readonly PurchaseOrderRepository $orders,
         private readonly DeliveryRepository $deliveries,
+        private readonly StockLotRepository $lots,
         private readonly AlertRepository $alerts,
         private readonly OpsNotifier $notifier,
     ) {}
@@ -33,6 +35,7 @@ class AlertEngine
             ...$this->lowStockAlerts(),
             ...$this->delayedOrderAlerts(),
             ...$this->stalledDeliveryAlerts(),
+            ...$this->expiringLotAlerts(),
         ] as $alert) {
             if ($this->existsSimilar($alert)) {
                 $skipped++;
@@ -71,11 +74,13 @@ class AlertEngine
                 'message' => ($warehouse['name'] ?? $row['warehouseId']).' : '.$available.' dispo. (seuil '.$min.').',
                 'severity' => $available <= 0 ? 'critical' : 'warning',
                 'domain' => 'stock',
-                'relatedId' => $row['id'],
+                // relatedId = productId pour deep-link réappro / DA
+                'relatedId' => $row['productId'] ?? $row['id'],
                 'warehouseId' => $row['warehouseId'] ?? null,
                 'companyId' => $warehouse['companyId'] ?? ($product['companyId'] ?? null),
                 'roles' => ['WAREHOUSE_MANAGER', 'PROCUREMENT', 'MANAGER'],
                 'code' => 'low_stock:'.$row['productId'].':'.$row['warehouseId'],
+                'action' => 'replenish',
             ];
         }
 
@@ -108,8 +113,47 @@ class AlertEngine
                 'relatedId' => $order['id'],
                 'warehouseId' => $order['warehouseId'] ?? null,
                 'companyId' => $order['companyId'] ?? null,
-                'roles' => ['PROCUREMENT', 'MANAGER'],
+                'roles' => ['PROCUREMENT', 'MANAGER', 'WAREHOUSE_MANAGER'],
                 'code' => 'po_delay:'.$order['id'].':'.$expected,
+                'action' => 'receive',
+            ];
+        }
+
+        return $out;
+    }
+
+    /** @return list<array<string, mixed>> */
+    private function expiringLotAlerts(): array
+    {
+        $horizon = now()->addDays(14)->toDateString();
+        $today = now()->toDateString();
+        $products = $this->products->all()->keyBy('id');
+        $warehouses = $this->warehouses->all()->keyBy('id');
+        $out = [];
+        foreach ($this->lots->all() as $lot) {
+            $qty = (int) ($lot['quantity'] ?? 0);
+            $expiry = $lot['expiryDate'] ?? null;
+            if ($qty <= 0 || ! $expiry) {
+                continue;
+            }
+            $day = substr((string) DemoDate::rebase($expiry), 0, 10);
+            if ($day > $horizon) {
+                continue;
+            }
+            $product = $products->get($lot['productId'] ?? '');
+            $warehouse = $warehouses->get($lot['warehouseId'] ?? '');
+            $expired = $day < $today;
+            $out[] = [
+                'title' => ($expired ? 'Lot périmé — ' : 'DLC proche — ').($product['name'] ?? $lot['productId'] ?? 'article'),
+                'message' => 'Lot '.($lot['lotCode'] ?? $lot['id']).' · '.$qty.' '.($product['unit'] ?? 'u').' · DLC '.$day.' · '.($warehouse['name'] ?? $lot['warehouseId'] ?? ''),
+                'severity' => $expired ? 'critical' : 'warning',
+                'domain' => 'stock',
+                'relatedId' => $lot['productId'] ?? $lot['id'],
+                'warehouseId' => $lot['warehouseId'] ?? null,
+                'companyId' => $warehouse['companyId'] ?? ($product['companyId'] ?? ($lot['companyId'] ?? null)),
+                'roles' => ['WAREHOUSE_MANAGER', 'MANAGER', 'PROCUREMENT'],
+                'code' => 'lot_expiry:'.($lot['id'] ?? '').':'.$day,
+                'action' => 'stock',
             ];
         }
 
@@ -131,28 +175,25 @@ class AlertEngine
                 continue;
             }
             $day = substr((string) DemoDate::rebase($scheduled), 0, 10);
-            if ($day > $today) {
+            // Uniquement les retards calendaires : le bruit « prepared le jour J » noie Today en démo.
+            if ($day >= $today) {
                 continue;
             }
-            if ($day === $today && in_array($status, ['in_transit', 'prepared'], true)) {
-                // Même jour : alerte seulement si encore "prepared" après 12h
-                if ($status !== 'prepared' || now()->hour < 12) {
-                    continue;
-                }
+            if (in_array($status, ['in_transit', 'delivered', 'failed'], true)) {
+                continue;
             }
-            if ($day < $today || ($day === $today && $status === 'prepared' && now()->hour >= 12)) {
-                $out[] = [
-                    'title' => 'Livraison non démarrée — '.($delivery['code'] ?? $delivery['client'] ?? $delivery['id']),
-                    'message' => ($delivery['client'] ?? '').' ('.($delivery['city'] ?? '').') prévue le '.$day.', statut '.$status.'.',
-                    'severity' => $day < $today ? 'critical' : 'warning',
-                    'domain' => 'logistics',
-                    'relatedId' => $delivery['id'],
-                    'warehouseId' => $delivery['warehouseId'] ?? null,
-                    'companyId' => $delivery['companyId'] ?? null,
-                    'roles' => ['DISPATCHER', 'MANAGER'],
-                    'code' => 'delivery_stall:'.$delivery['id'].':'.$day,
-                ];
-            }
+            $out[] = [
+                'title' => 'Livraison non démarrée — '.($delivery['code'] ?? $delivery['client'] ?? $delivery['id']),
+                'message' => ($delivery['client'] ?? '').' ('.($delivery['city'] ?? '').') prévue le '.$day.', statut '.$status.'.',
+                'severity' => 'critical',
+                'domain' => 'logistics',
+                'relatedId' => $delivery['id'],
+                'warehouseId' => $delivery['warehouseId'] ?? null,
+                'companyId' => $delivery['companyId'] ?? null,
+                'roles' => ['DISPATCHER', 'MANAGER'],
+                'code' => 'delivery_stall:'.$delivery['id'].':'.$day,
+                'action' => 'dispatch',
+            ];
         }
 
         return $out;

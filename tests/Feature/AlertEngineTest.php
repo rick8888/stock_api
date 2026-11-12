@@ -2,7 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Models\Alert;
+use App\Models\StockLot;
 use App\Services\AlertEngine;
+use App\Support\AlertVisibility;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -32,6 +35,7 @@ class AlertEngineTest extends TestCase
                 'id' => 'prd-1',
                 'name' => 'Huile',
                 'sku' => 'HUI-1',
+                'unit' => 'L',
                 'minStock' => 50,
                 'archived' => false,
                 'companyId' => 'co-test',
@@ -65,15 +69,44 @@ class AlertEngineTest extends TestCase
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+        (new StockLot)->fillDocument([
+            'id' => 'lot-1',
+            'productId' => 'prd-1',
+            'warehouseId' => 'wh-a',
+            'lotCode' => 'L-EXPIRE',
+            'quantity' => 8,
+            'expiryDate' => now()->addDays(5)->toDateString(),
+            'companyId' => 'co-test',
+        ])->save();
     }
 
-    public function test_engine_creates_low_stock_and_delayed_order_alerts(): void
+    public function test_engine_creates_low_stock_delayed_order_and_dlc_alerts(): void
     {
         $result = app(AlertEngine::class)->run();
-        $this->assertGreaterThanOrEqual(2, $result['created']);
+        $this->assertGreaterThanOrEqual(3, $result['created']);
+
+        $alerts = Alert::query()->get()->map(fn (Alert $row) => $row->document());
+        $byCode = $alerts->keyBy(fn (array $row) => explode(':', (string) ($row['code'] ?? ''))[0] ?? '');
+
+        $this->assertSame('replenish', $byCode['low_stock']['action'] ?? null);
+        $this->assertSame('prd-1', $byCode['low_stock']['relatedId'] ?? null);
+        $this->assertSame('receive', $byCode['po_delay']['action'] ?? null);
+        $this->assertSame('po-1', $byCode['po_delay']['relatedId'] ?? null);
+        $this->assertSame('stock', $byCode['lot_expiry']['action'] ?? null);
+
+        $this->assertSame(
+            '/analytics/forecasts?product=prd-1&warehouse=wh-a&action=da',
+            AlertVisibility::href($byCode['low_stock'], 'PROCUREMENT'),
+        );
+        $this->assertSame('Créer la DA', AlertVisibility::actionLabel($byCode['low_stock']));
+        $this->assertSame('Ouvrir le BR', AlertVisibility::actionLabel($byCode['po_delay']));
+        $this->assertSame(
+            '/procurement?tab=orders&order=po-1&action=receive',
+            AlertVisibility::href($byCode['po_delay'], 'PROCUREMENT'),
+        );
 
         $second = app(AlertEngine::class)->run();
         $this->assertSame(0, $second['created']);
-        $this->assertGreaterThanOrEqual(2, $second['skipped']);
+        $this->assertGreaterThanOrEqual(3, $second['skipped']);
     }
 }

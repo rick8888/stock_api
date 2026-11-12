@@ -1,10 +1,13 @@
 <?php
 
 use App\Http\Controllers\Api\AlertController;
+use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\TodayController;
 use App\Http\Controllers\Api\AnalyticsController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BillingController;
 use App\Http\Controllers\Api\ConsultationController;
+use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\DeliveryController;
 use App\Http\Controllers\Api\EntitlementController;
@@ -30,13 +33,20 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/auth/login', [AuthController::class, 'login']);
 Route::post('/webhooks/stripe', [BillingController::class, 'webhook']);
+Route::post('/contact', [ContactController::class, 'store'])->middleware('throttle:12,1');
 
 Route::middleware('auth:api')->group(function () {
     Route::post('/auth/logout', [AuthController::class, 'logout']);
     Route::post('/auth/refresh', [AuthController::class, 'refresh']);
     Route::get('/auth/me', [AuthController::class, 'me']);
 
-    Route::get('/platform/entitlements', [EntitlementController::class, 'show'])->middleware('permission:account.view,platform.view,user.view,stock.view');
+    // Snapshot plan/modules de la session — requis par tous les rôles authentifiés (pas un écran admin).
+    Route::get('/platform/entitlements', [EntitlementController::class, 'show']);
+
+    // Cloche in-app — tout utilisateur authentifié voit ses notifications (ou broadcast company).
+    Route::get('/notifications', [NotificationController::class, 'index']);
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllRead']);
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'markRead']);
 
     Route::get('/categories', [ProductController::class, 'categories'])->middleware('permission:product.view');
     Route::get('/products', [ProductController::class, 'index'])->middleware('permission:product.view');
@@ -70,6 +80,7 @@ Route::middleware('auth:api')->group(function () {
 
     Route::middleware('module:stock')->group(function () {
         Route::get('/stock', [StockController::class, 'index'])->middleware('permission:stock.view');
+        Route::get('/stock/overview', [StockController::class, 'overview'])->middleware('permission:stock.view');
         Route::get('/stock/lots', [StockLotController::class, 'index'])->middleware('permission:stock.view');
         Route::get('/stock/placements', [StockPlacementController::class, 'index'])->middleware('permission:stock.view');
         Route::post('/stock/pick-path', [StockPlacementController::class, 'pickPath'])->middleware('permission:stock.view,stock.issue');
@@ -95,6 +106,8 @@ Route::middleware('auth:api')->group(function () {
 
     Route::middleware('module:procurement')->group(function () {
         Route::get('/procurement', [ProcurementController::class, 'index'])->middleware('permission:procurement.view');
+        Route::get('/procurement/board', [ProcurementController::class, 'board'])->middleware('permission:procurement.view');
+        Route::get('/procurement/sourcing', [ProcurementController::class, 'sourcing'])->middleware('permission:procurement.view,purchase.create');
         Route::post('/procurement', [ProcurementController::class, 'store'])->middleware('permission:procurement.create');
         Route::patch('/procurement/{id}', [ProcurementController::class, 'update'])->middleware('permission:procurement.approve,procurement.create');
         Route::get('/consultations', [ConsultationController::class, 'index'])->middleware('permission:procurement.view');
@@ -110,11 +123,13 @@ Route::middleware('auth:api')->group(function () {
 
     Route::middleware('module:purchasing')->group(function () {
         Route::get('/purchases', [PurchaseController::class, 'index'])->middleware('permission:purchase.view');
+        Route::post('/purchases/from-offer', [PurchaseController::class, 'fromOffer'])->middleware('permission:purchase.create');
         Route::post('/purchases', [PurchaseController::class, 'store'])->middleware('permission:purchase.create');
         Route::patch('/purchases/{id}', [PurchaseController::class, 'update'])->middleware('permission:purchase.update,purchase.create');
     });
 
     Route::middleware('module:logistics')->group(function () {
+        Route::get('/logistics/board', [LogisticsController::class, 'board'])->middleware('permission:delivery.view');
         Route::get('/deliveries', [DeliveryController::class, 'index'])->middleware('permission:delivery.view');
         Route::post('/deliveries', [DeliveryController::class, 'store'])->middleware('permission:delivery.create');
         Route::patch('/deliveries/{id}', [DeliveryController::class, 'update'])->middleware('permission:delivery.update');
@@ -123,6 +138,7 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/shipments', [LogisticsController::class, 'storeShipment'])->middleware('permission:delivery.create');
         Route::patch('/shipments/{id}', [LogisticsController::class, 'updateShipment'])->middleware('permission:delivery.update');
         Route::get('/routes', [LogisticsController::class, 'routes'])->middleware('permission:delivery.view');
+        Route::post('/routes/assist', [LogisticsController::class, 'assistRoute'])->middleware('permission:delivery.create,delivery.update');
         Route::post('/routes', [LogisticsController::class, 'storeRoute'])->middleware('permission:delivery.create');
         Route::patch('/routes/{id}', [LogisticsController::class, 'updateRoute'])->middleware('permission:delivery.update');
         Route::get('/vehicles', [LogisticsController::class, 'vehicles'])->middleware('permission:delivery.view');
@@ -155,12 +171,15 @@ Route::middleware('auth:api')->group(function () {
     });
 
     Route::get('/tasks', [TaskController::class, 'index'])->middleware('permission:task.view');
+    Route::get('/tasks/board', [TaskController::class, 'board'])->middleware('permission:task.view');
     Route::post('/tasks', [TaskController::class, 'store'])->middleware('permission:task.create');
     Route::patch('/tasks/{id}', [TaskController::class, 'update'])->middleware('permission:task.update');
 
     Route::get('/alerts', [AlertController::class, 'index'])->middleware('permission:task.view,stock.view,delivery.view');
     Route::post('/alerts/{id}/read', [AlertController::class, 'markRead'])->middleware('permission:task.view,stock.view,delivery.view');
     Route::get('/planning', [AlertController::class, 'planning'])->middleware('permission:task.view');
+    Route::get('/planning/board', [AlertController::class, 'planningBoard'])->middleware('permission:task.view');
+    Route::get('/ops/today', [TodayController::class, 'brief'])->middleware('permission:task.view,stock.view,delivery.view');
 
     Route::get('/analytics/snapshot', [AnalyticsController::class, 'snapshot'])->middleware(['permission:analytics.view', 'module:analytics']);
 

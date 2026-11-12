@@ -49,10 +49,17 @@ class ReplenishmentController extends ApiController
     {
         $validated = $request->validate([
             'warehouseId' => ['required', 'string'],
+            'serviceLevel' => ['sometimes', 'numeric', 'min:0.8', 'max:0.999'],
+            'leadTimeDays' => ['sometimes', 'numeric', 'min:1', 'max:90'],
         ]);
 
+        $serviceLevel = isset($validated['serviceLevel']) ? (float) $validated['serviceLevel'] : null;
+        $leadTime = isset($validated['leadTimeDays']) ? (float) $validated['leadTimeDays'] : null;
+
         return $this->items(
-            $this->replenishment->evaluateWarehouse($validated['warehouseId'])
+            $this->replenishment->evaluateWarehouse($validated['warehouseId'], $serviceLevel, $leadTime)
+                ->filter(fn (array $row) => ($row['suggestedQuantity'] ?? 0) > 0)
+                ->values()
         );
     }
 }

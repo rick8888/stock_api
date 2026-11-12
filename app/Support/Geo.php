@@ -187,4 +187,49 @@ final class Geo
 
         return $path[count($path) - 1];
     }
+
+    /**
+     * Découpe un tracé selon une progression (0–1) : trail déjà parcouru + reste.
+     *
+     * @param  list<array{lat: float, lng: float, label?: string}>  $path
+     * @return array{done: list<array{lat: float, lng: float, label?: string}>, rest: list<array{lat: float, lng: float, label?: string}>}
+     */
+    public static function splitPath(array $path, float $t): array
+    {
+        if (! $path) {
+            return ['done' => [], 'rest' => []];
+        }
+        if ($t <= 0) {
+            return ['done' => [$path[0]], 'rest' => $path];
+        }
+        if ($t >= 1) {
+            return ['done' => $path, 'rest' => [end($path)]];
+        }
+        $cursor = self::pointAlong($path, $t);
+        $lengths = [];
+        $total = 0.0;
+        for ($i = 0; $i < count($path) - 1; $i++) {
+            $len = self::haversineKm($path[$i], $path[$i + 1]);
+            $lengths[] = $len;
+            $total += $len;
+        }
+        $target = max($total, 0.0001) * $t;
+        $done = [$path[0]];
+        $seg = 0;
+        for (; $seg < count($lengths); $seg++) {
+            $len = max($lengths[$seg], 0.0001);
+            if ($target <= $len) {
+                break;
+            }
+            $done[] = $path[$seg + 1];
+            $target -= $len;
+        }
+        $done[] = $cursor;
+        $rest = [$cursor];
+        for ($i = $seg + 1; $i < count($path); $i++) {
+            $rest[] = $path[$i];
+        }
+
+        return ['done' => $done, 'rest' => $rest];
+    }
 }

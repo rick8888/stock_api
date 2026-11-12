@@ -7,7 +7,7 @@
       "email": "super@bravo.stock",
       "password": "demo",
       "role": "SUPER_ADMIN",
-      "title": "Propriétaire Bravo.Stock",
+      "title": "Propriétaire BravoStock",
       "avatarHue": 250,
       "warehouseIds": [],
       "productIds": [],
@@ -251,7 +251,7 @@
       "id": "role-super",
       "key": "SUPER_ADMIN",
       "name": "Super administrateur",
-      "description": "Propriétaire Bravo.Stock : entreprises, plans, abonnements, facturation.",
+      "description": "Propriétaire BravoStock : entreprises, plans, abonnements, facturation.",
       "permissions": [
         "platform.view",
         "platform.companies",
@@ -263,7 +263,7 @@
       "id": "role-owner",
       "key": "TENANT_OWNER",
       "name": "Propriétaire",
-      "description": "Compte entreprise : administrateurs, abonnement, factures Bravo.Stock.",
+      "description": "Compte entreprise : administrateurs, abonnement, factures BravoStock.",
       "permissions": [
         "account.view",
         "account.company",
@@ -5172,7 +5172,7 @@
       "productId": "prd-lait",
       "warehouseId": "wh-casa",
       "lotCode": "LAI-0826",
-      "expiryDate": "2026-09-20",
+      "expiryDate": "2026-08-30",
       "locationId": "loc-casa-a0102",
       "quantity": 120,
       "companyId": "co-atlas"
@@ -5372,7 +5372,9 @@
         "PROCUREMENT",
         "MANAGER",
         "DISPATCHER"
-      ]
+      ],
+      "code": "low_stock:prd-huile:wh-casa",
+      "action": "replenish"
     },
     {
       "id": "al-02",
@@ -5388,7 +5390,9 @@
         "PROCUREMENT",
         "WAREHOUSE_MANAGER",
         "MANAGER"
-      ]
+      ],
+      "code": "po_delay:po-1042:2026-08-24",
+      "action": "receive"
     },
     {
       "id": "al-03",
@@ -5437,7 +5441,28 @@
         "PROCUREMENT",
         "MANAGER",
         "DISPATCHER"
-      ]
+      ],
+      "code": "low_stock:prd-lait:wh-casa",
+      "action": "replenish"
+    },
+    {
+      "id": "al-11",
+      "title": "DLC proche — Lait",
+      "message": "Lot LAI-0826 · 120 u · DLC 2026-08-30 · Casablanca.",
+      "severity": "warning",
+      "createdAt": "2026-08-26T07:25:00.000Z",
+      "read": false,
+      "domain": "stock",
+      "relatedId": "prd-lait",
+      "warehouseId": "wh-casa",
+      "roles": [
+        "WAREHOUSE_MANAGER",
+        "PROCUREMENT",
+        "MANAGER",
+        "DISPATCHER"
+      ],
+      "code": "lot_expiry:lot-lait-1:2026-08-30",
+      "action": "stock"
     },
     {
       "id": "al-06",
@@ -5961,7 +5986,7 @@
       "id": "plan-pro",
       "name": "Pro",
       "code": "pro",
-      "description": "Multi-sites, logistique et assistant opérationnel.",
+      "description": "Multi-sites, logistique, réappro / analytics et assistant opérationnel.",
       "monthlyPrice": 2490,
       "yearlyPrice": 24900,
       "maxUsers": 25,
@@ -5971,7 +5996,8 @@
         "procurement",
         "purchasing",
         "logistics",
-        "assistant"
+        "assistant",
+        "analytics"
       ],
       "active": true
     },

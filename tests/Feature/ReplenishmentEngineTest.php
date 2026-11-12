@@ -232,6 +232,38 @@ class ReplenishmentEngineTest extends TestCase
             ->assertJsonPath('0.reorderPoint', 50);
     }
 
+    public function test_simulate_does_not_persist_and_honours_service_level(): void
+    {
+        app(DemandForecastService::class)->recompute(['wh-a']);
+
+        $before = DB::table('replenishment_suggestions')->count();
+
+        $low = $this->postJson('/api/replenishment/simulate', [
+            'warehouseId' => 'wh-a',
+            'serviceLevel' => 0.9,
+        ])->assertOk()->json();
+
+        $high = $this->postJson('/api/replenishment/simulate', [
+            'warehouseId' => 'wh-a',
+            'serviceLevel' => 0.99,
+        ])->assertOk()->json();
+
+        $slow = $this->postJson('/api/replenishment/simulate', [
+            'warehouseId' => 'wh-a',
+            'serviceLevel' => 0.95,
+            'leadTimeDays' => 14,
+        ])->assertOk()->json();
+
+        $this->assertSame($before, DB::table('replenishment_suggestions')->count());
+        $this->assertNotEmpty($low);
+        $this->assertNotEmpty($high);
+        $this->assertNotEmpty($slow);
+        // Un service plus élevé doit au minimum monter la sécurité (et souvent la qty).
+        $this->assertGreaterThanOrEqual((int) $high[0]['safetyStock'], (int) $low[0]['safetyStock']);
+        $this->assertGreaterThanOrEqual((int) $high[0]['suggestedQuantity'], (int) $low[0]['suggestedQuantity']);
+        $this->assertSame(14, (int) $slow[0]['leadTimeDays']);
+    }
+
     public function test_a_stale_request_stops_inflating_the_suggestion_once_expired(): void
     {
         $this->placeRequest('pr-stale', quantity: 400, submittedDaysAgo: 90);

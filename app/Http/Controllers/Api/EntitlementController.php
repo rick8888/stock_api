@@ -11,8 +11,10 @@ class EntitlementController extends ApiController
 
     public function show(Request $request)
     {
+        $companyId = $request->query('companyId', $request->input('companyId'));
+
         return response()->json(
-            $this->entitlements->snapshot($request->input('companyId')),
+            $this->entitlements->snapshot(is_string($companyId) && $companyId !== '' ? $companyId : null),
         );
     }
 }

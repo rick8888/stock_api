@@ -13,5 +13,6 @@ class DatabaseSeeder extends Seeder
         $this->call(SupplierCatalogSeeder::class);
         $this->call(DemandHistorySeeder::class);
         $this->call(TrackingHistorySeeder::class);
+        $this->call(DemoStorySeeder::class);
     }
 }

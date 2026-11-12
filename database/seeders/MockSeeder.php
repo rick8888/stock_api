@@ -28,7 +28,9 @@ use App\Models\Route;
 use App\Models\Shipment;
 use App\Models\ShippingNote;
 use App\Models\StockItem;
+use App\Models\StockLot;
 use App\Models\StockMovement;
+use App\Models\StockPlacement;
 use App\Models\Subscription;
 use App\Models\SubscriptionPlan;
 use App\Models\Supplier;
@@ -36,6 +38,7 @@ use App\Models\TaskItem;
 use App\Models\User;
 use App\Models\Vehicle;
 use App\Models\Warehouse;
+use App\Models\WarehouseLocation;
 use Illuminate\Database\Seeder;
 
 class MockSeeder extends Seeder
@@ -105,6 +108,9 @@ class MockSeeder extends Seeder
         $this->docs($mock['products'] ?? [], Product::class);
         $this->docs($mock['suppliers'] ?? [], Supplier::class);
         $this->docs($mock['stock'] ?? [], StockItem::class);
+        $this->docs($mock['warehouseLocations'] ?? [], WarehouseLocation::class);
+        $this->docs($mock['stockLots'] ?? [], StockLot::class);
+        $this->docs($mock['stockPlacements'] ?? [], StockPlacement::class);
         $this->docs($mock['stockMovements'] ?? [], StockMovement::class);
         $this->docs($mock['inventories'] ?? [], InventorySession::class);
         $this->docs($mock['procurementRequests'] ?? [], ProcurementRequest::class);
