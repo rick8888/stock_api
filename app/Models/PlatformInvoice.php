@@ -7,7 +7,7 @@ class PlatformInvoice extends RelationalDocumentModel
     protected $table = 'platform_invoices';
 
     protected $fillable = [
-        'id', 'payload', 'company_id', 'subscription_id', 'number', 'amount', 'status',
+        'id', 'payload', 'company_id', 'subscription_id', 'number', 'amount', 'currency', 'status',
         'issued_at', 'due_date', 'paid_at', 'payment_provider', 'payment_ref', 'stripe_invoice_id',
     ];
 
@@ -29,6 +29,7 @@ class PlatformInvoice extends RelationalDocumentModel
             'subscriptionId' => 'subscription_id',
             'number' => 'number',
             'amount' => 'amount',
+            'currency' => 'currency',
             'status' => 'status',
             'paymentProvider' => 'payment_provider',
             'paymentRef' => 'payment_ref',

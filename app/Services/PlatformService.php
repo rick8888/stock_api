@@ -7,6 +7,8 @@ use App\Models\Company;
 use App\Repositories\Eloquent\PlatformInvoiceRepository;
 use App\Repositories\Eloquent\SubscriptionPlanRepository;
 use App\Repositories\Eloquent\SubscriptionRepository;
+use App\Support\BillingCountries;
+use App\Support\PlanPricing;
 use App\Support\Tenant;
 use App\Support\Uid;
 use Illuminate\Support\Collection;
@@ -66,6 +68,8 @@ class PlatformService
             if (! $plan || empty($plan['active'])) {
                 throw new DomainException('Plan introuvable.');
             }
+            $country = BillingCountries::normalize($input['country'] ?? null);
+            PlanPricing::require($plan, $country);
             $id = Uid::make('co');
             $company = Company::query()->create([
                 'id' => $id,
@@ -73,6 +77,7 @@ class PlatformService
                 'legal_name' => trim($input['legalName'] ?? '') ?: $name,
                 'ice' => trim($input['ice'] ?? ''),
                 'city' => trim($input['city'] ?? ''),
+                'country' => $country,
                 'email' => strtolower(trim($input['email'] ?? '')),
                 'phone' => trim($input['phone'] ?? ''),
                 'status' => 'trial',
@@ -112,6 +117,20 @@ class PlatformService
             if (array_key_exists('email', $input)) {
                 $company->email = strtolower(trim((string) $input['email']));
             }
+            if (array_key_exists('country', $input)) {
+                $country = BillingCountries::normalize($input['country']);
+                if ($country !== $company->country && ! $this->tenant->isPlatform()) {
+                    throw new DomainException('Le pays de facturation est modifiable uniquement par BravoStock.');
+                }
+                if ($country !== $company->country) {
+                    $current = $this->subscriptions->forCompany($id);
+                    $plan = $current ? $this->plans->find($current['planId'] ?? '') : null;
+                    if ($plan) {
+                        PlanPricing::require($plan, $country);
+                    }
+                    $company->country = $country;
+                }
+            }
             if (! empty($input['status'])) {
                 $company->status = $input['status'];
                 $subscription = $this->subscriptions->forCompany($id);
@@ -147,14 +166,15 @@ class PlatformService
         if ($this->plans->all()->contains(fn (array $plan) => $plan['code'] === $code)) {
             throw new DomainException('Ce code de plan existe déjà.');
         }
+        $prices = $this->pricesFromInput($input);
 
         return $this->plans->put([
             'id' => Uid::make('plan'),
             'name' => $name,
             'code' => $code,
             'description' => trim($input['description'] ?? ''),
-            'monthlyPrice' => max(0, (int) round($input['monthlyPrice'] ?? 0)),
-            'yearlyPrice' => max(0, (int) round($input['yearlyPrice'] ?? 0)),
+            'prices' => $prices,
+            ...$this->referencePrices($prices),
             'maxUsers' => max(0, (int) round($input['maxUsers'] ?? 0)),
             'maxWarehouses' => max(0, (int) round($input['maxWarehouses'] ?? 0)),
             'modules' => $input['modules'] ?? [],
@@ -173,10 +193,26 @@ class PlatformService
         if (array_key_exists('description', $input)) {
             $plan['description'] = trim($input['description']);
         }
-        foreach (['monthlyPrice', 'yearlyPrice', 'maxUsers', 'maxWarehouses'] as $key) {
+        foreach (['maxUsers', 'maxWarehouses'] as $key) {
             if (array_key_exists($key, $input)) {
                 $plan[$key] = max(0, (int) round($input[$key]));
             }
+        }
+        if (array_key_exists('prices', $input)) {
+            $plan['prices'] = $this->pricesFromInput($input);
+        } elseif (array_key_exists('monthlyPrice', $input) || array_key_exists('yearlyPrice', $input)) {
+            // Ancien format (prix uniques) : ils pilotent le tarif Maroc.
+            $prices = $plan['prices'] ?? [];
+            $ma = PlanPricing::for($plan, BillingCountries::DEFAULT) ?? ['monthly' => 0, 'yearly' => 0];
+            $prices[BillingCountries::DEFAULT] = [
+                ...($prices[BillingCountries::DEFAULT] ?? []),
+                'monthly' => max(0, (int) round($input['monthlyPrice'] ?? $ma['monthly'])),
+                'yearly' => max(0, (int) round($input['yearlyPrice'] ?? $ma['yearly'])),
+            ];
+            $plan['prices'] = $prices;
+        }
+        if (isset($plan['prices'])) {
+            $plan = [...$plan, ...$this->referencePrices($plan['prices'])];
         }
         foreach (['stripePriceMonthly', 'stripePriceYearly'] as $key) {
             if (array_key_exists($key, $input)) {
@@ -207,6 +243,7 @@ class PlatformService
                 if (! $plan) {
                     throw new DomainException('Plan introuvable.');
                 }
+                PlanPricing::require($plan, $company?->country ?? BillingCountries::DEFAULT);
                 $subscription['planId'] = $plan['id'];
             }
             if (! empty($input['interval'])) {
@@ -235,12 +272,14 @@ class PlatformService
             if (! empty($input['planId']) || ! empty($input['interval'])) {
                 $plan = $this->plans->find($subscription['planId']);
                 if ($plan && ($subscription['status'] ?? '') === 'active') {
+                    $country = $company?->country ?? BillingCountries::DEFAULT;
                     $this->invoices->put([
                         'id' => Uid::make('pinv'),
                         'companyId' => $companyId,
                         'subscriptionId' => $subscription['id'],
                         'number' => $this->nextInvoiceNumber(),
-                        'amount' => ($subscription['interval'] ?? '') === 'yearly' ? $plan['yearlyPrice'] : $plan['monthlyPrice'],
+                        'amount' => PlanPricing::amount($plan, $country, (string) ($subscription['interval'] ?? 'monthly')),
+                        'currency' => BillingCountries::currency($country),
                         'status' => 'open',
                         'issuedAt' => now()->toDateString(),
                         'dueDate' => $this->addDays(now()->toDateString(), 14),
@@ -325,12 +364,53 @@ class PlatformService
             'legalName' => $company->legal_name,
             'ice' => $company->ice,
             'city' => $company->city,
+            'country' => $company->country ?: BillingCountries::DEFAULT,
+            'currency' => BillingCountries::currency($company->country),
             'email' => $company->email,
             'phone' => $company->phone,
             'status' => $company->status,
             'createdAt' => optional($company->created_at)->toDateString() ?? now()->toDateString(),
             'usersCount' => $company->users_count,
             'warehousesCount' => $company->warehouses_count,
+        ];
+    }
+
+    /**
+     * Grille de prix saisie. Ancien format accepté : monthlyPrice/yearlyPrice → tarif Maroc.
+     *
+     * @return array<string, array<string, mixed>>
+     */
+    private function pricesFromInput(array $input): array
+    {
+        $prices = PlanPricing::sanitize($input['prices'] ?? null);
+        if (! $prices && array_key_exists('monthlyPrice', $input)) {
+            $prices = PlanPricing::sanitize([BillingCountries::DEFAULT => [
+                'monthly' => $input['monthlyPrice'],
+                'yearly' => $input['yearlyPrice'] ?? null,
+                'stripePriceMonthly' => $input['stripePriceMonthly'] ?? '',
+                'stripePriceYearly' => $input['stripePriceYearly'] ?? '',
+            ]]);
+        }
+        if (! $prices) {
+            throw new DomainException('Renseignez le tarif d’au moins un pays.');
+        }
+
+        return $prices;
+    }
+
+    /**
+     * monthlyPrice / yearlyPrice restent alimentés (tri, compatibilité) avec le tarif Maroc,
+     * ou 0 quand le plan n'est pas vendu au Maroc.
+     *
+     * @return array{monthlyPrice: int, yearlyPrice: int}
+     */
+    private function referencePrices(array $prices): array
+    {
+        $ma = $prices[BillingCountries::DEFAULT] ?? null;
+
+        return [
+            'monthlyPrice' => (int) ($ma['monthly'] ?? 0),
+            'yearlyPrice' => (int) ($ma['yearly'] ?? 0),
         ];
     }
 

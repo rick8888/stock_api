@@ -8,6 +8,8 @@ use App\Models\Company;
 use App\Repositories\Eloquent\PlatformInvoiceRepository;
 use App\Repositories\Eloquent\SubscriptionPlanRepository;
 use App\Repositories\Eloquent\SubscriptionRepository;
+use App\Support\BillingCountries;
+use App\Support\PlanPricing;
 use App\Support\Tenant;
 use App\Support\Uid;
 use Illuminate\Support\Facades\DB;
@@ -53,7 +55,7 @@ class StripeBillingService
             throw new DomainException('Plan introuvable.');
         }
 
-        $priceId = $this->priceIdFor($plan, $interval);
+        $priceId = $this->priceIdFor($plan, $interval, $company->country ?: BillingCountries::DEFAULT);
         $success = $this->checkoutUrl(config('services.billing.stripe.success_url'));
         $cancel = $this->returnUrl(config('services.billing.stripe.cancel_url'));
 
@@ -263,7 +265,8 @@ class StripeBillingService
         }
 
         $companyId = (string) $subscription['companyId'];
-        $amount = ((int) ($object['amount_paid'] ?? 0)) / 100;
+        $currency = strtoupper((string) ($object['currency'] ?? BillingCountries::currency(Company::query()->find($companyId)?->country)));
+        $amount = BillingCountries::fromMinorUnits((int) ($object['amount_paid'] ?? 0), $currency);
         $stripeInvoiceId = (string) ($object['id'] ?? '');
         $existing = $this->invoices->findByStripeInvoiceId($stripeInvoiceId);
         if (! $existing) {
@@ -273,6 +276,7 @@ class StripeBillingService
                 'subscriptionId' => $subscription['id'],
                 'number' => 'ST-'.strtoupper(substr($stripeInvoiceId ?: Uid::make('inv'), -8)),
                 'amount' => $amount,
+                'currency' => $currency,
                 'status' => 'paid',
                 'issuedAt' => now()->toDateString(),
                 'dueDate' => now()->toDateString(),
@@ -335,7 +339,8 @@ class StripeBillingService
         if (! in_array($invoice['status'] ?? '', ['open', 'overdue'], true)) {
             throw new DomainException('Cette facture n’est pas payable.');
         }
-        $amountCents = (int) round(((float) ($invoice['amount'] ?? 0)) * 100);
+        $currency = strtoupper((string) ($invoice['currency'] ?? BillingCountries::currency($company->country)));
+        $amountCents = BillingCountries::toMinorUnits((float) ($invoice['amount'] ?? 0), $currency);
         if ($amountCents < 1) {
             throw new DomainException('Montant de facture invalide.');
         }
@@ -346,7 +351,7 @@ class StripeBillingService
             'line_items' => [[
                 'quantity' => 1,
                 'price_data' => [
-                    'currency' => config('services.billing.stripe.currency', 'mad'),
+                    'currency' => strtolower($currency),
                     'unit_amount' => $amountCents,
                     'product_data' => [
                         'name' => 'Facture '.($invoice['number'] ?? $invoiceId),
@@ -395,12 +400,18 @@ class StripeBillingService
     }
 
     /** @param  array<string, mixed>  $plan */
-    private function priceIdFor(array $plan, string $interval): string
+    private function priceIdFor(array $plan, string $interval, string $country): string
     {
         $key = $interval === 'yearly' ? 'stripePriceYearly' : 'stripePriceMonthly';
-        $priceId = trim((string) ($plan[$key] ?? ''));
+        // Un Price Stripe est lié à une devise : il en faut un par pays (tarif du pays).
+        $price = PlanPricing::require($plan, $country);
+        $priceId = $price[$key];
+        if ($priceId === '' && $country === BillingCountries::DEFAULT) {
+            $priceId = trim((string) ($plan[$key] ?? ''));
+        }
         if ($priceId === '') {
-            throw new DomainException("Price Stripe manquant sur le plan ({$key}).");
+            $countryName = BillingCountries::name($country);
+            throw new DomainException("Price Stripe manquant sur le plan pour {$countryName} ({$key}).");
         }
 
         return $priceId;

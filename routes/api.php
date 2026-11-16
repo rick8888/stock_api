@@ -189,6 +189,8 @@ Route::middleware('auth:api')->group(function () {
     Route::patch('/users/{id}', [UserController::class, 'update'])->middleware('permission:user.update,account.admins');
     Route::get('/roles', [UserController::class, 'roles'])->middleware('permission:user.view,account.admins');
 
+    Route::get('/platform/contact-messages', [ContactController::class, 'index'])->middleware('permission:platform.view');
+    Route::patch('/platform/contact-messages/{id}', [ContactController::class, 'update'])->middleware('permission:platform.view');
     Route::get('/platform/companies', [PlatformController::class, 'companies'])->middleware('permission:platform.companies,account.view');
     Route::post('/platform/companies', [PlatformController::class, 'storeCompany'])->middleware('permission:platform.companies');
     Route::patch('/platform/companies/{id}', [PlatformController::class, 'updateCompany'])->middleware('permission:platform.companies,account.company');

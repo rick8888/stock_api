@@ -60,6 +60,7 @@ class MockSeeder extends Seeder
                     'legal_name' => $row['legalName'],
                     'ice' => $row['ice'] ?? null,
                     'city' => $row['city'] ?? null,
+                    'country' => $row['country'] ?? 'MA',
                     'email' => $row['email'] ?? null,
                     'phone' => $row['phone'] ?? null,
                     'status' => $row['status'] ?? 'active',

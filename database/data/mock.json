@@ -5906,6 +5906,7 @@
       "legalName": "Atlas Distribution SARL",
       "ice": "001845632000089",
       "city": "Casablanca",
+      "country": "MA",
       "email": "admin@bravo.stock",
       "phone": "0522 40 12 80",
       "status": "active",
@@ -5919,6 +5920,7 @@
       "legalName": "Maghreb Fresh SA",
       "ice": "001923410000056",
       "city": "Rabat",
+      "country": "MA",
       "email": "direction@maghrebfresh.ma",
       "phone": "0537 72 18 40",
       "status": "active",
@@ -5932,6 +5934,7 @@
       "legalName": "Sud Logistique SARL",
       "ice": "002201198000033",
       "city": "Marrakech",
+      "country": "MA",
       "email": "contact@sudlogistique.ma",
       "phone": "0524 33 90 12",
       "status": "trial",
@@ -5945,6 +5948,7 @@
       "legalName": "Nord Transit SARL",
       "ice": "001776540000021",
       "city": "Tanger",
+      "country": "MA",
       "email": "compta@nordtransit.ma",
       "phone": "0539 94 21 70",
       "status": "active",
@@ -5958,12 +5962,41 @@
       "legalName": "Oasis Négoce SARL",
       "ice": "002410880000014",
       "city": "Agadir",
+      "country": "MA",
       "email": "hello@oasisnegoce.ma",
       "phone": "0528 84 03 55",
       "status": "suspended",
       "createdAt": "2026-02-20",
       "usersCount": 7,
       "warehousesCount": 2
+    },
+    {
+      "id": "co-lagune",
+      "name": "Lagune Distribution",
+      "legalName": "Lagune Distribution SARL",
+      "ice": "CI-2019-0458731",
+      "city": "Abidjan",
+      "country": "CI",
+      "email": "direction@lagunedistribution.ci",
+      "phone": "+225 27 22 41 18 30",
+      "status": "active",
+      "createdAt": "2026-05-06",
+      "usersCount": 9,
+      "warehousesCount": 2
+    },
+    {
+      "id": "co-fleuve",
+      "name": "Fleuve Négoce",
+      "legalName": "Fleuve Négoce SARL",
+      "ice": "A1234567K",
+      "city": "Kinshasa",
+      "country": "CD",
+      "email": "compta@fleuvenegoce.cd",
+      "phone": "+243 81 555 20 14",
+      "status": "trial",
+      "createdAt": "2026-08-20",
+      "usersCount": 2,
+      "warehousesCount": 1
     }
   ],
   "plans": [
@@ -5974,6 +6007,28 @@
       "description": "Un site, l’essentiel du stock et des demandes.",
       "monthlyPrice": 890,
       "yearlyPrice": 8900,
+      "prices": {
+        "MA": {
+          "monthly": 890,
+          "yearly": 8900
+        },
+        "CI": {
+          "monthly": 55000,
+          "yearly": 550000
+        },
+        "SN": {
+          "monthly": 55000,
+          "yearly": 550000
+        },
+        "CD": {
+          "monthly": 89,
+          "yearly": 890
+        },
+        "CG": {
+          "monthly": 55000,
+          "yearly": 550000
+        }
+      },
       "maxUsers": 5,
       "maxWarehouses": 1,
       "modules": [
@@ -5989,6 +6044,28 @@
       "description": "Multi-sites, logistique, réappro / analytics et assistant opérationnel.",
       "monthlyPrice": 2490,
       "yearlyPrice": 24900,
+      "prices": {
+        "MA": {
+          "monthly": 2490,
+          "yearly": 24900
+        },
+        "CI": {
+          "monthly": 149000,
+          "yearly": 1490000
+        },
+        "SN": {
+          "monthly": 149000,
+          "yearly": 1490000
+        },
+        "CD": {
+          "monthly": 249,
+          "yearly": 2490
+        },
+        "CG": {
+          "monthly": 149000,
+          "yearly": 1490000
+        }
+      },
       "maxUsers": 25,
       "maxWarehouses": 5,
       "modules": [
@@ -6008,6 +6085,28 @@
       "description": "Sans plafond, analytics et finance inclus.",
       "monthlyPrice": 5900,
       "yearlyPrice": 59000,
+      "prices": {
+        "MA": {
+          "monthly": 5900,
+          "yearly": 59000
+        },
+        "CI": {
+          "monthly": 359000,
+          "yearly": 3590000
+        },
+        "SN": {
+          "monthly": 359000,
+          "yearly": 3590000
+        },
+        "CD": {
+          "monthly": 590,
+          "yearly": 5900
+        },
+        "CG": {
+          "monthly": 359000,
+          "yearly": 3590000
+        }
+      },
       "maxUsers": 0,
       "maxWarehouses": 0,
       "modules": [
@@ -6073,6 +6172,27 @@
       "startedAt": "2026-02-20",
       "currentPeriodEnd": "2026-07-20",
       "seats": 7
+    },
+    {
+      "id": "sub-lagune",
+      "companyId": "co-lagune",
+      "planId": "plan-pro",
+      "status": "active",
+      "interval": "monthly",
+      "startedAt": "2026-05-06",
+      "currentPeriodEnd": "2026-09-06",
+      "seats": 9
+    },
+    {
+      "id": "sub-fleuve",
+      "companyId": "co-fleuve",
+      "planId": "plan-starter",
+      "status": "trialing",
+      "interval": "monthly",
+      "startedAt": "2026-08-20",
+      "currentPeriodEnd": "2026-09-03",
+      "trialEndsAt": "2026-09-03",
+      "seats": 2
     }
   ],
   "platformInvoices": [
@@ -6082,6 +6202,7 @@
       "subscriptionId": "sub-atlas",
       "number": "BS-2026-014",
       "amount": 2490,
+      "currency": "MAD",
       "status": "open",
       "issuedAt": "2026-08-04",
       "dueDate": "2026-09-04"
@@ -6092,6 +6213,7 @@
       "subscriptionId": "sub-atlas",
       "number": "BS-2026-009",
       "amount": 2490,
+      "currency": "MAD",
       "status": "paid",
       "issuedAt": "2026-07-04",
       "dueDate": "2026-08-04",
@@ -6103,6 +6225,7 @@
       "subscriptionId": "sub-maghreb",
       "number": "BS-2026-003",
       "amount": 59000,
+      "currency": "MAD",
       "status": "paid",
       "issuedAt": "2026-01-14",
       "dueDate": "2026-01-28",
@@ -6114,6 +6237,7 @@
       "subscriptionId": "sub-nord",
       "number": "BS-2026-011",
       "amount": 2490,
+      "currency": "MAD",
       "status": "overdue",
       "issuedAt": "2026-07-02",
       "dueDate": "2026-08-02"
@@ -6124,6 +6248,7 @@
       "subscriptionId": "sub-nord",
       "number": "BS-2026-007",
       "amount": 2490,
+      "currency": "MAD",
       "status": "paid",
       "issuedAt": "2026-06-02",
       "dueDate": "2026-07-02",
@@ -6135,9 +6260,33 @@
       "subscriptionId": "sub-oasis",
       "number": "BS-2026-008",
       "amount": 2490,
+      "currency": "MAD",
       "status": "overdue",
       "issuedAt": "2026-06-20",
       "dueDate": "2026-07-20"
+    },
+    {
+      "id": "pinv-lagune-08",
+      "companyId": "co-lagune",
+      "subscriptionId": "sub-lagune",
+      "number": "BS-2026-015",
+      "amount": 149000,
+      "currency": "XOF",
+      "status": "open",
+      "issuedAt": "2026-08-06",
+      "dueDate": "2026-09-06"
+    },
+    {
+      "id": "pinv-lagune-07",
+      "companyId": "co-lagune",
+      "subscriptionId": "sub-lagune",
+      "number": "BS-2026-010",
+      "amount": 149000,
+      "currency": "XOF",
+      "status": "paid",
+      "issuedAt": "2026-07-06",
+      "dueDate": "2026-08-06",
+      "paidAt": "2026-07-09"
     }
   ]
 }

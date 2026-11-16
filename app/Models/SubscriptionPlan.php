@@ -7,7 +7,7 @@ class SubscriptionPlan extends RelationalDocumentModel
     protected $table = 'subscription_plans';
 
     protected $fillable = [
-        'id', 'payload', 'name', 'code', 'description', 'monthly_price', 'yearly_price',
+        'id', 'payload', 'name', 'code', 'description', 'monthly_price', 'yearly_price', 'prices',
         'max_users', 'max_warehouses', 'modules', 'active', 'stripe_price_monthly', 'stripe_price_yearly',
     ];
 
@@ -20,6 +20,7 @@ class SubscriptionPlan extends RelationalDocumentModel
             'max_users' => 'integer',
             'max_warehouses' => 'integer',
             'modules' => 'array',
+            'prices' => 'array',
             'active' => 'boolean',
         ];
     }
@@ -46,6 +47,9 @@ class SubscriptionPlan extends RelationalDocumentModel
         if (is_array($this->modules)) {
             $doc['modules'] = $this->modules;
         }
+        if (is_array($this->prices)) {
+            $doc['prices'] = $this->prices;
+        }
 
         return $doc;
     }
@@ -54,6 +58,9 @@ class SubscriptionPlan extends RelationalDocumentModel
     {
         if (array_key_exists('modules', $data)) {
             $this->modules = is_array($data['modules']) ? array_values($data['modules']) : [];
+        }
+        if (array_key_exists('prices', $data)) {
+            $this->prices = is_array($data['prices']) && $data['prices'] ? $data['prices'] : null;
         }
 
         return parent::fillDocument($data);

@@ -17,6 +17,7 @@ class Company extends Model
         'legal_name',
         'ice',
         'city',
+        'country',
         'email',
         'phone',
         'status',
